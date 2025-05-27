@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
-import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
-import { db } from "@/commons/libraries/firebase/firebaseApp";
+// import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
+// import { db } from "@/commons/libraries/firebase/firebaseApp";
 
 const containerStyle = {
   width: "100vw",
@@ -16,16 +16,14 @@ const initialCenter = {
 export default function Maps() {
   const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null);
   const [markerPosition, setMarkerPosition] = useState(initialCenter);
+  const [rightClickPos, setRightClickPos] = useState<google.maps.LatLngLiteral | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
+  // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
-  // 우클릭한 위치 저장 (기록할 위치)
-  const [rightClickPos, setRightClickPos] = useState<google.maps.LatLngLiteral | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  console.log("우클릭 위치:", rightClickPos);
-
-  // 검색 결과 받아서 마커 이동
+  // 🔍 [검색 박스] 장소 검색 후 위치 이동 // 기존에 구글에서 제공한 코드
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current?.getPlaces();
     if (!places || places.length === 0) return;
@@ -43,7 +41,7 @@ export default function Maps() {
     }
   };
 
-  // 우클릭 이벤트 핸들러
+  // 🖱️ [이벤트] 지도 우클릭 시 위치 저장 + 모달 표시
   const onMapRightClick = (e: google.maps.MapMouseEvent) => {
     if (e.latLng) {
       setRightClickPos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
@@ -51,6 +49,7 @@ export default function Maps() {
     }
   };
 
+  // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
   const handleConfirm = () => {
     if (rightClickPos) {
       setMarkerPosition(rightClickPos);
@@ -69,61 +68,61 @@ export default function Maps() {
     mapRef.current = map;
   };
 
-  // firestore
-  // 등록
-  const handleFormSubmit = async (data: ITravelLog) => {
-    try {
-      // 등록 시간 측정
-      const now = new Date(); // 현재 시간을 Date 객체로 가져옴
-      const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
+  //  데이터 함수 > 아직 작업 전임 임시로 쓰던 코드를 가져옴
+  // 📦 [Firestore] 위치 데이터 등록
+  // const handleFormSubmit = async (data: ITravelLog) => {
+  //   try {
+  //     // 등록 시간 측정
+  //     const now = new Date(); // 현재 시간을 Date 객체로 가져옴
+  //     const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
 
-      const docRef = await addDoc(collection(db, "income"), {
-        ...data, // IncomeItemData 타입에 있는 모든 데이터
-        // userId,
-        // itemType,
-        // price: Number(data.price) * Number(currency),
-        createdAt, // 테이블 생성 시간
-      });
-      // reset();
-      // readData();
-      console.log("문서 ID:", docRef.id); // Firestore에서 생성된 고유한 문서 ID
-    } catch (error) {
-      console.error("문서 추가 실패:", error);
-    }
-  };
+  //     const docRef = await addDoc(collection(db, "income"), {
+  //       ...data, // IncomeItemData 타입에 있는 모든 데이터
+  //       // userId,
+  //       // itemType,
+  //       // price: Number(data.price) * Number(currency),
+  //       createdAt, // 테이블 생성 시간
+  //     });
+  //     // reset();
+  //     // readData();
+  //     console.log("문서 ID:", docRef.id); // Firestore에서 생성된 고유한 문서 ID
+  //   } catch (error) {
+  //     console.error("문서 추가 실패:", error);
+  //   }
+  // };
 
-  // 조회
-  const [incomeItemArray, setIncomeItemArray] = useState<ITravelLog[]>([]);
+  // 📥 [Firestore] 위치 데이터 조회
+  // const [incomeItemArray, setIncomeItemArray] = useState<ITravelLog[]>([]);
 
-  const readData = async () => {
-    const q = query(
-      collection(db, "income")
-      // where("userId", "==", userId),
-      // orderBy("createdAt", "desc") // createdAt 기준 내림차순 정렬
-    );
+  // const readData = async () => {
+  //   const q = query(
+  //     collection(db, "income")
+  //     // where("userId", "==", userId),
+  //     // orderBy("createdAt", "desc") // createdAt 기준 내림차순 정렬
+  //   );
 
-    // 위에서 데이터를 정렬하고 조회
-    const querySnapshot = await getDocs(q);
-    const dataArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id, // 문서의 ID
-      ...doc.data(), // 문서의 데이터
-    }));
-    setIncomeItemArray(dataArray as ITravelLog[]);
-  };
+  //   // 위에서 데이터를 정렬하고 조회
+  //   const querySnapshot = await getDocs(q);
+  //   const dataArray = querySnapshot.docs.map((doc) => ({
+  //     id: doc.id, // 문서의 ID
+  //     ...doc.data(), // 문서의 데이터
+  //   }));
+  //   setIncomeItemArray(dataArray as ITravelLog[]);
+  // };
 
-  // 삭제
-  const handleFormDelete = async (selectionItem: string[]) => {
-    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-    for (const id of selectionItem) {
-      try {
-        await deleteDoc(doc(db, "income", id));
-        console.log(`ID ${id} 삭제 성공`);
-        // readData();
-      } catch (error) {
-        console.error(`ID ${id} 삭제 실패`, error);
-      }
-    }
-  };
+  // 🗑️ [Firestore] 위치 데이터 삭제
+  // const handleFormDelete = async (selectionItem: string[]) => {
+  //   // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
+  //   for (const id of selectionItem) {
+  //     try {
+  //       await deleteDoc(doc(db, "income", id));
+  //       console.log(`ID ${id} 삭제 성공`);
+  //       // readData();
+  //     } catch (error) {
+  //       console.error(`ID ${id} 삭제 실패`, error);
+  //     }
+  //   }
+  // };
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={["places"]}>
