@@ -13,9 +13,23 @@ const initialCenter = {
   lng: -73.98633,
 };
 
+const mapOptions = {
+  mapTypeControl: false,
+  styles: [
+    // {
+    //   featureType: "poi",
+    //   elementType: "labels",
+    //   stylers: [{ visibility: "off" }],
+    // },
+  ],
+};
+
+const LIBRARIES: "places"[] = ["places"];
+
 export default function Maps() {
   const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
   const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
+  const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
 
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태 함수
@@ -55,6 +69,7 @@ export default function Maps() {
     // 저장 시 포지션 값이 있다면, 마커를 계속 추가
     if (selectedPosition) {
       setMarkers((prev) => [...prev, selectedPosition]); // ✅ 배열에 추가
+      setMapCenter(selectedPosition); // ✅ 여기서만 중심 이동
     }
     setShowModal(false);
     setSelectedPosition(null);
@@ -127,8 +142,8 @@ export default function Maps() {
   // };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={["places"]}>
-      <GoogleMap mapContainerStyle={containerStyle} center={selectedPosition ?? initialCenter} zoom={13} options={{ mapTypeControl: false }} onLoad={onLoadMap} onRightClick={onMapRightClick}>
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={LIBRARIES}>
+      <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onRightClick={onMapRightClick}>
         {/* 생성된 마커 */}
         {markers.map((marker, index) => (
           <Marker key={index} position={marker} onClick={() => setSelectedMarker(marker)} />
