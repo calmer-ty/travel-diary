@@ -14,10 +14,11 @@ const initialCenter = {
 };
 
 export default function Maps() {
-  const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null);
-  const [markerPosition, setMarkerPosition] = useState(initialCenter);
-  const [rightClickPos, setRightClickPos] = useState<google.maps.LatLngLiteral | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
+  const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
+
+  const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
+  const [showModal, setShowModal] = useState(false); // 모달 상태 함수
 
   // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -31,7 +32,7 @@ export default function Maps() {
     const location = places[0].geometry?.location;
 
     if (!location) return;
-    setMarkerPosition({
+    setSelectedPosition({
       lat: location.lat(),
       lng: location.lng(),
     });
@@ -44,23 +45,24 @@ export default function Maps() {
   // 🖱️ [이벤트] 지도 우클릭 시 위치 저장 + 모달 표시
   const onMapRightClick = (e: google.maps.MapMouseEvent) => {
     if (e.latLng) {
-      setRightClickPos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+      setSelectedPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
       setShowModal(true); // 모달 띄우기
     }
   };
 
   // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
   const handleConfirm = () => {
-    if (rightClickPos) {
-      setMarkerPosition(rightClickPos);
-      setSelectedMarker(rightClickPos);
+    // 저장 시 포지션 값이 있다면, 마커를 계속 추가
+    if (selectedPosition) {
+      setMarkers((prev) => [...prev, selectedPosition]); // ✅ 배열에 추가
     }
     setShowModal(false);
-    setRightClickPos(null);
+    setSelectedPosition(null);
   };
+
   const handleCancel = () => {
     setShowModal(false);
-    setRightClickPos(null);
+    setSelectedPosition(null);
   };
 
   // 지도 로드 시 참조 저장
@@ -126,11 +128,12 @@ export default function Maps() {
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={["places"]}>
-      <GoogleMap mapContainerStyle={containerStyle} center={markerPosition} zoom={13} options={{ mapTypeControl: false }} onLoad={onLoadMap} onRightClick={onMapRightClick}>
-        {/* 마커 */}
-        <Marker position={markerPosition} onClick={() => setSelectedMarker(markerPosition)} />
-
-        {/* 지도 정보창 */}
+      <GoogleMap mapContainerStyle={containerStyle} center={selectedPosition ?? initialCenter} zoom={13} options={{ mapTypeControl: false }} onLoad={onLoadMap} onRightClick={onMapRightClick}>
+        {/* 생성된 마커 */}
+        {markers.map((marker, index) => (
+          <Marker key={index} position={marker} onClick={() => setSelectedMarker(marker)} />
+        ))}
+        {/* 마커 정보창  */}
         {selectedMarker && (
           <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)}>
             <div>
@@ -139,7 +142,6 @@ export default function Maps() {
             </div>
           </InfoWindow>
         )}
-
         {/* 검색창 */}
         <StandaloneSearchBox
           onLoad={(ref) => (searchBoxRef.current = ref)} // 검색박스 레퍼런스 저장
@@ -151,10 +153,10 @@ export default function Maps() {
             className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-2.5 z-10 bg-white"
           />
         </StandaloneSearchBox>
-
         {/* 모달 간단 구현 */}
         {showModal && (
-          <form onSubmit={handleFormSubmit} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border p-4 rounded shadow-lg z-50">
+          <form onSubmit={handleConfirm} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border p-4 rounded shadow-lg z-50">
+            {/* <form className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border p-4 rounded shadow-lg z-50"> */}
             <h2 className="text-lg font-semibold mb-4">위치 기록 추가</h2>
             {/* <label className="block mb-2 text-sm">
               제목
