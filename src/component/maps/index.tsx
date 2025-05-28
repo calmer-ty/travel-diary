@@ -64,6 +64,8 @@ export default function Maps() {
     }
   };
 
+  //💡 장소에 마커가 안찍히는 (위치 저장이 되지않는) 오류가 보입니다! - rin
+
   // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
   const handleConfirm = () => {
     // 저장 시 포지션 값이 있다면, 마커를 계속 추가
@@ -146,7 +148,16 @@ export default function Maps() {
       <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onRightClick={onMapRightClick}>
         {/* 생성된 마커 */}
         {markers.map((marker, index) => (
-          <Marker key={index} position={marker} onClick={() => setSelectedMarker(marker)} />
+          <Marker
+            key={index}
+            position={marker}
+            onClick={() => setSelectedMarker(marker)}
+            icon={{
+              url: "/images/icon_marker.png",
+              scaledSize: new window.google.maps.Size(40, 64),
+              anchor: new window.google.maps.Point(20, 40),
+            }}
+          />
         ))}
         {/* 마커 정보창  */}
         {selectedMarker && (
