@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
+import Modal01 from "../modal";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
 
@@ -77,7 +78,7 @@ export default function Maps() {
     setSelectedPosition(null);
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setShowModal(false);
     setSelectedPosition(null);
   };
@@ -160,14 +161,14 @@ export default function Maps() {
           />
         ))}
         {/* 마커 정보창  */}
-        {selectedMarker && (
+        {/* {selectedMarker && (
           <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)}>
             <div>
               <h3>여기에 정보 넣기</h3>
               <p>위치 설명 또는 상세 주소</p>
             </div>
           </InfoWindow>
-        )}
+        )} */}
         {/* 검색창 */}
         <StandaloneSearchBox
           onLoad={(ref) => (searchBoxRef.current = ref)} // 검색박스 레퍼런스 저장
@@ -180,28 +181,7 @@ export default function Maps() {
           />
         </StandaloneSearchBox>
         {/* 모달 간단 구현 */}
-        {showModal && (
-          <form onSubmit={handleConfirm} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border p-4 rounded shadow-lg z-50">
-            {/* <form className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border p-4 rounded shadow-lg z-50"> */}
-            <h2 className="text-lg font-semibold mb-4">위치 기록 추가</h2>
-            {/* <label className="block mb-2 text-sm">
-              제목
-              <input type="text" className="w-full border rounded px-2 py-1 mt-1" value={title} onChange={(e) => setTitle(e.target.value)} />
-            </label>
-            <label className="block mb-2 text-sm">
-              메모
-              <textarea className="w-full border rounded px-2 py-1 mt-1" rows={3} value={note} onChange={(e) => setNote(e.target.value)} />
-            </label> */}
-            <div className="mt-4 flex justify-end gap-2">
-              <button type="submit" className="px-4 py-1 bg-blue-500 text-white rounded">
-                저장
-              </button>
-              <button className="px-4 py-1 bg-gray-300 rounded" onClick={handleCancel}>
-                취소
-              </button>
-            </div>
-          </form>
-        )}
+        {showModal && <Modal01 handleCancel={handleCancel} handleConfirm={handleConfirm} selectedMarker={selectedMarker} />}
       </GoogleMap>
     </LoadScript>
   );

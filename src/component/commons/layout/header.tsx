@@ -14,8 +14,6 @@ export default function Headers() {
     }
   };
 
-  const handleGoogleLogout = () => {};
-
   return (
     <header className="bg-white w-full h-[50px] p-1 shadow-[0_3px_3px_rgba(0,0,0,0.2)] fixed top-[0] z-[10]">
       <div className="w-full h-full flex justify-between items-center">
