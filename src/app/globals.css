@@ -21,6 +21,7 @@
 
 html {
   font-size: calc((40 / 9) * 1vw);
+  font-family: "jejugothic";
 }
 @media (min-width: 480px) {
   html {
@@ -41,5 +42,17 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  font-family: "jejugothic";
+}
+
+button {
+  display: inline-block;
+  cursor: pointer;
+}
+
+/*font*/
+@font-face {
+  font-family: "jejugothic";
+  src: "//fonts.googleapis.com/earlyaccess/jejugothic.css";
 }

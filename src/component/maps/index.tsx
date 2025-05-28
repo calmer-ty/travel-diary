@@ -165,7 +165,7 @@ export default function Maps() {
           <input
             type="text"
             placeholder="검색"
-            className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-2.5 z-10 bg-white"
+            className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
           />
         </StandaloneSearchBox>
         {/* 모달 간단 구현 */}
