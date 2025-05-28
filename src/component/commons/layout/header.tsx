@@ -3,7 +3,7 @@
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";
 
-export default function Headers() {
+export default function Header() {
   // Google 로그인 처리
   const handleGoogleLogin = async (): Promise<void> => {
     try {
