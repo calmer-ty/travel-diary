@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
 import Modal01 from "../modal";
+import { AnimatePresence } from "framer-motion";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
 
@@ -68,20 +69,19 @@ export default function Maps() {
   //💡 장소에 마커가 안찍히는 (위치 저장이 되지않는) 오류가 보입니다! - rin
 
   // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
-  const handleConfirm = () => {
-    // 저장 시 포지션 값이 있다면, 마커를 계속 추가
+  const handleConfirm = useCallback(() => {
     if (selectedPosition) {
-      setMarkers((prev) => [...prev, selectedPosition]); // ✅ 배열에 추가
-      setMapCenter(selectedPosition); // ✅ 여기서만 중심 이동
+      setMarkers((prev) => [...prev, selectedPosition]);
+      setMapCenter(selectedPosition);
     }
     setShowModal(false);
     setSelectedPosition(null);
-  };
+  }, [selectedPosition, setMarkers, setMapCenter, setShowModal, setSelectedPosition]);
 
-  const handleCancel = (): void => {
+  const handleCancel = useCallback(() => {
     setShowModal(false);
     setSelectedPosition(null);
-  };
+  }, [setShowModal, setSelectedPosition]);
 
   // 지도 로드 시 참조 저장
   const onLoadMap = (map: google.maps.Map) => {
@@ -180,8 +180,8 @@ export default function Maps() {
             className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
           />
         </StandaloneSearchBox>
+        <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence>
         {/* 모달 간단 구현 */}
-        {showModal && <Modal01 handleCancel={handleCancel} handleConfirm={handleConfirm} selectedMarker={selectedMarker} />}
       </GoogleMap>
     </LoadScript>
   );
