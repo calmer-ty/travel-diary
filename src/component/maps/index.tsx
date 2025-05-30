@@ -30,7 +30,7 @@ const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
   const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
-  const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
+  // const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
 
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
@@ -59,11 +59,32 @@ export default function Maps() {
   };
 
   // 🖱️ [이벤트] 지도 우클릭 시 위치 저장 + 모달 표시
-  const onMapRightClick = (e: google.maps.MapMouseEvent) => {
-    if (e.latLng) {
-      setSelectedPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-      setShowModal(true); // 모달 띄우기
-    }
+  // const onMapRightClick = (e: google.maps.MapMouseEvent) => {
+  //   if (e.latLng) {
+  //     setSelectedPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+  //     setShowModal(true); // 모달 띄우기
+  //   }
+  // };
+
+  const handlePOIClick = (e: google.maps.MapMouseEvent) => {
+    if (!e.latLng || !mapRef.current) return;
+
+    const service = new window.google.maps.places.PlacesService(mapRef.current);
+
+    const request = {
+      location: e.latLng,
+      radius: 20, // 반경 20m
+      rankBy: google.maps.places.RankBy.PROMINENCE,
+    };
+
+    service.nearbySearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+        const place = results[0];
+        console.log("클릭한 장소 정보:", place);
+        alert(`장소명: ${place.name}\n주소: ${place.vicinity}`);
+        // 이 정보를 InfoWindow 등에 띄울 수 있음
+      }
+    });
   };
 
   //💡 장소에 마커가 안찍히는 (위치 저장이 되지않는) 오류가 보입니다! - rin
@@ -146,13 +167,13 @@ export default function Maps() {
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={LIBRARIES}>
-      <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onRightClick={onMapRightClick}>
+      <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={handlePOIClick}>
         {/* 생성된 마커 */}
         {markers.map((marker, index) => (
           <Marker
             key={index}
             position={marker}
-            onClick={() => setSelectedMarker(marker)}
+            // onClick={() => setSelectedMarker(marker)}
             icon={{
               url: "/images/icon_marker.png",
               scaledSize: new window.google.maps.Size(40, 64),
