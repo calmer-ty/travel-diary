@@ -2,8 +2,11 @@
 
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";
+import { useRouter } from "next/router";
 
 export default function Header() {
+  //const router = useRouter();
+
   // Google 로그인 처리
   const handleGoogleLogin = async (): Promise<void> => {
     try {

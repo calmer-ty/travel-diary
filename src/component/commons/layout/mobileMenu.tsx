@@ -12,7 +12,7 @@ export default function MobileMenu() {
           <button className="w-7 h-7 bg-contain bg-no-repeat bg-[url(/images/icon_balloon.png)]"></button>
         </li>
         <li className="flex justify-center items-center w-1/4 h-full">
-          <button className="w-6 h-6 bg-contain bg-no-repeat bg-[url(/images/icon_people.png)]"></button>
+          <button className="w-5.5 h-5.5 bg-contain bg-no-repeat bg-[url(/images/icon_people.png)]"></button>
         </li>
       </ul>
     </nav>
