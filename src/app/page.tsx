@@ -1,7 +1,8 @@
 "use client";
 
+import MainPage from "@/components/mainPage";
+
 // import { useAuth } from "@/commons/hooks/useAuth";
-import MainPage from "./main";
 
 export default function Home() {
   // const { user } = useAuth();
