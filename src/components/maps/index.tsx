@@ -1,19 +1,13 @@
 import { useCallback, useRef, useState } from "react";
-import {
-  LoadScript,
-  Marker,
-  // InfoWindow,
-  GoogleMap,
-  StandaloneSearchBox,
-} from "@react-google-maps/api";
+import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
 import Modal01 from "@/components/commons/modal/01";
 import { AnimatePresence } from "framer-motion";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
 
 const containerStyle = {
-  width: "100vw",
-  height: "100vh",
+  width: "100%",
+  height: "100%",
 };
 
 const initialCenter = {
@@ -87,15 +81,53 @@ export default function Maps() {
     service.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
         const place = results[0];
+        //
 
         setAddress(place);
-        // console.log("클릭한 장소 정보:", place);
-        // alert(`장소명: ${place.name}\n주소: ${place.vicinity}`);
+        console.log("클릭한 장소 정보:", place);
+        alert(`장소명: ${place.name}\n주소: ${place.vicinity}`);
         // 이 정보를 InfoWindow 등에 띄울 수 있음
       }
     });
   };
-  console.log("address: ", address);
+
+  // const handlePOIClick = (e: google.maps.MapMouseEvent) => {
+  //   if (!e.latLng || !mapRef.current) return;
+
+  //   const service = new window.google.maps.places.PlacesService(mapRef.current);
+
+  //   // 사용자가 POI를 클릭했다면 placeId가 존재함
+  //   if (e?.placeId) {
+  //     // placeId로 직접 상세 정보 가져오기
+  //     e.stop(); // 지도 기본 InfoWindow 막기
+  //     service.getDetails({ placeId: e.placeId }, (detail, status) => {
+  //       if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
+  //         setAddress(detail);
+  //         console.log("정확한 POI 정보:", detail);
+  //       }
+  //     });
+  //     return;
+  //   }
+
+  //   // 일반 좌표 클릭이라면 주변 장소 검색 (fallback)
+  //   const request = {
+  //     location: e.latLng,
+  //     radius: 20,
+  //     rankBy: google.maps.places.RankBy.PROMINENCE,
+  //   };
+
+  //   service.nearbySearch(request, (results, status) => {
+  //     if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
+  //       const place = results[0];
+  //       service.getDetails({ placeId: place.place_id }, (detail, status) => {
+  //         if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
+  //           setAddress(detail);
+  //           console.log("주변 장소 정보:", detail);
+  //         }
+  //       });
+  //     }
+  //   });
+  // };
 
   //💡 장소에 마커가 안찍히는 (위치 저장이 되지않는) 오류가 보입니다! - rin
 
