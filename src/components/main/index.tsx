@@ -1,6 +1,6 @@
 export default function Main() {
   return (
-    <div className="relative w-screen h-screen overflow-hidden p-5">
+    <div className="relative size-full overflow-hidden">
       <div className="relative size-full flex justify-center items-center gap-[3.125rem]">
         <div className="relative w-[37.5rem] h-[45.625rem] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-[1.25rem] border-solid border-gray-300 pt-[5rem] pl-[3.75rem] cursor-pointer">
           <div className="text-[3rem]">여기는 쌸라쌸라</div>
