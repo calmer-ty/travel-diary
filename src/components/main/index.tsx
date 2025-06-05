@@ -1,8 +1,19 @@
+import { useRouter } from "next/navigation";
+
 export default function Main() {
+  const router = useRouter();
+
+  const onClickMap = () => {
+    router.push("./maps");
+  };
+
   return (
     <div className="relative size-full overflow-hidden">
-      <div className="relative size-full flex justify-center items-center gap-[3.125rem]">
-        <div className="relative w-[37.5rem] h-[45.625rem] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-[1.25rem] border-solid border-gray-300 pt-[5rem] pl-[3.75rem] cursor-pointer">
+      <div className="relative size-full flex justify-center items-center gap-[3.125rem] p-[3.125rem]">
+        <div
+          onClick={onClickMap}
+          className="relative w-[37.5rem] h-[45.625rem] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-[1.25rem] border-solid border-gray-300 pt-[5rem] pl-[3.75rem] cursor-pointer"
+        >
           <div className="text-[3rem]">여기는 쌸라쌸라</div>
 
           <div className="text-[1.5rem] mt-[1.875rem]">

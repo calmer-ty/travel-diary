@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 // import { useAuth } from "@/commons/hooks/useAuth";
 import MainPage from "./main";
