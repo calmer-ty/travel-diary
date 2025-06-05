@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
-import Modal01 from "../modal";
+import Modal01 from "../commons/modal";
 import { AnimatePresence } from "framer-motion";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
