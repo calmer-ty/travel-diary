@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Header />
-        <main className="w-full h-full pt-[3.125rem]">{children}</main>
+        <main className="size-full pt-[3.125rem]">{children}</main>
         <div className="block sm:hidden">
           <MobileMenu />
         </div>
