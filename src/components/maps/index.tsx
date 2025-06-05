@@ -1,6 +1,12 @@
 import { useCallback, useRef, useState } from "react";
-import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
-import Modal01 from "../commons/modal";
+import {
+  LoadScript,
+  Marker,
+  // InfoWindow,
+  GoogleMap,
+  StandaloneSearchBox,
+} from "@react-google-maps/api";
+import Modal01 from "@/components/commons/modal/01";
 import { AnimatePresence } from "framer-motion";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
@@ -32,6 +38,7 @@ export default function Maps() {
   const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
   // const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
+  const [address, setAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
 
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태 함수
@@ -80,12 +87,15 @@ export default function Maps() {
     service.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
         const place = results[0];
-        console.log("클릭한 장소 정보:", place);
-        alert(`장소명: ${place.name}\n주소: ${place.vicinity}`);
+
+        setAddress(place);
+        // console.log("클릭한 장소 정보:", place);
+        // alert(`장소명: ${place.name}\n주소: ${place.vicinity}`);
         // 이 정보를 InfoWindow 등에 띄울 수 있음
       }
     });
   };
+  console.log("address: ", address);
 
   //💡 장소에 마커가 안찍히는 (위치 저장이 되지않는) 오류가 보입니다! - rin
 
