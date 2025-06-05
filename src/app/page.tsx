@@ -7,7 +7,7 @@ import Maps from "@/component/maps";
 // import MainPage from "@/component/mainpage";
 
 export default function Home() {
-  // return <MainPage />;
   const { user } = useAuth();
-  return <>{user === null ? <IntroPage /> : <Maps />}</>;
+  console.log(user);
+  return <><IntroPage />}</>;
 }

@@ -4,7 +4,7 @@ import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";
 import { signInWithPopup } from "firebase/auth";
 
 // 🔒 로그인 하는 페이지
-export default function IntroPage() {
+export default function MainPage() {
   // Google 로그인 처리
   // const handleGoogleLogin = async (): Promise<void> => {
   //   try {
