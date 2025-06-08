@@ -1,3 +1,6 @@
+  // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
+// import { db } from "@/commons/libraries/firebase/firebaseApp";
+
 //  데이터 함수 > 아직 작업 전임 임시로 쓰던 코드를 가져옴
   // 📦 [Firestore] 위치 데이터 등록
   // const handleFormSubmit = async (data: ITravelLog) => {
@@ -53,3 +56,5 @@
   //     }
   //   }
   // };
+
+

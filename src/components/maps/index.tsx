@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
-import Modal01 from "@/components/commons/modal/01";
-import { AnimatePresence } from "framer-motion";
+// import { AnimatePresence } from "framer-motion";
+import ModalMaps from "../commons/modal/maps";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
 
@@ -62,8 +62,8 @@ export default function Maps() {
   const handlePOIClick = (e: google.maps.MapMouseEvent) => {
     if (!e.latLng || !mapRef.current) return;
 
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
+    // const lat = e.latLng.lat();
+    // const lng = e.latLng.lng();
 
     const placeId = (e as any).placeId as string | undefined;
 
@@ -140,7 +140,8 @@ export default function Maps() {
             className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
           />
         </StandaloneSearchBox>
-        <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence>
+        {/* <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence> */}
+        {showModal && <ModalMaps name="" address="" handleCancel={handleCancel} handleConfirm={handleConfirm} />}
         {/* 모달 간단 구현 */}
       </GoogleMap>
     </LoadScript>
