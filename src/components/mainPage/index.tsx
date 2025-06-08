@@ -26,9 +26,9 @@ export default function MainPage() {
             <p>기록해봐 쏼랴쏼랴</p>
           </div>
 
-          <img className="absolute bottom-6 right-6 w-70" src="./images/img_diary.png" alt="" />
+          <img className="absolute bottom-6 right-6 w-[50%] lg:w-70" src="./images/img_diary.png" alt="" />
         </motion.div>
-        <div className="w-[42%] h-full flex justify-between items-center flex-col size-full">
+        <div className="w-[42%] h-full flex justify-between items-center flex-col gap-8 size-full">
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
@@ -36,7 +36,7 @@ export default function MainPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: i * 0.1, ease: "easeOut" }}
               whileHover={{ scale: 1.03, boxShadow: "8px 8px 0px #888888" }}
-              className="w-full h-50 bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-3xl border border-gray-300 cursor-pointer"
+              className="w-full h-[33.3%] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-3xl border border-gray-300 cursor-pointer"
             />
           ))}
         </div>
