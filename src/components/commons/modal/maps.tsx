@@ -3,6 +3,8 @@ import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 
 interface IModalMapsProps {
+  name: string;
+  address: string;
   handleCancel: () => void;
   handleConfirm: () => void;
   // selectedMarker: google.maps.LatLngLiteral | null;
@@ -18,8 +20,8 @@ export default function ModalMaps(props: IModalMapsProps) {
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-200 h-100 p-10 bg-[#F9F9F9] rounded-xl shadow-md"
     >
       <form onSubmit={props.handleConfirm} className="flex flex-col h-full">
-        <h4 className="mb-1 text-xl">어쩌고</h4>
-        <p>저쩌고</p>
+        <h4 className="mb-1 text-xl">이름: {props.name}</h4>
+        <p>주소: {props.address}</p>
         <DatePicker01 />
         <Textarea className="h-full bg-white mt-4" placeholder="기록할 내용을 적어보세요." />
         <button type="submit" className="absolute bottom-4 right-4 px-4 py-1 bg-[#DFB489] text-white rounded-md shadow-[2px_2px_0px_#CB9B6A]">
