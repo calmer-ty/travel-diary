@@ -76,7 +76,8 @@ export default function Maps() {
       service.getDetails({ placeId }, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && place) {
           setAddress(place);
-          alert(`이름: ${place.name}\n주소: ${place.formatted_address}`);
+          setShowModal(true);
+          // alert(`이름: ${place.name}\n주소: ${place.formatted_address}`);
         } else {
           console.error("getDetails 실패:", status);
         }
@@ -141,7 +142,7 @@ export default function Maps() {
           />
         </StandaloneSearchBox>
         {/* <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence> */}
-        {showModal && <ModalMaps name="" address="" handleCancel={handleCancel} handleConfirm={handleConfirm} />}
+        {showModal && <ModalMaps name={address?.name ?? "이름 없음"} address={address?.formatted_address ?? "주소 정보 없음"} handleCancel={handleCancel} handleConfirm={handleConfirm} />}
         {/* 모달 간단 구현 */}
       </GoogleMap>
     </LoadScript>
