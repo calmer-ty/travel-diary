@@ -59,77 +59,30 @@ export default function Maps() {
     }
   };
 
-  // 🖱️ [이벤트] 지도 우클릭 시 위치 저장 + 모달 표시
-  // const onMapRightClick = (e: google.maps.MapMouseEvent) => {
-  //   if (e.latLng) {
-  //     setSelectedPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
-  //     setShowModal(true); // 모달 띄우기
-  //   }
-  // };
-
   const handlePOIClick = (e: google.maps.MapMouseEvent) => {
     if (!e.latLng || !mapRef.current) return;
 
-    const service = new window.google.maps.places.PlacesService(mapRef.current);
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
 
-    const request = {
-      location: e.latLng,
-      radius: 20, // 반경 20m
-      rankBy: google.maps.places.RankBy.PROMINENCE,
-    };
+    const placeId = (e as any).placeId as string | undefined;
 
-    service.nearbySearch(request, (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-        const place = results[0];
-        //
+    // 🔍 POI를 클릭한 경우 (placeId 존재)
+    if (placeId) {
+      e.stop(); // infoWindow 기본 동작 막기
 
-        setAddress(place);
-        console.log("클릭한 장소 정보:", place);
-        alert(`장소명: ${place.name}\n주소: ${place.vicinity}`);
-        // 이 정보를 InfoWindow 등에 띄울 수 있음
-      }
-    });
+      const service = new window.google.maps.places.PlacesService(mapRef.current);
+
+      service.getDetails({ placeId }, (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+          setAddress(place);
+          alert(`이름: ${place.name}\n주소: ${place.formatted_address}`);
+        } else {
+          console.error("getDetails 실패:", status);
+        }
+      });
+    }
   };
-
-  // const handlePOIClick = (e: google.maps.MapMouseEvent) => {
-  //   if (!e.latLng || !mapRef.current) return;
-
-  //   const service = new window.google.maps.places.PlacesService(mapRef.current);
-
-  //   // 사용자가 POI를 클릭했다면 placeId가 존재함
-  //   if (e?.placeId) {
-  //     // placeId로 직접 상세 정보 가져오기
-  //     e.stop(); // 지도 기본 InfoWindow 막기
-  //     service.getDetails({ placeId: e.placeId }, (detail, status) => {
-  //       if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
-  //         setAddress(detail);
-  //         console.log("정확한 POI 정보:", detail);
-  //       }
-  //     });
-  //     return;
-  //   }
-
-  //   // 일반 좌표 클릭이라면 주변 장소 검색 (fallback)
-  //   const request = {
-  //     location: e.latLng,
-  //     radius: 20,
-  //     rankBy: google.maps.places.RankBy.PROMINENCE,
-  //   };
-
-  //   service.nearbySearch(request, (results, status) => {
-  //     if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
-  //       const place = results[0];
-  //       service.getDetails({ placeId: place.place_id }, (detail, status) => {
-  //         if (status === google.maps.places.PlacesServiceStatus.OK && detail) {
-  //           setAddress(detail);
-  //           console.log("주변 장소 정보:", detail);
-  //         }
-  //       });
-  //     }
-  //   });
-  // };
-
-  //💡 장소에 마커가 안찍히는 (위치 저장이 되지않는) 오류가 보입니다! - rin
 
   // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
   const handleConfirm = useCallback(() => {
@@ -150,62 +103,6 @@ export default function Maps() {
   const onLoadMap = (map: google.maps.Map) => {
     mapRef.current = map;
   };
-
-  //  데이터 함수 > 아직 작업 전임 임시로 쓰던 코드를 가져옴
-  // 📦 [Firestore] 위치 데이터 등록
-  // const handleFormSubmit = async (data: ITravelLog) => {
-  //   try {
-  //     // 등록 시간 측정
-  //     const now = new Date(); // 현재 시간을 Date 객체로 가져옴
-  //     const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
-
-  //     const docRef = await addDoc(collection(db, "income"), {
-  //       ...data, // IncomeItemData 타입에 있는 모든 데이터
-  //       // userId,
-  //       // itemType,
-  //       // price: Number(data.price) * Number(currency),
-  //       createdAt, // 테이블 생성 시간
-  //     });
-  //     // reset();
-  //     // readData();
-  //     console.log("문서 ID:", docRef.id); // Firestore에서 생성된 고유한 문서 ID
-  //   } catch (error) {
-  //     console.error("문서 추가 실패:", error);
-  //   }
-  // };
-
-  // 📥 [Firestore] 위치 데이터 조회
-  // const [incomeItemArray, setIncomeItemArray] = useState<ITravelLog[]>([]);
-
-  // const readData = async () => {
-  //   const q = query(
-  //     collection(db, "income")
-  //     // where("userId", "==", userId),
-  //     // orderBy("createdAt", "desc") // createdAt 기준 내림차순 정렬
-  //   );
-
-  //   // 위에서 데이터를 정렬하고 조회
-  //   const querySnapshot = await getDocs(q);
-  //   const dataArray = querySnapshot.docs.map((doc) => ({
-  //     id: doc.id, // 문서의 ID
-  //     ...doc.data(), // 문서의 데이터
-  //   }));
-  //   setIncomeItemArray(dataArray as ITravelLog[]);
-  // };
-
-  // 🗑️ [Firestore] 위치 데이터 삭제
-  // const handleFormDelete = async (selectionItem: string[]) => {
-  //   // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-  //   for (const id of selectionItem) {
-  //     try {
-  //       await deleteDoc(doc(db, "income", id));
-  //       console.log(`ID ${id} 삭제 성공`);
-  //       // readData();
-  //     } catch (error) {
-  //       console.error(`ID ${id} 삭제 실패`, error);
-  //     }
-  //   }
-  // };
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={LIBRARIES}>
