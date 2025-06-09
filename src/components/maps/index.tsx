@@ -1,11 +1,9 @@
 import { useCallback, useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
 // import { AnimatePresence } from "framer-motion";
-import ModalMaps from "../commons/modal/maps";
+import ModalMaps from "./modal";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
-// import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
-// import { db } from "@/commons/libraries/firebase/firebaseApp";
 
 const containerStyle = {
   width: "100%",
@@ -39,7 +37,11 @@ export default function Maps() {
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태 함수
 
+  // 모달 입력 폼
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState("");
+  // console.log("open: ", open);
+  console.log("date: ", date);
 
   // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -95,17 +97,15 @@ export default function Maps() {
   const handleConfirm = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
-      console.log("aa");
       if (!address?.formatted_address) return;
 
-      console.log("bb");
       // firebase 등록하기 기능
       try {
         const travelData = collection(getFirestore(firebaseApp), "TravelData ");
         const travelDataResult = await addDoc(travelData, {
           place: address.name,
-          content: content,
-          date: "..",
+          content,
+          date,
           address: address.formatted_address,
         });
 
@@ -121,7 +121,7 @@ export default function Maps() {
       setShowModal(false);
       setSelectedPosition(null);
     },
-    [address, content, selectedPosition]
+    [address, content, date, selectedPosition]
   );
 
   const handleCancel = useCallback(() => {
@@ -175,6 +175,8 @@ export default function Maps() {
           <ModalMaps
             name={address?.name ?? "이름 없음"}
             address={address?.formatted_address ?? "주소 정보 없음"}
+            date={date}
+            setDate={setDate}
             content={content}
             setContent={setContent}
             handleCancel={handleCancel}
