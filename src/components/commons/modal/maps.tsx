@@ -16,8 +16,8 @@ export default function ModalMaps(props: IModalMapsProps) {
       initial={{ y: "100%", opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: "100%", opacity: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-200 h-100 pt-8 pr-8 pb-14 pl-8 bg-[#F9F9F9] rounded-xl shadow-md"
+      transition={{ duration: 0.1, ease: "easeOut" }}
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-80 h-120 pt-8 pr-8 pb-14 pl-8 bg-[#F9F9F9] rounded-xl shadow-md sm:w-140 lg:w-180"
     >
       <form onSubmit={props.handleConfirm} className="flex flex-col h-full">
         <h4 className="mb-1 text-xl">{props.name}</h4>
