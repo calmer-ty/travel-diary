@@ -2,8 +2,14 @@
 
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";
+import { useAuth } from "@/commons/hooks/useAuth";
+
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function Header() {
+  const { user } = useAuth();
+
   // Google 로그인 처리
   const handleGoogleLogin = async (): Promise<void> => {
     try {
@@ -14,23 +20,48 @@ export default function Header() {
     }
   };
 
-  return (
-    <header className="w-full h-[3.125rem] px-[1.25rem] bg-white shadow-[0_3px_3px_rgba(0,0,0,0.2)] fixed top-0 z-10">
-      <div className="size-full flex justify-between items-center">
-        <h1 className="text-[0px] w-30 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat">Travel Diary</h1>
+  // 로그아웃 처리
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await auth.signOut();
+      // setAlertOpen(true);
+      // setRouting("/");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    }
+  };
 
-        {auth.currentUser?.uid ? (
-          <div className="flex items-center gap-2 font-medium">
-            <img className="w-4 h-4" src="/images/icon_people.png" alt="" />
-            <span>{auth.currentUser.displayName}</span>
-          </div>
-        ) : (
-          // <button onClick={handleGoogleLogout} className="font-medium ">로그 아웃</button>
-          <button onClick={handleGoogleLogin} className="font-medium ">
-            로그인
-          </button>
-        )}
-      </div>
+  console.log("user: ", user);
+
+  return (
+    <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
+      <h1 className="text-[0px] w-30 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat">Travel Diary</h1>
+      {user !== null ? (
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <div className="flex items-center gap-2">
+                  <img className="w-4 h-4" src="/images/icon_people.png" alt="" />
+                  <span>{user.displayName}</span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="start">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      ) : (
+        <Button variant="outline" onClick={handleGoogleLogin}>
+          로그인
+        </Button>
+        // <button onClick={handleGoogleLogin}>로그인</button>
+      )}
     </header>
   );
 }
