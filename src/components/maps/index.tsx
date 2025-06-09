@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
 // import { AnimatePresence } from "framer-motion";
 import ModalMaps from "../commons/modal/maps";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 // import { addDoc, collection, deleteDoc, doc, getDocs, query } from "firebase/firestore";
 // import { db } from "@/commons/libraries/firebase/firebaseApp";
 
@@ -37,6 +39,8 @@ export default function Maps() {
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태 함수
 
+  const [content, setContent] = useState("");
+
   // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
@@ -60,12 +64,12 @@ export default function Maps() {
   };
 
   const handlePOIClick = (e: google.maps.MapMouseEvent) => {
+    const placeId = (e as any).placeId as string | undefined;
+
     if (!e.latLng || !mapRef.current) return;
 
-    // const lat = e.latLng.lat();
-    // const lng = e.latLng.lng();
-
-    const placeId = (e as any).placeId as string | undefined;
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
 
     // 🔍 POI를 클릭한 경우 (placeId 존재)
     if (placeId) {
@@ -75,6 +79,8 @@ export default function Maps() {
 
       service.getDetails({ placeId }, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+          setSelectedPosition({ lat, lng });
+
           setAddress(place);
           setShowModal(true);
           // alert(`이름: ${place.name}\n주소: ${place.formatted_address}`);
@@ -86,14 +92,37 @@ export default function Maps() {
   };
 
   // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
-  const handleConfirm = useCallback(() => {
-    if (selectedPosition) {
-      setMarkers((prev) => [...prev, selectedPosition]);
-      setMapCenter(selectedPosition);
-    }
-    setShowModal(false);
-    setSelectedPosition(null);
-  }, [selectedPosition, setMarkers, setMapCenter, setShowModal, setSelectedPosition]);
+  const handleConfirm = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+      console.log("aa");
+      if (!address?.formatted_address) return;
+
+      console.log("bb");
+      // firebase 등록하기 기능
+      try {
+        const travel_place = collection(getFirestore(firebaseApp), "travel_place");
+        const TravelData = await addDoc(travel_place, {
+          place: address.name,
+          content: content,
+          date: "..",
+          address: address.formatted_address,
+        });
+
+        console.log(TravelData);
+      } catch (error) {
+        if (error instanceof Error) alert(error.message);
+      }
+
+      if (selectedPosition) {
+        setMarkers((prev) => [...prev, selectedPosition]);
+        setMapCenter(selectedPosition);
+      }
+      setShowModal(false);
+      setSelectedPosition(null);
+    },
+    [address, content, selectedPosition]
+  );
 
   const handleCancel = useCallback(() => {
     setShowModal(false);
@@ -142,7 +171,16 @@ export default function Maps() {
           />
         </StandaloneSearchBox>
         {/* <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence> */}
-        {showModal && <ModalMaps name={address?.name ?? "이름 없음"} address={address?.formatted_address ?? "주소 정보 없음"} handleCancel={handleCancel} handleConfirm={handleConfirm} />}
+        {showModal && (
+          <ModalMaps
+            name={address?.name ?? "이름 없음"}
+            address={address?.formatted_address ?? "주소 정보 없음"}
+            content={content}
+            setContent={setContent}
+            handleCancel={handleCancel}
+            handleConfirm={handleConfirm}
+          />
+        )}
         {/* 모달 간단 구현 */}
       </GoogleMap>
     </LoadScript>

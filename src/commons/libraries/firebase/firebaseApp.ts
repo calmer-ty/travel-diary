@@ -15,11 +15,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
-export const db = getFirestore(app);
+export const db = getFirestore(firebaseApp);
 
 // Firebase 인증 인스턴스 가져오기
-const auth = getAuth(app);
+const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 export { auth, googleProvider };
