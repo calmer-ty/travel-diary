@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 interface IModalMapsProps {
   name: string;
   address: string;
+  date: Date | undefined;
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   content: string;
   setContent: (value: string) => void;
   handleCancel: () => void;
@@ -24,7 +26,7 @@ export default function ModalMaps(props: IModalMapsProps) {
       <form onSubmit={props.handleConfirm} className="flex flex-col h-full">
         <h4 className="mb-1 text-xl">{props.name}</h4>
         <p className="mb-2 text-sm">{props.address}</p>
-        <DatePicker01 className="mb-4" />
+        <DatePicker01 date={props.date} setDate={props.setDate} className="mb-4" />
         <Textarea onChange={(e) => props.setContent(e.target.value)} className="h-full bg-white" placeholder="기록할 내용을 적어보세요." content={props.content} />
         <button type="submit" className="absolute bottom-4 right-4 px-4 py-1 bg-[#DFB489] text-white rounded-md shadow-[2px_2px_0px_#CB9B6A]">
           저장
