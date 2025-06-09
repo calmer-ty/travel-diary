@@ -1,1 +1,2 @@
 shadcn 설치시 정의된 컴포넌트들
+npx shadcn-ui@latest add ___
