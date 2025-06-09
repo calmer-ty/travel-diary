@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from "react";
-import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
+import { Marker, InfoWindow, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 // import { AnimatePresence } from "framer-motion";
 import ModalMaps from "./modal";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
 
@@ -10,12 +10,10 @@ const containerStyle = {
   width: "100%",
   height: "100%",
 };
-
 const initialCenter = {
   lat: 40.749933,
   lng: -73.98633,
 };
-
 const mapOptions = {
   mapTypeControl: false,
   styles: [
@@ -26,7 +24,6 @@ const mapOptions = {
     // },
   ],
 };
-
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
@@ -109,8 +106,8 @@ export default function Maps() {
 
       // firebase 등록하기 기능
       try {
-        const travelData = collection(getFirestore(firebaseApp), "TravelData ");
-        const travelDataResult = await addDoc(travelData, {
+        const travelData = collection(getFirestore(firebaseApp), "travelData");
+        const docRef = await addDoc(travelData, {
           uid: user?.uid,
           place: address.name,
           content,
@@ -118,7 +115,10 @@ export default function Maps() {
           address: address.formatted_address,
         });
 
-        console.log(travelDataResult);
+        // 문서 ID를 포함한 데이터로 업데이트
+        await updateDoc(docRef, {
+          _id: docRef.id,
+        });
       } catch (error) {
         if (error instanceof Error) alert(error.message);
       }
@@ -138,29 +138,35 @@ export default function Maps() {
     setSelectedPosition(null);
   }, [setShowModal, setSelectedPosition]);
 
+  // Google API Loader
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+    libraries: LIBRARIES,
+  });
+
   // 지도 로드 시 참조 저장
   const onLoadMap = (map: google.maps.Map) => {
     mapRef.current = map;
   };
 
+  if (!isLoaded) return <div>Loading Map...</div>;
+
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={LIBRARIES}>
-      <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={handlePOIClick}>
-        {/* 생성된 마커 */}
-        {markers.map((marker, index) => (
-          <Marker
-            key={index}
-            position={marker}
-            // onClick={() => setSelectedMarker(marker)}
-            icon={{
-              url: "/images/icon_marker.png",
-              scaledSize: new window.google.maps.Size(40, 64),
-              anchor: new window.google.maps.Point(20, 40),
-            }}
-          />
-        ))}
-        {/* 마커 정보창  */}
-        {/* {selectedMarker && (
+    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={handlePOIClick}>
+      {/* 생성된 마커 */}
+      {markers.map((marker, index) => (
+        <Marker
+          key={index}
+          position={marker}
+          icon={{
+            url: "/images/icon_marker.png",
+            scaledSize: new window.google.maps.Size(40, 64),
+            anchor: new window.google.maps.Point(20, 40),
+          }}
+        />
+      ))}
+      {/* 마커 정보창  */}
+      {/* {selectedMarker && (
           <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)}>
             <div>
               <h3>여기에 정보 넣기</h3>
@@ -168,32 +174,31 @@ export default function Maps() {
             </div>
           </InfoWindow>
         )} */}
-        {/* 검색창 */}
-        <StandaloneSearchBox
-          onLoad={(ref) => (searchBoxRef.current = ref)} // 검색박스 레퍼런스 저장
-          onPlacesChanged={handlePlacesChanged} // 검색 후 처리할 함수
-        >
-          <input
-            type="text"
-            placeholder="검색"
-            className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
-          />
-        </StandaloneSearchBox>
-        {/* <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence> */}
-        {showModal && (
-          <ModalMaps
-            name={address?.name ?? "이름 없음"}
-            address={address?.formatted_address ?? "주소 정보 없음"}
-            date={date}
-            setDate={setDate}
-            content={content}
-            setContent={setContent}
-            handleCancel={handleCancel}
-            handleConfirm={handleConfirm}
-          />
-        )}
-        {/* 모달 간단 구현 */}
-      </GoogleMap>
-    </LoadScript>
+      {/* 검색창 */}
+      <StandaloneSearchBox
+        onLoad={(ref) => (searchBoxRef.current = ref)} // 검색박스 레퍼런스 저장
+        onPlacesChanged={handlePlacesChanged} // 검색 후 처리할 함수
+      >
+        <input
+          type="text"
+          placeholder="검색"
+          className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
+        />
+      </StandaloneSearchBox>
+      {/* <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence> */}
+      {showModal && (
+        <ModalMaps
+          name={address?.name ?? "이름 없음"}
+          address={address?.formatted_address ?? "주소 정보 없음"}
+          date={date}
+          setDate={setDate}
+          content={content}
+          setContent={setContent}
+          handleCancel={handleCancel}
+          handleConfirm={handleConfirm}
+        />
+      )}
+      {/* 모달 간단 구현 */}
+    </GoogleMap>
   );
 }
