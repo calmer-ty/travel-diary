@@ -7,12 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-export function DatePicker01() {
+interface IDatePicker01Props {
+  className: string;
+}
+export function DatePicker01(props: IDatePicker01Props) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className={`flex flex-col gap-3 ${props.className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" id="date" className="!flex">
