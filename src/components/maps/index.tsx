@@ -101,15 +101,15 @@ export default function Maps() {
       console.log("bb");
       // firebase 등록하기 기능
       try {
-        const TravelData = collection(getFirestore(firebaseApp), "TravelData ");
-        const TravelDataResult = await addDoc(TravelData, {
+        const travelData = collection(getFirestore(firebaseApp), "TravelData ");
+        const travelDataResult = await addDoc(travelData, {
           place: address.name,
           content: content,
           date: "..",
           address: address.formatted_address,
         });
 
-        console.log(TravelDataResult);
+        console.log(travelDataResult);
       } catch (error) {
         if (error instanceof Error) alert(error.message);
       }
