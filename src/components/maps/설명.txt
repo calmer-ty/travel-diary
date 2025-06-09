@@ -58,3 +58,12 @@
   // };
 
 
+{/* 마커 정보창  */}
+        {/* {selectedMarker && (
+          <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)}>
+            <div>
+              <h3>여기에 정보 넣기</h3>
+              <p>위치 설명 또는 상세 주소</p>
+            </div>
+          </InfoWindow>
+        )} */}

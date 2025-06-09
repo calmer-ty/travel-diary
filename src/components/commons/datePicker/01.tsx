@@ -25,7 +25,7 @@ export function DatePicker01(props: IDatePicker01Props) {
             <span>{props.date ? props.date.toLocaleDateString() : "기록할 날짜를 선택하세요."}</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+        <PopoverContent className="w-auto overflow-hidden p-0 bg-white" align="start">
           <Calendar
             mode="single"
             selected={props.date}

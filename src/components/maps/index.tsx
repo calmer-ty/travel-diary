@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "@react-google-maps/api";
 // import { AnimatePresence } from "framer-motion";
 import ModalMaps from "./modal";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
 
@@ -27,11 +27,19 @@ const mapOptions = {
   ],
 };
 
+interface TravelPlace {
+  id: string;
+  place: string;
+  address: string;
+  content: string;
+  date: string;
+}
+
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
   const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
-  // const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
+  const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
   const [address, setAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
 
@@ -143,6 +151,19 @@ export default function Maps() {
     mapRef.current = map;
   };
 
+  // 마커 클릭
+  const onClickMarker = async () => {
+    const db = getFirestore(firebaseApp);
+    const querySnapshot = await getDocs(collection(db, "travelData"));
+
+    const travelItemData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as TravelPlace[];
+
+    console.log("travelItemData", travelItemData);
+  };
+
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""} libraries={LIBRARIES}>
       <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={handlePOIClick}>
@@ -151,7 +172,8 @@ export default function Maps() {
           <Marker
             key={index}
             position={marker}
-            // onClick={() => setSelectedMarker(marker)}
+            onClick={onClickMarker}
+            // onClick={() => setSelectedMarker(place)}
             icon={{
               url: "/images/icon_marker.png",
               scaledSize: new window.google.maps.Size(40, 64),
@@ -159,15 +181,7 @@ export default function Maps() {
             }}
           />
         ))}
-        {/* 마커 정보창  */}
-        {/* {selectedMarker && (
-          <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)}>
-            <div>
-              <h3>여기에 정보 넣기</h3>
-              <p>위치 설명 또는 상세 주소</p>
-            </div>
-          </InfoWindow>
-        )} */}
+
         {/* 검색창 */}
         <StandaloneSearchBox
           onLoad={(ref) => (searchBoxRef.current = ref)} // 검색박스 레퍼런스 저장
