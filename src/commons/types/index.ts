@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export interface IExchangeRate {
   base: string;
   data: {
@@ -12,11 +10,8 @@ export interface IExchangeRate {
   };
   time_last_update_utc: string;
 }
-export interface IIncomeItemData {
-  id: string;
-  itemType: string;
-  brandName: string;
-  itemName: string;
-  price: string;
-  createdAt: Timestamp;
+export interface IModalMaps {
+  _id: string;
+  date: Date;
+  content: string;
 }

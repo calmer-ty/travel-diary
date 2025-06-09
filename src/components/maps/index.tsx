@@ -1,10 +1,12 @@
 import { useCallback, useRef, useState } from "react";
+
 import { Marker, InfoWindow, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
-// import { AnimatePresence } from "framer-motion";
-import ModalMaps from "./modal";
 import { addDoc, collection, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
+
+import ModalMaps from "./modal";
+import { IModalMaps } from "@/commons/types";
 
 const containerStyle = {
   width: "100%",
@@ -38,7 +40,7 @@ export default function Maps() {
   // 모달 입력 폼
   const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [content, setContent] = useState("");
+  // const [content, setContent] = useState("");
   console.log("user?.uid ", user?.uid);
 
   // 🔧 Ref 객체
@@ -93,8 +95,9 @@ export default function Maps() {
 
   // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
   const handleConfirm = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+    // async (e: React.FormEvent<HTMLFormElement>) => {
+    async (data: IModalMaps) => {
+      // e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
       // 🔒 uid 없을 경우 등록 막기
       if (!user?.uid) {
@@ -108,10 +111,10 @@ export default function Maps() {
       try {
         const travelData = collection(getFirestore(firebaseApp), "travelData");
         const docRef = await addDoc(travelData, {
+          ...data,
+          date,
           uid: user?.uid,
           place: address.name,
-          content,
-          date,
           address: address.formatted_address,
         });
 
@@ -130,7 +133,7 @@ export default function Maps() {
       setShowModal(false);
       setSelectedPosition(null);
     },
-    [user?.uid, address, content, date, selectedPosition]
+    [user?.uid, address, selectedPosition]
   );
 
   const handleCancel = useCallback(() => {
@@ -192,8 +195,8 @@ export default function Maps() {
           address={address?.formatted_address ?? "주소 정보 없음"}
           date={date}
           setDate={setDate}
-          content={content}
-          setContent={setContent}
+          // content={content}
+          // setContent={setContent}
           handleCancel={handleCancel}
           handleConfirm={handleConfirm}
         />
