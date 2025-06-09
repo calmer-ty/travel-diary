@@ -4,6 +4,7 @@ import { LoadScript, Marker, InfoWindow, GoogleMap, StandaloneSearchBox } from "
 import ModalMaps from "./modal";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
+import { useAuth } from "@/commons/hooks/useAuth";
 
 const containerStyle = {
   width: "100%",
@@ -38,10 +39,10 @@ export default function Maps() {
   const [showModal, setShowModal] = useState(false); // 모달 상태 함수
 
   // 모달 입력 폼
+  const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState("");
-  // console.log("open: ", open);
-  console.log("date: ", date);
+  console.log("user?.uid ", user?.uid);
 
   // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -97,12 +98,20 @@ export default function Maps() {
   const handleConfirm = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+
+      // 🔒 uid 없을 경우 등록 막기
+      if (!user?.uid) {
+        alert("로그인이 필요합니다. 먼저 로그인해주세요.");
+        return;
+      }
+
       if (!address?.formatted_address) return;
 
       // firebase 등록하기 기능
       try {
         const travelData = collection(getFirestore(firebaseApp), "TravelData ");
         const travelDataResult = await addDoc(travelData, {
+          uid: user?.uid,
           place: address.name,
           content,
           date,
@@ -121,7 +130,7 @@ export default function Maps() {
       setShowModal(false);
       setSelectedPosition(null);
     },
-    [address, content, date, selectedPosition]
+    [user?.uid, address, content, date, selectedPosition]
   );
 
   const handleCancel = useCallback(() => {
