@@ -6,6 +6,7 @@ import { useAuth } from "@/commons/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 export default function Header() {
   const { user } = useAuth();
@@ -35,7 +36,11 @@ export default function Header() {
 
   return (
     <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
-      <h1 className="text-[0px] w-30 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat">Travel Diary</h1>
+      <h1 className="w-30 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat text-[0px]">
+        <Link href="/" className="block size-full">
+          Travel Diary
+        </Link>
+      </h1>
       {user !== null ? (
         <>
           <DropdownMenu>
