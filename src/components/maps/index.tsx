@@ -1,12 +1,11 @@
 import { useCallback, useRef, useState } from "react";
-
-import { Marker, InfoWindow, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
-import { addDoc, collection, getFirestore, updateDoc } from "firebase/firestore";
+import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
+import { addDoc, collection, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
 
 import ModalMaps from "./modal";
-import { IModalMaps } from "@/commons/types";
+import { ILogPlace, IModalMaps } from "@/commons/types";
 
 const containerStyle = {
   width: "100%",
@@ -26,6 +25,7 @@ const mapOptions = {
     // },
   ],
 };
+
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
@@ -133,7 +133,7 @@ export default function Maps() {
       setShowModal(false);
       setSelectedPosition(null);
     },
-    [user?.uid, address, selectedPosition]
+    [user?.uid, address, date, selectedPosition]
   );
 
   const handleCancel = useCallback(() => {
@@ -152,6 +152,19 @@ export default function Maps() {
     mapRef.current = map;
   };
 
+  // 마커 클릭
+  const onClickMarker = async () => {
+    const db = getFirestore(firebaseApp);
+    const querySnapshot = await getDocs(collection(db, "travelData"));
+
+    const travelItemData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as ILogPlace[];
+
+    console.log("travelItemData", travelItemData);
+  };
+
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
@@ -161,6 +174,7 @@ export default function Maps() {
         <Marker
           key={index}
           position={marker}
+          onClick={onClickMarker}
           icon={{
             url: "/images/icon_marker.png",
             scaledSize: new window.google.maps.Size(40, 64),
@@ -195,8 +209,6 @@ export default function Maps() {
           address={address?.formatted_address ?? "주소 정보 없음"}
           date={date}
           setDate={setDate}
-          // content={content}
-          // setContent={setContent}
           handleCancel={handleCancel}
           handleConfirm={handleConfirm}
         />

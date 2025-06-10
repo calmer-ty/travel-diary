@@ -10,8 +10,6 @@ interface IModalMapsProps {
   address: string;
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  content: string;
-  setContent: (value: string) => void;
   handleCancel: () => void;
   // handleConfirm: (e: React.FormEvent<HTMLFormElement>) => void;
   handleConfirm: (data: IModalMaps) => Promise<void>;
@@ -34,7 +32,7 @@ export default function ModalMaps(props: IModalMapsProps) {
         <p className="mb-2 text-sm">{props.address}</p>
         <DatePicker01 date={props.date} setDate={props.setDate} className="mb-4" />
         {/* onChange={(e) => props.setContent(e.target.value)} */}
-        <Textarea {...register("content")} className="h-full bg-white" placeholder="기록할 내용을 적어보세요." content={props.content} />
+        <Textarea {...register("content")} className="h-full bg-white" placeholder="기록할 내용을 적어보세요." />
         <button type="submit" className="absolute bottom-4 right-4 px-4 py-1 bg-[#DFB489] text-white rounded-md shadow-[2px_2px_0px_#CB9B6A]">
           저장
         </button>
