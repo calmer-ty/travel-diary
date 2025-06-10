@@ -40,8 +40,6 @@ export default function Maps() {
   // 모달 입력 폼
   const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(undefined);
-  // const [content, setContent] = useState("");
-  console.log("user?.uid ", user?.uid);
 
   // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -182,15 +180,7 @@ export default function Maps() {
           }}
         />
       ))}
-      {/* 마커 정보창  */}
-      {/* {selectedMarker && (
-          <InfoWindow position={selectedMarker} onCloseClick={() => setSelectedMarker(null)}>
-            <div>
-              <h3>여기에 정보 넣기</h3>
-              <p>위치 설명 또는 상세 주소</p>
-            </div>
-          </InfoWindow>
-        )} */}
+
       {/* 검색창 */}
       <StandaloneSearchBox
         onLoad={(ref) => (searchBoxRef.current = ref)} // 검색박스 레퍼런스 저장
@@ -202,7 +192,8 @@ export default function Maps() {
           className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
         />
       </StandaloneSearchBox>
-      {/* <AnimatePresence>{showModal && <Modal01 key="slide-modal" handleCancel={handleCancel} handleConfirm={handleConfirm} />}</AnimatePresence> */}
+
+      {/* 모달 */}
       {showModal && (
         <ModalMaps
           name={address?.name ?? "이름 없음"}
