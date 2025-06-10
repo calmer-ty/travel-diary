@@ -39,6 +39,11 @@ export default function Maps() {
   const mapRef = useRef<google.maps.Map | null>(null);
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
+  const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null); // 지도의 현재 보이는 영역 정보
+  // 북동쪽(NorthEast) 좌표 (오른쪽 위 끝점)
+  // 남서쪽(SouthWest) 좌표 (왼쪽 아래 끝점)
+  // 을 포함해서 사각형 범위를 나타내는 객체
+
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태
 
@@ -48,6 +53,13 @@ export default function Maps() {
   // 모달 입력 폼
   const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(undefined);
+
+  // 지도 bounds 변경 시 호출
+  const handleBoundsChanged = () => {
+    if (mapRef.current) {
+      setBounds(mapRef.current.getBounds() ?? null);
+    }
+  };
 
   // 🔍 [검색 박스] 장소 검색 후 위치 이동 // 기존에 구글에서 제공한 코드
   const handlePlacesChanged = () => {
@@ -223,20 +235,26 @@ export default function Maps() {
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={onClickPOI}>
+    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={onClickPOI} onBoundsChanged={handleBoundsChanged}>
       {/* 생성된 마커 */}
-      {markers.map((marker) => (
-        <Marker
-          key={marker._id}
-          position={marker.latLng}
-          onClick={onClickMarker}
-          icon={{
-            url: "/images/icon_marker.png",
-            scaledSize: new window.google.maps.Size(40, 64),
-            anchor: new window.google.maps.Point(20, 74),
-          }}
-        />
-      ))}
+      {markers
+        .filter((marker) => {
+          if (!bounds) return true; // bounds 없으면 모두 렌더링 (초기값)
+          const position = new window.google.maps.LatLng(marker.latLng.lat, marker.latLng.lng);
+          return bounds.contains(position); // ✅ bounds 안에 있는 마커만!
+        })
+        .map((marker) => (
+          <Marker
+            key={marker._id}
+            position={marker.latLng}
+            onClick={onClickMarker}
+            icon={{
+              url: "/images/icon_marker.png",
+              scaledSize: new window.google.maps.Size(40, 64),
+              anchor: new window.google.maps.Point(20, 74),
+            }}
+          />
+        ))}
 
       {/* 검색창 */}
       <StandaloneSearchBox
