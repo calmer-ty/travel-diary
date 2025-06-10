@@ -3,21 +3,19 @@ import { motion } from "framer-motion";
 import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 
-import { IModalMaps } from "@/commons/types";
+import { ILogPlace } from "@/commons/types";
 
 interface IModalMapsProps {
   name: string;
   address: string;
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  handleConfirm: (data: ILogPlace) => Promise<void>;
   handleCancel: () => void;
-  // handleConfirm: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleConfirm: (data: IModalMaps) => Promise<void>;
-  // selectedMarker: google.maps.LatLngLiteral | null;
 }
 
 export default function ModalMaps(props: IModalMapsProps) {
-  const { register, handleSubmit } = useForm<IModalMaps>();
+  const { register, handleSubmit } = useForm<ILogPlace>();
 
   return (
     <motion.div
