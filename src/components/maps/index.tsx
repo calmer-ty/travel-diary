@@ -5,7 +5,7 @@ import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
 
 import ModalMaps from "./modal";
-import { ILogPlace, IModalMaps } from "@/commons/types";
+import { ILogPlace } from "@/commons/types";
 
 const containerStyle = {
   width: "100%",
@@ -29,7 +29,8 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
-  const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
+  // const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
+  const [markers, setMarkers] = useState<ILogPlace[]>([]); // 마커 ( 생성했던 마커 )
   // const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
   const [address, setAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
@@ -65,7 +66,8 @@ export default function Maps() {
     }
   };
 
-  const handlePOIClick = (e: google.maps.MapMouseEvent) => {
+  // POI 클릭 시
+  const onClickPOI = (e: google.maps.MapMouseEvent) => {
     const placeId = (e as any).placeId as string | undefined;
 
     if (!e.latLng || !mapRef.current) return;
@@ -93,10 +95,39 @@ export default function Maps() {
     }
   };
 
-  // ✅ [확인] 위치 값을 저장하고, 데이터도 저장하는 기능 ( 아직 위치값만 저장 중 )
+  // 마커 보이기
+  const fetchStoredMarkers = useCallback(async () => {
+    const db = getFirestore(firebaseApp);
+    const querySnapshot = await getDocs(collection(db, "travelData"));
+
+    const storedMarkers = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    })) as ILogPlace[];
+
+    const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
+
+    setMarkers(userMarkers);
+  }, [user?.uid]);
+  useEffect(() => {
+    fetchStoredMarkers();
+  }, [fetchStoredMarkers]);
+
+  // 마커 클릭
+  const onClickMarker = async () => {
+    setShowModal(true);
+    // const db = getFirestore(firebaseApp);
+    // const querySnapshot = await getDocs(collection(db, "travelData"));
+
+    // const travelItemData = querySnapshot.docs.map((doc) => ({
+    //   _id: doc.id,
+    //   ...doc.data(),
+    // })) as ILogPlace[];
+  };
+
+  // ✅ [확인] firebase 등록하기 기능
   const handleConfirm = useCallback(
     // async (e: React.FormEvent<HTMLFormElement>) => {
-    async (data: IModalMaps) => {
+    async (data: ILogPlace) => {
       // e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
       // 🔒 uid 없을 경우 등록 막기
@@ -115,35 +146,49 @@ export default function Maps() {
         return;
       }
 
-      // firebase 등록하기 기능
+      if (!selectedPosition) {
+        alert("마커를 선택해주세요!");
+        return;
+      }
+
+      // 저장할 마커 정보 준비 (아직 _id 없음)
+      const markerData: ILogPlace = {
+        ...data,
+        name: address.name ?? "",
+        address: address.formatted_address,
+        latLng: selectedPosition,
+        uid: user.uid,
+        date,
+      };
+
       try {
+        // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
         const travelData = collection(getFirestore(firebaseApp), "travelData");
         const docRef = await addDoc(travelData, {
-          ...data,
-          date,
-          uid: user?.uid,
-          name: address.name,
-          address: address.formatted_address,
-          latLng: selectedPosition,
+          ...markerData,
         });
 
         // 문서 ID를 포함한 데이터로 업데이트
         await updateDoc(docRef, {
           _id: docRef.id,
         });
+
+        // 3. docRef.id를 marker 객체에 넣어서 새로 구성
+        const newMarker = {
+          ...markerData,
+          _id: docRef.id,
+        };
+        setMarkers((prev) => [...prev, newMarker]);
+
+        setMapCenter(selectedPosition);
+        setShowModal(false);
+        setSelectedPosition(null);
       } catch (error) {
         if (error instanceof Error) {
-          console.log(error.message);
+          console.error(error.message);
           return;
         }
       }
-
-      if (selectedPosition) {
-        setMarkers((prev) => [...prev, selectedPosition]);
-        setMapCenter(selectedPosition);
-      }
-      setShowModal(false);
-      setSelectedPosition(null);
     },
     [user?.uid, address, date, selectedPosition]
   );
@@ -164,46 +209,15 @@ export default function Maps() {
     mapRef.current = map;
   };
 
-  // 마커 보이기
-  const fetchStoredMarkers = useCallback(async () => {
-    const db = getFirestore(firebaseApp);
-    const querySnapshot = await getDocs(collection(db, "travelData"));
-
-    const storedMarkers = querySnapshot.docs.map((doc) => ({
-      _id: doc.id,
-      ...doc.data(),
-    })) as ILogPlace[];
-
-    const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
-
-    setMarkers(userMarkers.map((item) => item.latLng));
-  }, [user?.uid]);
-  useEffect(() => {
-    fetchStoredMarkers();
-  }, [fetchStoredMarkers]);
-
-  // 마커 클릭
-  const onClickMarker = async () => {
-    const db = getFirestore(firebaseApp);
-    const querySnapshot = await getDocs(collection(db, "travelData"));
-
-    const travelItemData = querySnapshot.docs.map((doc) => ({
-      _id: doc.id,
-      ...doc.data(),
-    })) as ILogPlace[];
-
-    console.log("travelItemData", travelItemData);
-  };
-
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={handlePOIClick}>
+    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={onClickPOI}>
       {/* 생성된 마커 */}
       {markers.map((marker, index) => (
         <Marker
           key={index}
-          position={marker}
+          position={marker.latLng}
           onClick={onClickMarker}
           icon={{
             url: "/images/icon_marker.png",
