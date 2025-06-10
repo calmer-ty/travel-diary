@@ -105,6 +105,11 @@ export default function Maps() {
 
       if (!address?.formatted_address) return;
 
+      if (!date) {
+        alert("날짜를 선택해주세요!");
+        return;
+      }
+
       // firebase 등록하기 기능
       try {
         const travelData = collection(getFirestore(firebaseApp), "travelData");
@@ -121,7 +126,10 @@ export default function Maps() {
           _id: docRef.id,
         });
       } catch (error) {
-        if (error instanceof Error) alert(error.message);
+        if (error instanceof Error) {
+          console.log(error.message);
+          return;
+        }
       }
 
       if (selectedPosition) {
@@ -176,7 +184,7 @@ export default function Maps() {
           icon={{
             url: "/images/icon_marker.png",
             scaledSize: new window.google.maps.Size(40, 64),
-            anchor: new window.google.maps.Point(20, 40),
+            anchor: new window.google.maps.Point(20, 74),
           }}
         />
       ))}
