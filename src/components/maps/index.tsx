@@ -31,11 +31,13 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
-  // const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]); // 마커 ( 생성했던 마커 )
-  const [markers, setMarkers] = useState<ILogPlace[]>([]); // 마커 ( 생성했던 마커 )
-  // const [selectedMarker, setSelectedMarker] = useState<google.maps.LatLngLiteral | null>(null); // 선택된 마커
+  const [markers, setMarkers] = useState<ILogPlace[]>([]); // 마커
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
   const [address, setAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
+
+  // 🔧 Ref 객체
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태
@@ -46,12 +48,6 @@ export default function Maps() {
   // 모달 입력 폼
   const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(undefined);
-
-  // 🔧 Ref 객체
-  const mapRef = useRef<google.maps.Map | null>(null);
-  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
-
-  console.log("markers: ", markers);
 
   // 🔍 [검색 박스] 장소 검색 후 위치 이동 // 기존에 구글에서 제공한 코드
   const handlePlacesChanged = () => {
@@ -194,6 +190,7 @@ export default function Maps() {
         };
         setMarkers((prev) => [...prev, newMarker]);
 
+        // 맵 센터, 모달끄기, 포지션 초기화
         setMapCenter(selectedPosition);
         setShowModal(false);
         setSelectedPosition(null);
@@ -228,9 +225,9 @@ export default function Maps() {
   return (
     <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={onClickPOI}>
       {/* 생성된 마커 */}
-      {markers.map((marker, index) => (
+      {markers.map((marker) => (
         <Marker
-          key={index}
+          key={marker._id}
           position={marker.latLng}
           onClick={onClickMarker}
           icon={{
