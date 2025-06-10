@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 import { addDoc, collection, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
@@ -44,6 +44,8 @@ export default function Maps() {
   // 🔧 Ref 객체
   const mapRef = useRef<google.maps.Map | null>(null);
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
+
+  console.log("markers: ", markers);
 
   // 🔍 [검색 박스] 장소 검색 후 위치 이동 // 기존에 구글에서 제공한 코드
   const handlePlacesChanged = () => {
@@ -162,13 +164,31 @@ export default function Maps() {
     mapRef.current = map;
   };
 
+  // 마커 보이기
+  const fetchStoredMarkers = useCallback(async () => {
+    const db = getFirestore(firebaseApp);
+    const querySnapshot = await getDocs(collection(db, "travelData"));
+
+    const storedMarkers = querySnapshot.docs.map((doc) => ({
+      _id: doc.id,
+      ...doc.data(),
+    })) as ILogPlace[];
+
+    const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
+
+    setMarkers(userMarkers.map((item) => item.latLng));
+  }, [user?.uid]);
+  useEffect(() => {
+    fetchStoredMarkers();
+  }, [fetchStoredMarkers]);
+
   // 마커 클릭
   const onClickMarker = async () => {
     const db = getFirestore(firebaseApp);
     const querySnapshot = await getDocs(collection(db, "travelData"));
 
     const travelItemData = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
+      _id: doc.id,
       ...doc.data(),
     })) as ILogPlace[];
 
