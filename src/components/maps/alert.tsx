@@ -1,0 +1,29 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2Icon } from "lucide-react";
+import { motion } from "framer-motion";
+
+interface IAlertProps {
+  alertValue: string;
+}
+
+export default function AlertMaps(props: IAlertProps) {
+  return (
+    <motion.div
+      initial={{ x: 0, opacity: 0 }}
+      animate={{
+        x: [0, -20, 20, -20, 20, 0],
+        scale: [1, 0.98, 1.02, 0.98, 1.02, 1],
+        opacity: 1,
+      }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-80 "
+    >
+      <Alert>
+        <CheckCircle2Icon />
+        <AlertTitle>{props.alertValue}</AlertTitle>
+        {/* <AlertDescription></AlertDescription> */}
+      </Alert>
+    </motion.div>
+  );
+}
