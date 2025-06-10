@@ -99,11 +99,14 @@ export default function Maps() {
 
       // 🔒 uid 없을 경우 등록 막기
       if (!user?.uid) {
-        alert("로그인이 필요합니다. 먼저 로그인해주세요.");
+        alert("로그인이 필요합니다. 먼저 로그인해주세요!");
         return;
       }
 
-      if (!address?.formatted_address) return;
+      if (!address?.formatted_address) {
+        alert("주소가 없습니다!");
+        return;
+      }
 
       if (!date) {
         alert("날짜를 선택해주세요!");
@@ -117,8 +120,9 @@ export default function Maps() {
           ...data,
           date,
           uid: user?.uid,
-          place: address.name,
+          name: address.name,
           address: address.formatted_address,
+          latLng: selectedPosition,
         });
 
         // 문서 ID를 포함한 데이터로 업데이트
