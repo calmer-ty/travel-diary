@@ -52,12 +52,11 @@ export default function Maps() {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter);
 
-  // 📅 모달/날짜 관련
+  // 🖊️ 폼 관련
+  const { user } = useAuth();
   const [showModal, setShowModal] = useState(false); // 모달 상태
   const [date, setDate] = useState<Date | undefined>(undefined);
-
-  // 👤 사용자
-  const { user } = useAuth();
+  const [content, setContent] = useState<string>("");
 
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
@@ -140,13 +139,14 @@ export default function Maps() {
     setIsEdit(true);
     setMarkerData(marker);
     setDate(marker.date); // 첫 마커 클릭 시 마커 데이터로 렌더링
+    setContent(marker.content);
   };
 
   // ✅ [확인] firebase 등록하기 기능
   const handleConfirm = useCallback(
-    // async (e: React.FormEvent<HTMLFormElement>) => {
-    async (data: ILogPlace) => {
-      // e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      // async (data: ILogPlace) => {
+      e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
       // 🔒 uid 없을 경우 등록 막기
       if (!user?.uid) {
@@ -171,12 +171,14 @@ export default function Maps() {
 
       // 저장할 마커 정보 준비 (아직 _id 없음)
       const markerData: ILogPlace = {
-        ...data,
+        // ...data,
+        _id: "",
         name: mapsAddress.name ?? "",
         address: mapsAddress.formatted_address,
         latLng: selectedPosition,
         uid: user.uid,
         date,
+        content,
       };
 
       try {
@@ -209,7 +211,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, selectedPosition, triggerAlert]
+    [user?.uid, mapsAddress, date, content, selectedPosition, triggerAlert]
   );
 
   const handleCancel = useCallback(() => {
@@ -267,17 +269,16 @@ export default function Maps() {
       {/* 모달 */}
       {showModal && (
         <ModalMaps
-          isEdit={isEdit}
-          markerData={markerData}
           name={isEdit ? markerData?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
           address={isEdit ? markerData?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
           date={date}
           setDate={setDate}
-          handleCancel={handleCancel}
+          content={content}
+          setContent={setContent}
           handleConfirm={handleConfirm}
+          handleCancel={handleCancel}
         />
       )}
-      {/* 모달 간단 구현 */}
 
       {/* 알럿 창 */}
       {showAlert && <AlertMaps alertValue={alertValue} />}
