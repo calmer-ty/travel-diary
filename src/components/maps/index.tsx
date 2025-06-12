@@ -10,8 +10,6 @@ import { ILogPlace } from "@/commons/types";
 import AlertMaps from "./alert";
 import { useAlert } from "@/commons/hooks/useAlert";
 
-const { showAlert, alertValue, triggerAlert } = useAlert();
-
 const containerStyle = {
   width: "100%",
   height: "100%",
@@ -34,25 +32,31 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
-  const [markers, setMarkers] = useState<ILogPlace[]>([]); // 마커
+  // 🗺️ 지도 관련 상태
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
   const [address, setAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
-
-  // 🔧 Ref 객체
-  const mapRef = useRef<google.maps.Map | null>(null);
-  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
-
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null); // 지도의 현재 보이는 영역 정보
   // 북동쪽(NorthEast) 좌표 (오른쪽 위 끝점)
   // 남서쪽(SouthWest) 좌표 (왼쪽 아래 끝점)
   // 을 포함해서 사각형 범위를 나타내는 객체
+  const mapRef = useRef<google.maps.Map | null>(null);
 
-  const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
+  // 🔍 검색 관련
+  const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
+
+  // 📌 마커 관련
+  const [markers, setMarkers] = useState<ILogPlace[]>([]);
+  const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter);
+
+  // 📅 모달/날짜 관련
   const [showModal, setShowModal] = useState(false); // 모달 상태
-
-  // 모달 입력 폼
-  const { user } = useAuth();
   const [date, setDate] = useState<Date | undefined>(undefined);
+
+  // 👤 사용자
+  const { user } = useAuth();
+
+  // ⚠️ 알림창 등
+  const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -160,7 +164,7 @@ export default function Maps() {
       }
 
       if (!selectedPosition) {
-        alert("마커를 선택해주세요!");
+        triggerAlert("마커를 선택해주세요!");
         return;
       }
 
@@ -204,7 +208,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, address, date, selectedPosition]
+    [user?.uid, address, date, selectedPosition, triggerAlert]
   );
 
   const handleCancel = useCallback(() => {
