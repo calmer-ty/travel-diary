@@ -8,6 +8,9 @@ import ModalMaps from "./modal";
 import { ILogPlace } from "@/commons/types";
 
 import AlertMaps from "./alert";
+import { useAlert } from "@/commons/hooks/useAlert";
+
+const { showAlert, alertValue, triggerAlert } = useAlert();
 
 const containerStyle = {
   width: "100%",
@@ -46,9 +49,6 @@ export default function Maps() {
 
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // 선택한 위치 ( 오른쪽 클릭이든 왼쪽 클릭이든 사용자가 선택한 ) 상태 함수
   const [showModal, setShowModal] = useState(false); // 모달 상태
-
-  const [showAlert, setShowAlert] = useState(false); // 알럿창 상태
-  const [alertValue, setAlertValue] = useState("");
 
   // 모달 입력 폼
   const { user } = useAuth();
@@ -143,28 +143,19 @@ export default function Maps() {
     async (data: ILogPlace) => {
       // e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-      const showAlert = (message: string) => {
-        setAlertValue(message);
-        setShowAlert(true);
-
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 3000);
-      };
-
       // 🔒 uid 없을 경우 등록 막기
       if (!user?.uid) {
-        showAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+        triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
         return;
       }
 
       if (!address?.formatted_address) {
-        showAlert("주소가 없습니다!");
+        triggerAlert("주소가 없습니다!");
         return;
       }
 
       if (!date) {
-        showAlert("기록할 날짜를 선택해 주세요.");
+        triggerAlert("기록할 날짜를 선택해 주세요.");
         return;
       }
 
