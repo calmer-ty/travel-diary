@@ -142,10 +142,9 @@ export default function Maps() {
     setContent(marker.content);
   };
 
-  // ✅ [확인] firebase 등록하기 기능
-  const handleConfirm = useCallback(
+  // ✅ [등록]
+  const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
-      // async (data: ILogPlace) => {
       e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
       // 🔒 uid 없을 경우 등록 막기
@@ -213,6 +212,11 @@ export default function Maps() {
     },
     [user?.uid, mapsAddress, date, content, selectedPosition, triggerAlert]
   );
+  // ✅ [수정]
+  const handleUpdate = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+    console.log("수정하기");
+  }, []);
 
   const handleCancel = useCallback(() => {
     setShowModal(false);
@@ -269,13 +273,15 @@ export default function Maps() {
       {/* 모달 */}
       {showModal && (
         <ModalMaps
+          isEdit={isEdit}
           name={isEdit ? markerData?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
           address={isEdit ? markerData?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
           date={date}
           setDate={setDate}
           content={content}
           setContent={setContent}
-          handleConfirm={handleConfirm}
+          handleSubmit={handleSubmit}
+          handleUpdate={handleUpdate}
           handleCancel={handleCancel}
         />
       )}
