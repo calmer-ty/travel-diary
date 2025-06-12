@@ -4,8 +4,11 @@ import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 
 import { ILogPlace } from "@/commons/types";
+import { useEffect } from "react";
 
 interface IModalMapsProps {
+  isEdit: boolean;
+  markerData: ILogPlace | undefined;
   name: string;
   address: string;
   date: Date | undefined;
@@ -14,8 +17,16 @@ interface IModalMapsProps {
   handleCancel: () => void;
 }
 
-export default function ModalMaps({ name, address, date, setDate, handleConfirm, handleCancel }: IModalMapsProps) {
-  const { register, handleSubmit } = useForm<ILogPlace>();
+export default function ModalMaps({ isEdit, markerData, name, address, date, setDate, handleConfirm, handleCancel }: IModalMapsProps) {
+  const { register, handleSubmit, reset } = useForm<ILogPlace>();
+
+  useEffect(() => {
+    if (isEdit) {
+      reset({
+        content: markerData?.content,
+      });
+    }
+  }, [isEdit, markerData, reset]);
 
   return (
     <motion.div

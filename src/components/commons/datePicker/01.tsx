@@ -15,6 +15,7 @@ interface IDatePicker01Props {
 export function DatePicker01({ date, setDate, className }: IDatePicker01Props) {
   const [open, setOpen] = React.useState(false);
   // const [date, setDate] = React.useState<Date | undefined>(undefined);
+  console.log("date: ", date);
 
   return (
     <div className={`flex flex-col gap-3 ${className}`}>

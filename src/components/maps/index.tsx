@@ -123,6 +123,7 @@ export default function Maps() {
 
     const storedMarkers = querySnapshot.docs.map((doc) => ({
       ...doc.data(),
+      date: doc.data().date.toDate(),
     })) as ILogPlace[];
 
     const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
@@ -134,19 +135,11 @@ export default function Maps() {
   }, [fetchStoredMarkers]);
 
   // 마커 클릭
-
   const onClickMarker = (marker: ILogPlace) => {
     setShowModal(true);
     setIsEdit(true);
     setMarkerData(marker);
-    console.log("marker: ", marker.date);
-    // const db = getFirestore(firebaseApp);
-    // const querySnapshot = await getDocs(collection(db, "travelData"));
-
-    // const travelItemData = querySnapshot.docs.map((doc) => ({
-    //   _id: doc.id,
-    //   ...doc.data(),
-    // })) as ILogPlace[];
+    setDate(marker.date); // 첫 마커 클릭 시 마커 데이터로 렌더링
   };
 
   // ✅ [확인] firebase 등록하기 기능
@@ -274,9 +267,10 @@ export default function Maps() {
       {/* 모달 */}
       {showModal && (
         <ModalMaps
+          isEdit={isEdit}
+          markerData={markerData}
           name={isEdit ? markerData?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
           address={isEdit ? markerData?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
-          // date={isEdit ? markerData?.date : date}
           date={date}
           setDate={setDate}
           handleCancel={handleCancel}
