@@ -81,7 +81,7 @@ export default function Maps() {
 
   // POI 클릭 시
   const onClickPOI = (e: google.maps.MapMouseEvent) => {
-    const placeId = (e as any).placeId as string | undefined;
+    const placeId = (e as google.maps.IconMouseEvent).placeId;
 
     if (!e.latLng || !mapRef.current) return;
 
