@@ -3,12 +3,12 @@ import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-g
 import { addDoc, collection, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
+import { useAlert } from "@/commons/hooks/useAlert";
 
 import ModalMaps from "./modal";
-import { ILogPlace } from "@/commons/types";
-
 import AlertMaps from "./alert";
-import { useAlert } from "@/commons/hooks/useAlert";
+
+import { ILogPlace } from "@/commons/types";
 
 const containerStyle = {
   width: "100%",
@@ -32,14 +32,18 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
+  // 🔧Edit 상태
+  const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가
   // 🗺️ 지도 관련 상태
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
-  const [address, setAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
+  const [mapsAddress, setMapsAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null); // 지도의 현재 보이는 영역 정보
   // 북동쪽(NorthEast) 좌표 (오른쪽 위 끝점)
   // 남서쪽(SouthWest) 좌표 (왼쪽 아래 끝점)
   // 을 포함해서 사각형 범위를 나타내는 객체
   const mapRef = useRef<google.maps.Map | null>(null);
+
+  const [markerData, setMarkerData] = useState<ILogPlace>();
 
   // 🔍 검색 관련
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
@@ -100,9 +104,9 @@ export default function Maps() {
 
       service.getDetails({ placeId }, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+          setIsEdit(false); // 모달 창 데이터 초기화
           setSelectedPosition({ lat, lng });
-
-          setAddress(place);
+          setMapsAddress(place);
           setShowModal(true);
           // alert(`이름: ${place.name}\n주소: ${place.formatted_address}`);
         } else {
@@ -130,8 +134,12 @@ export default function Maps() {
   }, [fetchStoredMarkers]);
 
   // 마커 클릭
-  const onClickMarker = async () => {
+
+  const onClickMarker = (marker: ILogPlace) => {
     setShowModal(true);
+    setIsEdit(true);
+    setMarkerData(marker);
+    console.log("marker: ", marker.date);
     // const db = getFirestore(firebaseApp);
     // const querySnapshot = await getDocs(collection(db, "travelData"));
 
@@ -153,7 +161,7 @@ export default function Maps() {
         return;
       }
 
-      if (!address?.formatted_address) {
+      if (!mapsAddress?.formatted_address) {
         triggerAlert("주소가 없습니다!");
         return;
       }
@@ -171,8 +179,8 @@ export default function Maps() {
       // 저장할 마커 정보 준비 (아직 _id 없음)
       const markerData: ILogPlace = {
         ...data,
-        name: address.name ?? "",
-        address: address.formatted_address,
+        name: mapsAddress.name ?? "",
+        address: mapsAddress.formatted_address,
         latLng: selectedPosition,
         uid: user.uid,
         date,
@@ -208,7 +216,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, address, date, selectedPosition, triggerAlert]
+    [user?.uid, mapsAddress, date, selectedPosition, triggerAlert]
   );
 
   const handleCancel = useCallback(() => {
@@ -242,7 +250,7 @@ export default function Maps() {
           <Marker
             key={marker._id}
             position={marker.latLng}
-            onClick={onClickMarker}
+            onClick={() => onClickMarker(marker)} // 마커 데이터 전달
             icon={{
               url: "/images/icon_marker.png",
               scaledSize: new window.google.maps.Size(40, 64),
@@ -266,8 +274,9 @@ export default function Maps() {
       {/* 모달 */}
       {showModal && (
         <ModalMaps
-          name={address?.name ?? "이름 없음"}
-          address={address?.formatted_address ?? "주소 정보 없음"}
+          name={isEdit ? markerData?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
+          address={isEdit ? markerData?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
+          // date={isEdit ? markerData?.date : date}
           date={date}
           setDate={setDate}
           handleCancel={handleCancel}
