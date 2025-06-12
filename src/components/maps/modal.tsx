@@ -28,10 +28,14 @@ export default function ModalMaps(props: IModalMapsProps) {
       <form onSubmit={handleSubmit(props.handleConfirm)} className="flex flex-col h-full">
         <h4 className="mb-1 text-xl">{props.name}</h4>
         <p className="mb-2 text-sm">{props.address}</p>
+        <div className="flex gap-1 items-center  rounded-md mb-2 bg-white border px-2 py-1.5  shadow-xs cursor-pointer">
+          <img className="w-5" src="./images/icon_plus.png" alt="" />
+          리스트
+        </div>
         <DatePicker01 date={props.date} setDate={props.setDate} className="mb-4" />
         {/* onChange={(e) => props.setContent(e.target.value)} */}
-        <Textarea {...register("content")} className="h-full bg-white" placeholder="기록할 내용을 적어보세요." />
-        <button type="submit" className="absolute bottom-4 right-4 px-4 py-1 bg-[#DFB489] text-white rounded-md shadow-[2px_2px_0px_#CB9B6A]">
+        <Textarea {...register("content")} className="h-full bg-white resize-none" placeholder="기록할 내용을 적어보세요." />
+        <button type="submit" className="absolute bottom-4 right-4 px-4 py-1 bg-[#DFB489] text-white rounded-md shadow-[2px_2px_0px_#CB9B6A] ">
           저장
         </button>
         <button className="absolute top-4 right-4 w-8 h-8 bg-[url(/images/btn_close.png)] bg-contain bg-no-repeat" onClick={props.handleCancel}></button>
