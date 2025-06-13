@@ -62,10 +62,21 @@ export default function Maps() {
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 북마크 리스트 관련
-  const [bookmarkSelect, setBookmarkSelect] = useState(false);
+  const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
+  const [travelBookmarkName, setTravelBookmarkName] = useState("");
+  const [bookmarkShow, setBookmarkShow] = useState(false);
+  const [bookmarkListShow, setBookmarkListShow] = useState(false);
+
+  const onClickBookMarkerColor = (color: string): void => {
+    setBookmarkColor((prev) => (prev === color ? null : color));
+  };
 
   const onClickBookMarker = (): void => {
-    setBookmarkSelect((prev) => !prev);
+    setBookmarkShow((prev) => !prev);
+  };
+
+  const onClickBookMarkerList = (): void => {
+    setBookmarkListShow((prev) => !prev);
   };
 
   // 지도 bounds 변경 시 호출
@@ -185,8 +196,10 @@ export default function Maps() {
         uid: user.uid,
         date,
         content,
-        travelName: "",
-        travelBookmark: "",
+        travelBookmark: {
+          name: travelBookmarkName,
+          bookmarkColor,
+        },
       };
 
       try {
@@ -292,8 +305,14 @@ export default function Maps() {
           handleSubmit={handleSubmit}
           handleUpdate={handleUpdate}
           handleCancel={handleCancel}
-          bookmarkSelect={bookmarkSelect}
+          onClickBookMarkerColor={onClickBookMarkerColor}
+          bookmarkColor={bookmarkColor}
+          travelBookmarkName={travelBookmarkName}
+          setTravelBookmarkName={setTravelBookmarkName}
+          bookmarkShow={bookmarkShow}
           onClickBookMarker={onClickBookMarker}
+          bookmarkListShow={bookmarkListShow}
+          onClickBookMarkerList={onClickBookMarkerList}
         />
       )}
 
