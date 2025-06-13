@@ -10,8 +10,3 @@ export interface ILogPlace {
     lng: number;
   };
 }
-export interface IModalMaps {
-  _id: string;
-  date: Date;
-  content: string;
-}
