@@ -2,8 +2,7 @@ import { motion } from "framer-motion";
 import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 import { ColorList } from "./colorList";
-import { useState } from "react";
-// import { useModal } from "@/commons/hooks/useModal";
+import { useModal } from "@/commons/hooks/useModal";
 
 interface IModalMapsProps {
   isEdit: boolean;
@@ -24,10 +23,6 @@ interface IModalMapsProps {
 }
 
 export default function ModalMaps({
-  bookmarkName,
-  setBookmarkName,
-  bookmarkColor,
-  setBookmarkColor,
   isEdit,
   name,
   address,
@@ -38,22 +33,19 @@ export default function ModalMaps({
   handleSubmit,
   handleUpdate,
   handleCancel,
+  // 북마크
+  bookmarkName,
+  setBookmarkName,
+  bookmarkColor,
+  setBookmarkColor,
 }: IModalMapsProps) {
-  // const { isOpen, onClickToggle } = useModal();
-  const [bookmarkShow, setBookmarkShow] = useState(false);
-  const [bookmarkListShow, setBookmarkListShow] = useState(false);
+  const { isOpen: isBookmarkOpen, onClickToggle: toggleBookmark } = useModal();
+  const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList } = useModal();
 
   const onClickBookmarkColor = (color: string): void => {
     setBookmarkColor((prev) => (prev === color ? null : color));
   };
 
-  const onClickBookMarker = (): void => {
-    setBookmarkShow((prev) => !prev);
-  };
-
-  const onClickBookMarkerList = (): void => {
-    setBookmarkListShow((prev) => !prev);
-  };
   return (
     <motion.div
       initial={{ y: "100%", opacity: 0 }}
@@ -69,21 +61,21 @@ export default function ModalMaps({
 
         {/* 리스트 */}
         <div className="relative rounded-md mb-2 bg-white border px-2 py-1.5  shadow-xs  ">
-          <div className="text-center cursor-pointer" onClick={onClickBookMarker}>
+          <div className="text-center cursor-pointer" onClick={toggleBookmark}>
             <img className="w-6 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
             <span className="inline-block align-middle">여정</span>
           </div>
 
           {/* 리스트 박스 */}
-          <div style={{ display: bookmarkShow ? "block" : "none" }} className="absolute top-10 left-0 w-60 h-80 rounded-md bg-white border px-2 py-1.5  shadow-xs ">
+          <div style={{ display: isBookmarkOpen ? "block" : "none" }} className="absolute top-10 left-0 w-60 h-80 rounded-md bg-white border px-2 py-1.5  shadow-xs ">
             <div className="p-1 border-b ">
               {/* 리스트 추가하기 */}
-              <div className="cursor-pointer" onClick={onClickBookMarkerList}>
+              <div className="cursor-pointer" onClick={toggleBookmarkList}>
                 <img className="w-5 inline-block align-middle mr-1" src="./images/icon_plus.png" alt="" />
                 <span className="inline-block align-middle">여정 추가하기</span>
               </div>
               {/* 리스트 아이템 추가 박스 */}
-              <div style={{ display: bookmarkListShow ? "flex" : "none" }} className="flex flex-col gap-3 w-full mt-3">
+              <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full mt-3">
                 <input
                   className="w-full  border p-1 rounded-md placeholder:text-sm placeholder-gray"
                   type="text"
