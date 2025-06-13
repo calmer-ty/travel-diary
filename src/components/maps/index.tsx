@@ -61,6 +61,13 @@ export default function Maps() {
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
+  // 북마크 리스트 관련
+  const [bookmarkSelect, setBookmarkSelect] = useState(false);
+
+  const onClickBookMarker ():void => {
+    setBookmarkSelect(prev => !prev)
+  }
+
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
     if (mapRef.current) {
@@ -178,6 +185,8 @@ export default function Maps() {
         uid: user.uid,
         date,
         content,
+        travelName: "",
+        travelBookmark: "",
       };
 
       try {
@@ -283,6 +292,7 @@ export default function Maps() {
           handleSubmit={handleSubmit}
           handleUpdate={handleUpdate}
           handleCancel={handleCancel}
+          onClickBookMarker={onClickBookMarker}
         />
       )}
 

@@ -9,4 +9,6 @@ export interface ILogPlace {
     lat: number;
     lng: number;
   };
+  travelName: string;
+  travelBookmark: string;
 }
