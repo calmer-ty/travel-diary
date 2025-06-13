@@ -13,6 +13,8 @@ interface IModalMapsProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleCancel: () => void;
+  bookmarkSelect: boolean;
+  onClickBookMarker: () => void;
 }
 
 export default function ModalMaps({ isEdit, name, address, date, setDate, content, setContent, handleSubmit, handleUpdate, handleCancel }: IModalMapsProps) {

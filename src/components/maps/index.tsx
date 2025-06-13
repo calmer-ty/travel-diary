@@ -64,9 +64,9 @@ export default function Maps() {
   // 북마크 리스트 관련
   const [bookmarkSelect, setBookmarkSelect] = useState(false);
 
-  const onClickBookMarker ():void => {
-    setBookmarkSelect(prev => !prev)
-  }
+  const onClickBookMarker = (): void => {
+    setBookmarkSelect((prev) => !prev);
+  };
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -292,6 +292,7 @@ export default function Maps() {
           handleSubmit={handleSubmit}
           handleUpdate={handleUpdate}
           handleCancel={handleCancel}
+          bookmarkSelect={bookmarkSelect}
           onClickBookMarker={onClickBookMarker}
         />
       )}
