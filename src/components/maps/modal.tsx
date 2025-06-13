@@ -4,46 +4,48 @@ import { Textarea } from "@/components/ui/textarea";
 import { ColorList } from "./colorList";
 import { useModal } from "@/commons/hooks/useModal";
 
-interface IModalMapsProps {
-  isEdit: boolean;
+interface IMarkerDataProps {
   name: string;
   address: string;
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  handleCancel: () => void;
-  // 북마크
+}
+interface IBookmarkStateProps {
   bookmarkName: string;
   setBookmarkName: React.Dispatch<React.SetStateAction<string>>;
   bookmarkColor: string | null;
   setBookmarkColor: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+interface IModalMapsProps {
+  isEdit: boolean;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  handleCancel: () => void;
+  markerData: IMarkerDataProps;
+  bookmarkState: IBookmarkStateProps;
+}
+
 export default function ModalMaps({
   isEdit,
-  name,
-  address,
-  date,
-  setDate,
-  content,
-  setContent,
   handleSubmit,
   handleUpdate,
   handleCancel,
-  // 북마크
-  bookmarkName,
-  setBookmarkName,
-  bookmarkColor,
-  setBookmarkColor,
-}: IModalMapsProps) {
+  markerData,
+  bookmarkState,
+}: // 북마크
+// bookmarkName,
+// setBookmarkName,
+// bookmarkColor,
+// setBookmarkColor,
+IModalMapsProps) {
   const { isOpen: isBookmarkOpen, onClickToggle: toggleBookmark } = useModal();
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList } = useModal();
 
   const onClickBookmarkColor = (color: string): void => {
-    setBookmarkColor((prev) => (prev === color ? null : color));
+    bookmarkState.setBookmarkColor((prev) => (prev === color ? null : color));
   };
 
   return (
@@ -56,8 +58,8 @@ export default function ModalMaps({
     >
       <form onSubmit={isEdit ? handleUpdate : handleSubmit} className="flex flex-col h-full">
         {/* 장소 정보 */}
-        <h4 className="mb-1 text-xl">{name}</h4>
-        <p className="mb-2 text-sm">{address}</p>
+        <h4 className="mb-1 text-xl">{markerData.name}</h4>
+        <p className="mb-2 text-sm">{markerData.address}</p>
 
         {/* 리스트 */}
         <div className="relative rounded-md mb-2 bg-white border px-2 py-1.5  shadow-xs  ">
@@ -80,13 +82,18 @@ export default function ModalMaps({
                   className="w-full  border p-1 rounded-md placeholder:text-sm placeholder-gray"
                   type="text"
                   placeholder="여정의 이름을 입력해주세요."
-                  value={bookmarkName}
-                  onChange={(e) => setBookmarkName(e.target.value)}
+                  value={bookmarkState.bookmarkName}
+                  onChange={(e) => bookmarkState.setBookmarkName(e.target.value)}
                 />
                 <p className="text-sm">여정 색깔을 정해 주세요.</p>
                 <ul className="flex flex-wrap justify-center gap-1 w-full">
                   {ColorList.map(({ color }, idx) => (
-                    <li onClick={() => onClickBookmarkColor(color)} style={{ borderColor: bookmarkColor === color ? "#000" : "transparent" }} className="cursor-pointer border rounded-sm" key={idx}>
+                    <li
+                      onClick={() => onClickBookmarkColor(color)}
+                      style={{ borderColor: bookmarkState.bookmarkColor === color ? "#000" : "transparent" }}
+                      className="cursor-pointer border rounded-sm"
+                      key={idx}
+                    >
                       <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
                     </li>
                   ))}
@@ -100,10 +107,10 @@ export default function ModalMaps({
         </div>
 
         {/* 날짜 */}
-        <DatePicker01 date={date} setDate={setDate} className="mb-4" />
+        <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="mb-4" />
 
         {/* 컨텐츠 */}
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
+        <Textarea value={markerData.content} onChange={(e) => markerData.setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
 
         {/* 수정/등록 */}
         <button type="submit" className="self-end w-16 px-4 py-1 bg-[#DFB489] text-white rounded-md shadow-[2px_2px_0px_#CB9B6A]">

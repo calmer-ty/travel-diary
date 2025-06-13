@@ -321,25 +321,23 @@ export default function Maps() {
       {showModal && (
         <ModalMaps
           isEdit={isEdit}
-          name={isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
-          address={isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
-          date={date}
-          setDate={setDate}
-          content={content}
-          setContent={setContent}
           handleSubmit={handleSubmit}
           handleUpdate={handleUpdate}
           handleCancel={handleCancel}
-          // 북마크
-          bookmarkName={bookmarkName}
-          setBookmarkName={setBookmarkName}
-          bookmarkColor={bookmarkColor}
-          setBookmarkColor={setBookmarkColor}
-          // onClickBookmarkColor={onClickBookmarkColor}
-          // bookmarkShow={bookmarkShow}
-          // onClickBookMarker={onClickBookMarker}
-          // bookmarkListShow={bookmarkListShow}
-          // onClickBookMarkerList={onClickBookMarkerList}
+          markerData={{
+            name: isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음",
+            address: isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음",
+            date,
+            setDate,
+            content,
+            setContent,
+          }}
+          bookmarkState={{
+            bookmarkName,
+            setBookmarkName,
+            bookmarkColor,
+            setBookmarkColor,
+          }}
         />
       )}
 
