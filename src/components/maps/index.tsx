@@ -207,6 +207,7 @@ export default function Maps() {
           ...markerData,
           _id: docRef.id,
         };
+        // 4. 기존 마커와 그 뒤에 새로운 마커의 데이터를 추가하여 지도에 렌더링 준비
         setMarkers((prev) => [...prev, newMarker]);
 
         // 맵 센터, 모달끄기, 포지션 초기화

@@ -28,19 +28,7 @@ interface IModalMapsProps {
   bookmarkState: IBookmarkStateProps;
 }
 
-export default function ModalMaps({
-  isEdit,
-  handleSubmit,
-  handleUpdate,
-  handleCancel,
-  markerData,
-  bookmarkState,
-}: // 북마크
-// bookmarkName,
-// setBookmarkName,
-// bookmarkColor,
-// setBookmarkColor,
-IModalMapsProps) {
+export default function ModalMaps({ isEdit, handleSubmit, handleUpdate, handleCancel, markerData, bookmarkState }: IModalMapsProps) {
   const { isOpen: isBookmarkOpen, onClickToggle: toggleBookmark } = useModal();
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList } = useModal();
 
