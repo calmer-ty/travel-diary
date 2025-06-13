@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 import { ColorList } from "./colorList";
+import { useState } from "react";
+// import { useModal } from "@/commons/hooks/useModal";
 
 interface IModalMapsProps {
   isEdit: boolean;
@@ -15,25 +17,17 @@ interface IModalMapsProps {
   handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleCancel: () => void;
   // 북마크
-  bookmarkColor: string | null;
   bookmarkName: string;
   setBookmarkName: React.Dispatch<React.SetStateAction<string>>;
-  bookmarkShow: boolean;
-  bookmarkListShow: boolean;
-  onClickBookMarker: () => void;
-  onClickBookMarkerColor: (color: string) => void;
-  onClickBookMarkerList: () => void;
+  bookmarkColor: string | null;
+  setBookmarkColor: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export default function ModalMaps({
-  bookmarkListShow,
-  onClickBookMarkerList,
-  onClickBookMarker,
-  bookmarkShow,
   bookmarkName,
   setBookmarkName,
-  onClickBookMarkerColor,
   bookmarkColor,
+  setBookmarkColor,
   isEdit,
   name,
   address,
@@ -45,6 +39,21 @@ export default function ModalMaps({
   handleUpdate,
   handleCancel,
 }: IModalMapsProps) {
+  // const { isOpen, onClickToggle } = useModal();
+  const [bookmarkShow, setBookmarkShow] = useState(false);
+  const [bookmarkListShow, setBookmarkListShow] = useState(false);
+
+  const onClickBookmarkColor = (color: string): void => {
+    setBookmarkColor((prev) => (prev === color ? null : color));
+  };
+
+  const onClickBookMarker = (): void => {
+    setBookmarkShow((prev) => !prev);
+  };
+
+  const onClickBookMarkerList = (): void => {
+    setBookmarkListShow((prev) => !prev);
+  };
   return (
     <motion.div
       initial={{ y: "100%", opacity: 0 }}
@@ -85,7 +94,7 @@ export default function ModalMaps({
                 <p className="text-sm">여정 색깔을 정해 주세요.</p>
                 <ul className="flex flex-wrap justify-center gap-1 w-full">
                   {ColorList.map(({ color }, idx) => (
-                    <li onClick={() => onClickBookMarkerColor(color)} style={{ borderColor: bookmarkColor === color ? "#000" : "transparent" }} className="cursor-pointer border rounded-sm" key={idx}>
+                    <li onClick={() => onClickBookmarkColor(color)} style={{ borderColor: bookmarkColor === color ? "#000" : "transparent" }} className="cursor-pointer border rounded-sm" key={idx}>
                       <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
                     </li>
                   ))}

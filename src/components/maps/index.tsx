@@ -60,23 +60,9 @@ export default function Maps() {
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
-  // 북마크 리스트 관련
+  // 🔖 북마크
   const [bookmarkName, setBookmarkName] = useState("");
   const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
-  const [bookmarkShow, setBookmarkShow] = useState(false);
-  const [bookmarkListShow, setBookmarkListShow] = useState(false);
-
-  const onClickBookMarkerColor = (color: string): void => {
-    setBookmarkColor((prev) => (prev === color ? null : color));
-  };
-
-  const onClickBookMarker = (): void => {
-    setBookmarkShow((prev) => !prev);
-  };
-
-  const onClickBookMarkerList = (): void => {
-    setBookmarkListShow((prev) => !prev);
-  };
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -344,14 +330,16 @@ export default function Maps() {
           handleSubmit={handleSubmit}
           handleUpdate={handleUpdate}
           handleCancel={handleCancel}
-          onClickBookMarkerColor={onClickBookMarkerColor}
-          bookmarkColor={bookmarkColor}
+          // 북마크
           bookmarkName={bookmarkName}
           setBookmarkName={setBookmarkName}
-          bookmarkShow={bookmarkShow}
-          onClickBookMarker={onClickBookMarker}
-          bookmarkListShow={bookmarkListShow}
-          onClickBookMarkerList={onClickBookMarkerList}
+          bookmarkColor={bookmarkColor}
+          setBookmarkColor={setBookmarkColor}
+          // onClickBookmarkColor={onClickBookmarkColor}
+          // bookmarkShow={bookmarkShow}
+          // onClickBookMarker={onClickBookMarker}
+          // bookmarkListShow={bookmarkListShow}
+          // onClickBookMarkerList={onClickBookMarkerList}
         />
       )}
 

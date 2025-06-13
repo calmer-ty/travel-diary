@@ -1,0 +1,11 @@
+import { useState } from "react";
+
+// useAuth 훅을 만들어 Firebase 인증 상태를 관리
+export const useModal = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onClickToggle = (): void => {
+    setIsOpen((prev) => !prev);
+  };
+  return { isOpen, onClickToggle };
+};
