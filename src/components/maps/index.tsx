@@ -37,20 +37,19 @@ export default function Maps() {
   // 🗺️ 지도 관련 상태
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
   const [mapsAddress, setMapsAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
+  const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // POI 클릭시 위치 값
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null); // 지도의 현재 보이는 영역 정보
   // 북동쪽(NorthEast) 좌표 (오른쪽 위 끝점)
   // 남서쪽(SouthWest) 좌표 (왼쪽 아래 끝점)
   // 을 포함해서 사각형 범위를 나타내는 객체
   const mapRef = useRef<google.maps.Map | null>(null);
 
-  const [markerData, setMarkerData] = useState<ILogPlace>();
-
   // 🔍 검색 관련
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
   // 📌 마커 관련
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
-  const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter);
+  const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
 
   // 🖊️ 폼 관련
   const { user } = useAuth();
@@ -62,8 +61,8 @@ export default function Maps() {
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 북마크 리스트 관련
-  const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
   const [bookmarkName, setBookmarkName] = useState("");
+  const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
   const [bookmarkShow, setBookmarkShow] = useState(false);
   const [bookmarkListShow, setBookmarkListShow] = useState(false);
 
@@ -106,6 +105,8 @@ export default function Maps() {
 
   // POI 클릭 시
   const onClickPOI = (e: google.maps.MapMouseEvent) => {
+    console.log("date: ", date);
+    console.log("content: ", content);
     const placeId = (e as google.maps.IconMouseEvent).placeId;
 
     if (!e.latLng || !mapRef.current) return;
@@ -117,14 +118,15 @@ export default function Maps() {
     if (placeId) {
       e.stop(); // infoWindow 기본 동작 막기
 
-      const service = new window.google.maps.places.PlacesService(mapRef.current);
+      // 모달 창 데이터 초기화
+      setIsEdit(false);
+      setSelectedPosition({ lat, lng });
+      setShowModal(true);
 
+      const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && place) {
-          setIsEdit(false); // 모달 창 데이터 초기화
-          setSelectedPosition({ lat, lng });
           setMapsAddress(place);
-          setShowModal(true);
           // alert(`이름: ${place.name}\n주소: ${place.formatted_address}`);
         } else {
           console.error("getDetails 실패:", status);
@@ -155,7 +157,7 @@ export default function Maps() {
   const onClickMarker = (marker: ILogPlace) => {
     setShowModal(true);
     setIsEdit(true);
-    setMarkerData(marker);
+    setSelectedMarker(marker);
     setDate(marker.date); // 첫 마커 클릭 시 마커 데이터로 렌더링
     setContent(marker.content);
   };
@@ -246,21 +248,24 @@ export default function Maps() {
 
       try {
         // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
-        if (!markerData?._id) {
+        if (!selectedMarker?._id) {
           console.error("문서 ID가 없습니다");
           return;
         }
         const db = getFirestore(firebaseApp);
-        const docRef = doc(db, "travelData", markerData._id);
+        const docRef = doc(db, "travelData", selectedMarker._id);
 
         await updateDoc(docRef, {
           date,
           content,
         });
-
-        setMarkers((prev) => prev.map((marker) => (marker._id === markerData._id ? { ...marker, date: date ?? marker.date, content } : marker)));
-        console.log("성공적");
+        //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
+        setMarkers((prev) => prev.map((marker) => (marker._id === selectedMarker._id ? { ...marker, date: date ?? marker.date, content } : marker)));
         setShowModal(false);
+
+        // 수정 후에 입력 폼 스테이트 초기화
+        setDate(undefined);
+        setContent("");
       } catch (error) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -268,8 +273,11 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, date, content, markerData?._id, triggerAlert]
+    [user?.uid, date, content, selectedMarker, triggerAlert]
   );
+  useEffect(() => {
+    console.log("✅ 마커 업데이트됨: ", markers);
+  }, [markers]);
 
   const handleCancel = useCallback(() => {
     setShowModal(false);
@@ -327,8 +335,8 @@ export default function Maps() {
       {showModal && (
         <ModalMaps
           isEdit={isEdit}
-          name={isEdit ? markerData?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
-          address={isEdit ? markerData?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
+          name={isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}
+          address={isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}
           date={date}
           setDate={setDate}
           content={content}
