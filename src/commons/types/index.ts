@@ -10,7 +10,7 @@ export interface ILogPlace {
     lng: number;
   };
   bookmark: {
-    name: string;
+    bookmarkName: string;
     bookmarkColor: string | null;
   };
 }

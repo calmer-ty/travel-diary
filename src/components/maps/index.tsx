@@ -197,7 +197,7 @@ export default function Maps() {
         date,
         content,
         bookmark: {
-          name: bookmarkName,
+          bookmarkName,
           bookmarkColor,
         },
       };
