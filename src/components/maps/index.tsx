@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
-import { addDoc, collection, getDocs, getFirestore, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
 import { useAlert } from "@/commons/hooks/useAlert";
@@ -63,7 +63,7 @@ export default function Maps() {
 
   // 북마크 리스트 관련
   const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
-  const [travelBookmarkName, setTravelBookmarkName] = useState("");
+  const [bookmarkName, setBookmarkName] = useState("");
   const [bookmarkShow, setBookmarkShow] = useState(false);
   const [bookmarkListShow, setBookmarkListShow] = useState(false);
 
@@ -196,8 +196,8 @@ export default function Maps() {
         uid: user.uid,
         date,
         content,
-        travelBookmark: {
-          name: travelBookmarkName,
+        bookmark: {
+          name: bookmarkName,
           bookmarkColor,
         },
       };
@@ -232,13 +232,44 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, triggerAlert]
+    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert]
   );
   // ✅ [수정]
-  const handleUpdate = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
-    console.log("수정하기");
-  }, []);
+  const handleUpdate = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+
+      if (!user?.uid) {
+        triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+        return;
+      }
+
+      try {
+        // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
+        if (!markerData?._id) {
+          console.error("문서 ID가 없습니다");
+          return;
+        }
+        const db = getFirestore(firebaseApp);
+        const docRef = doc(db, "travelData", markerData._id);
+
+        await updateDoc(docRef, {
+          date,
+          content,
+        });
+
+        setMarkers((prev) => prev.map((marker) => (marker._id === markerData._id ? { ...marker, date: date ?? marker.date, content } : marker)));
+        console.log("성공적");
+        setShowModal(false);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+          return;
+        }
+      }
+    },
+    [user?.uid, date, content, markerData?._id, triggerAlert]
+  );
 
   const handleCancel = useCallback(() => {
     setShowModal(false);
@@ -307,8 +338,8 @@ export default function Maps() {
           handleCancel={handleCancel}
           onClickBookMarkerColor={onClickBookMarkerColor}
           bookmarkColor={bookmarkColor}
-          travelBookmarkName={travelBookmarkName}
-          setTravelBookmarkName={setTravelBookmarkName}
+          bookmarkName={bookmarkName}
+          setBookmarkName={setBookmarkName}
           bookmarkShow={bookmarkShow}
           onClickBookMarker={onClickBookMarker}
           bookmarkListShow={bookmarkListShow}

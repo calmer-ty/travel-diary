@@ -9,7 +9,7 @@ export interface ILogPlace {
     lat: number;
     lng: number;
   };
-  travelBookmark: {
+  bookmark: {
     name: string;
     bookmarkColor: string | null;
   };

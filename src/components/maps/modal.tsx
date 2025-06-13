@@ -14,13 +14,14 @@ interface IModalMapsProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleCancel: () => void;
+  // 북마크
   bookmarkColor: string | null;
-  onClickBookMarkerColor: (color: string) => void;
-  travelBookmarkName: string;
-  setTravelBookmarkName: React.Dispatch<React.SetStateAction<string>>;
+  bookmarkName: string;
+  setBookmarkName: React.Dispatch<React.SetStateAction<string>>;
   bookmarkShow: boolean;
-  onClickBookMarker: () => void;
   bookmarkListShow: boolean;
+  onClickBookMarker: () => void;
+  onClickBookMarkerColor: (color: string) => void;
   onClickBookMarkerList: () => void;
 }
 
@@ -29,8 +30,8 @@ export default function ModalMaps({
   onClickBookMarkerList,
   onClickBookMarker,
   bookmarkShow,
-  travelBookmarkName,
-  setTravelBookmarkName,
+  bookmarkName,
+  setBookmarkName,
   onClickBookMarkerColor,
   bookmarkColor,
   isEdit,
@@ -78,8 +79,8 @@ export default function ModalMaps({
                   className="w-full  border p-1 rounded-md placeholder:text-sm placeholder-gray"
                   type="text"
                   placeholder="여정의 이름을 입력해주세요."
-                  value={travelBookmarkName}
-                  onChange={(e) => setTravelBookmarkName(e.target.value)}
+                  value={bookmarkName}
+                  onChange={(e) => setBookmarkName(e.target.value)}
                 />
                 <p className="text-sm">여정 색깔을 정해 주세요.</p>
                 <ul className="flex flex-wrap justify-center gap-1 w-full">
