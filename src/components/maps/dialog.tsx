@@ -31,7 +31,6 @@ interface IMapsDialogProps {
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  // handleCancel: () => void;
   markerData: IMarkerDataProps;
   bookmarkState: IBookmarkStateProps;
 }
@@ -41,6 +40,11 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
 
   const onClickBookmarkColor = (color: string): void => {
     bookmarkState.setBookmarkColor((prev) => (prev === color ? null : color));
+  };
+
+  const onClickCancel = () => {
+    markerData.setDate(undefined);
+    markerData.setContent("");
   };
 
   return (
@@ -109,7 +113,9 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
             {/* 버튼 */}
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" onClick={onClickCancel}>
+                  Cancel
+                </Button>
               </DialogClose>
               <Button variant="primary" type="submit">
                 {isEdit ? "수정" : "등록"}

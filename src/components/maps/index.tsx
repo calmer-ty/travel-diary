@@ -213,6 +213,10 @@ export default function Maps() {
         setMapCenter(selectedPosition);
         setIsDialogOpen(false);
         setSelectedPosition(null);
+
+        // 수정 후에 입력 폼 스테이트 초기화
+        setDate(undefined);
+        setContent("");
       } catch (error) {
         if (error instanceof Error) {
           console.error(error.message);
@@ -266,11 +270,6 @@ export default function Maps() {
     // console.log("✅ 마커 업데이트됨: ", markers);
     console.log("✅ isDialogOpen 업데이트됨: ", isDialogOpen);
   }, [isDialogOpen]);
-
-  // const handleCancel = useCallback(() => {
-  //   setIsDialogOpen(false);
-  //   setSelectedPosition(null);
-  // }, [setIsDialogOpen, setSelectedPosition]);
 
   // Google API Loader
   const { isLoaded } = useJsApiLoader({
