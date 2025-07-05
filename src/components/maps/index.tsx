@@ -55,7 +55,6 @@ export default function Maps() {
 
   // 🖊️ 폼 관련
   const { isOpen: isDialogOpen, setIsOpen: setIsDialogOpen } = useDialog();
-  // const [showModal, setIsDialogOpen] = useState(false); // 모달 상태
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState<string>("");
 

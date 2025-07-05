@@ -45,15 +45,15 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
-        <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
+      <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
+        <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
             <DialogTitle>{markerData.name}</DialogTitle>
             <DialogDescription>{markerData.address}</DialogDescription>
           </DialogHeader>
 
           {/* 다이얼로그 */}
-          <div className="grid gap-4">
+          <div className="grid gap-3 mt-4">
             {/* 북마크 */}
             <DropdownMenu>
               {/* 여정 버튼 - 트리거 요소도 버튼이기 때문에 트리거 동작과 버튼 스타일을 갖기 위해선 asChild로 기능을 전달 */}
@@ -106,17 +106,18 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
             <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="mb-4" />
             {/* 내용 작성 */}
             <Textarea value={markerData.content} onChange={(e) => markerData.setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
+            {/* 버튼 */}
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button variant="primary" type="submit">
+                {isEdit ? "수정" : "등록"}
+              </Button>
+            </DialogFooter>
           </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button variant="primary" type="submit">
-              {isEdit ? "수정" : "등록"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
