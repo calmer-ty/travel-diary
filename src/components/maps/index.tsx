@@ -5,10 +5,11 @@ import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
 import { useAuth } from "@/commons/hooks/useAuth";
 import { useAlert } from "@/commons/hooks/useAlert";
 
-import ModalMaps from "./modal";
 import AlertMaps from "./alert";
 
 import { ILogPlace } from "@/commons/types";
+import { useDialog } from "@/commons/hooks/useDialog";
+import MapsDialog from "./dialog";
 
 const containerStyle = {
   width: "100%",
@@ -32,6 +33,7 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
+  const { user } = useAuth();
   // 🔧Edit 상태
   const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가
   // 🗺️ 지도 관련 상태
@@ -52,8 +54,8 @@ export default function Maps() {
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
 
   // 🖊️ 폼 관련
-  const { user } = useAuth();
-  const [showModal, setShowModal] = useState(false); // 모달 상태
+  const { isOpen: isDialogOpen, setIsOpen: setIsDialogOpen } = useDialog();
+  // const [showModal, setIsDialogOpen] = useState(false); // 모달 상태
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState<string>("");
 
@@ -107,7 +109,7 @@ export default function Maps() {
       // 모달 창 데이터 초기화
       setIsEdit(false);
       setSelectedPosition({ lat, lng });
-      setShowModal(true);
+      setIsDialogOpen(true);
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
@@ -141,7 +143,7 @@ export default function Maps() {
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
-    setShowModal(true);
+    setIsDialogOpen(true);
     setIsEdit(true);
     setSelectedMarker(marker);
     setDate(marker.date); // 첫 마커 클릭 시 마커 데이터로 렌더링
@@ -212,7 +214,7 @@ export default function Maps() {
 
         // 맵 센터, 모달끄기, 포지션 초기화
         setMapCenter(selectedPosition);
-        setShowModal(false);
+        setIsDialogOpen(false);
         setSelectedPosition(null);
       } catch (error) {
         if (error instanceof Error) {
@@ -221,7 +223,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert]
+    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setIsDialogOpen]
   );
   // ✅ [수정]
   const handleUpdate = useCallback(
@@ -248,7 +250,7 @@ export default function Maps() {
         });
         //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
         setMarkers((prev) => prev.map((marker) => (marker._id === selectedMarker._id ? { ...marker, date: date ?? marker.date, content } : marker)));
-        setShowModal(false);
+        setIsDialogOpen(false);
 
         // 수정 후에 입력 폼 스테이트 초기화
         setDate(undefined);
@@ -260,16 +262,17 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, date, content, selectedMarker, triggerAlert]
+    [user?.uid, date, content, selectedMarker, triggerAlert, setIsDialogOpen]
   );
-  useEffect(() => {
-    console.log("✅ 마커 업데이트됨: ", markers);
-  }, [markers]);
 
-  const handleCancel = useCallback(() => {
-    setShowModal(false);
-    setSelectedPosition(null);
-  }, [setShowModal, setSelectedPosition]);
+  // useEffect(() => {
+  //   console.log("✅ 마커 업데이트됨: ", markers);
+  // }, [markers]);
+
+  // const handleCancel = useCallback(() => {
+  //   setIsDialogOpen(false);
+  //   setSelectedPosition(null);
+  // }, [setIsDialogOpen, setSelectedPosition]);
 
   // Google API Loader
   const { isLoaded } = useJsApiLoader({
@@ -319,30 +322,29 @@ export default function Maps() {
       </StandaloneSearchBox>
 
       {/* 모달 */}
-      {showModal && (
-        <ModalMaps
-          isEdit={isEdit}
-          handleSubmit={handleSubmit}
-          handleUpdate={handleUpdate}
-          handleCancel={handleCancel}
-          markerData={{
-            name: isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음",
-            address: isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음",
-            date,
-            setDate,
-            content,
-            setContent,
-          }}
-          bookmarkState={{
-            bookmarkName,
-            setBookmarkName,
-            bookmarkColor,
-            setBookmarkColor,
-          }}
-        />
-      )}
+      <MapsDialog
+        isEdit={isEdit}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        handleSubmit={handleSubmit}
+        handleUpdate={handleUpdate}
+        markerData={{
+          name: isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음",
+          address: isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음",
+          date,
+          setDate,
+          content,
+          setContent,
+        }}
+        bookmarkState={{
+          bookmarkName,
+          setBookmarkName,
+          bookmarkColor,
+          setBookmarkColor,
+        }}
+      />
 
-      {/* 알럿 창 */}
+      {/* 경고창 */}
       {showAlert && <AlertMaps alertValue={alertValue} />}
     </GoogleMap>
   );
