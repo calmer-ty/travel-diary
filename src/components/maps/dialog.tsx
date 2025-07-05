@@ -1,11 +1,13 @@
-// shadcn
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
 import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 import { ColorList } from "./colorList";
 import { useDialog } from "@/commons/hooks/useDialog";
+
+// shadcn
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface IMarkerDataProps {
   name: string;
@@ -97,10 +99,24 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
               </div>
             </div>
 
-            {/* 내용 */}
-            <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="mb-4" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Open</Button>
+              </DropdownMenuTrigger>
 
-            {/* 내용 */}
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Billing</DropdownMenuItem>
+                <DropdownMenuItem>Team</DropdownMenuItem>
+                <DropdownMenuItem>Subscription</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* 날짜 선택 */}
+            <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="mb-4" />
+            {/* 내용 작성 */}
             <Textarea value={markerData.content} onChange={(e) => markerData.setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
           </div>
           <DialogFooter>
