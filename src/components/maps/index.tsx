@@ -158,8 +158,13 @@ export default function Maps() {
         return;
       }
 
+      if (!mapsAddress?.name) {
+        triggerAlert("주소명이 없습니다!");
+        return;
+      }
+
       if (!mapsAddress?.formatted_address) {
-        triggerAlert("주소가 없습니다!");
+        triggerAlert("상세주소가 없습니다!");
         return;
       }
 
@@ -168,19 +173,23 @@ export default function Maps() {
         return;
       }
 
+      if (!content) {
+        triggerAlert("기록할 내용을 입력해 주세요.");
+        return;
+      }
+
       if (!selectedPosition) {
         triggerAlert("마커를 선택해주세요!");
         return;
       }
 
-      // 저장할 마커 정보 준비 (아직 _id 없음)
+      // 저장할 마커 정보 준비
       const markerData: ILogPlace = {
-        // ...data,
-        _id: "",
-        name: mapsAddress.name ?? "",
-        address: mapsAddress.formatted_address,
+        _id: "", // (아직 _id 없음)
+        name: mapsAddress?.name,
+        address: mapsAddress?.formatted_address,
         latLng: selectedPosition,
-        uid: user.uid,
+        uid: user?.uid,
         date,
         content,
         bookmark: {

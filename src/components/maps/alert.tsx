@@ -17,9 +17,9 @@ export default function AlertMaps(props: IAlertProps) {
       }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-100 w-80 "
+      className="absolute top-1/6 left-1/2 -translate-x-1/2 -translate-y-1/2 z-100 w-80"
     >
-      <Alert>
+      <Alert variant="destructive">
         <CheckCircle2Icon />
         <AlertTitle>{props.alertValue}</AlertTitle>
         {/* <AlertDescription></AlertDescription> */}
