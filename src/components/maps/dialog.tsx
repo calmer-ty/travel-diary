@@ -5,6 +5,7 @@ import { useDialog } from "@/commons/hooks/useDialog";
 
 // shadcn
 import { Button } from "@/components/ui/button";
+import { Input } from "../ui/input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -36,7 +37,6 @@ interface IMapsDialogProps {
 }
 
 export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, handleSubmit, handleUpdate, markerData, bookmarkState }: IMapsDialogProps) {
-  const { isOpen: isBookmarkOpen, onClickToggle: toggleBookmark } = useDialog();
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList } = useDialog();
 
   const onClickBookmarkColor = (color: string): void => {
@@ -54,63 +54,51 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
 
           {/* 다이얼로그 */}
           <div className="grid gap-4">
-            {/* 리스트 */}
-            <div className="relative rounded-md bg-white border px-2 py-1.5  shadow-xs">
-              <div className="text-center cursor-pointer" onClick={toggleBookmark}>
-                <img className="w-6 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
-                <span className="inline-block align-middle">여정</span>
-              </div>
-
-              {/* 리스트 박스 */}
-              <div style={{ display: isBookmarkOpen ? "block" : "none" }} className="absolute top-10 left-0 w-60 h-80 rounded-md bg-white border px-2 py-1.5  shadow-xs ">
-                <div className="p-1 border-b">
-                  {/* 리스트 추가하기 */}
-                  <div className="cursor-pointer" onClick={toggleBookmarkList}>
-                    <img className="w-5 inline-block align-middle mr-1" src="./images/icon_plus.png" alt="" />
-                    <span className="inline-block align-middle">여정 추가하기</span>
-                  </div>
-                  {/* 리스트 아이템 추가 박스 */}
-                  <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full mt-3">
-                    <input
-                      className="w-full  border p-1 rounded-md placeholder:text-sm placeholder-gray"
-                      type="text"
-                      placeholder="여정의 이름을 입력해주세요."
-                      value={bookmarkState.bookmarkName}
-                      onChange={(e) => bookmarkState.setBookmarkName(e.target.value)}
-                    />
-                    <p className="text-sm">여정 색깔을 정해 주세요.</p>
-                    <ul className="flex flex-wrap justify-center gap-1 w-full">
-                      {ColorList.map(({ color }, idx) => (
-                        <li
-                          onClick={() => onClickBookmarkColor(color)}
-                          style={{ borderColor: bookmarkState.bookmarkColor === color ? "#000" : "transparent" }}
-                          className="cursor-pointer border rounded-sm"
-                          key={idx}
-                        >
-                          <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* 리스트 아이템 */}
-                  <div className="w-full overflow-y-auto"></div>
-                </div>
-              </div>
-            </div>
-
+            {/* 북마크 */}
             <DropdownMenu>
+              {/* 여정 버튼 - 트리거 요소도 버튼이기 때문에 트리거 동작과 버튼 스타일을 갖기 위해선 asChild로 기능을 전달 */}
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Open</Button>
+                <Button variant="outline">
+                  <img className="w-6 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
+                  <span className="inline-block align-middle">여정</span>
+                </Button>
               </DropdownMenuTrigger>
 
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault(); // 메뉴 닫히는 기본 동작 방지
+                    toggleBookmarkList();
+                  }}
+                >
+                  <img className="w-5 inline-block" src="./images/icon_plus.png" alt="" />
+                  <span>여정 추가하기</span>
+                </DropdownMenuItem>
+
+                {/* 여정 북마크 생성 요소 */}
+                {isBookmarkListOpen && (
+                  <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
+                    {/* 이 부분은 자유롭게 마크업 가능 */}
+                    <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full mt-3">
+                      <Input className="bg-white" placeholder="여정의 이름을 입력해주세요." value={bookmarkState.bookmarkName} onChange={(e) => bookmarkState.setBookmarkName(e.target.value)} />
+                      <p className="text-sm">여정 색깔을 정해 주세요.</p>
+                      <ul className="flex flex-wrap justify-center gap-1 w-full">
+                        {ColorList.map(({ color }, idx) => (
+                          <li
+                            onClick={() => onClickBookmarkColor(color)}
+                            style={{ borderColor: bookmarkState.bookmarkColor === color ? "#000" : "transparent" }}
+                            className="cursor-pointer border rounded-sm"
+                            key={idx}
+                          >
+                            <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
