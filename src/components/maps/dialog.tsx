@@ -27,15 +27,15 @@ interface IBookmarkStateProps {
 
 interface IMapsDialogProps {
   isEdit: boolean;
-  isDialogOpen: boolean;
-  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  showDialog: boolean;
+  setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   markerData: IMarkerDataProps;
   bookmarkState: IBookmarkStateProps;
 }
 
-export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, handleSubmit, handleUpdate, markerData, bookmarkState }: IMapsDialogProps) {
+export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSubmit, handleUpdate, markerData, bookmarkState }: IMapsDialogProps) {
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList } = useDialog();
 
   const onClickBookmarkColor = (color: string): void => {
@@ -48,7 +48,7 @@ export default function MapsDialog({ isEdit, isDialogOpen, setIsDialogOpen, hand
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>

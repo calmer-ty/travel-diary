@@ -54,7 +54,7 @@ export default function Maps() {
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
 
   // 🖊️ 폼 관련
-  const { isOpen: isDialogOpen, setIsOpen: setIsDialogOpen } = useDialog();
+  const { isOpen: showDialog, setIsOpen: setShowDialog } = useDialog();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState<string>("");
 
@@ -106,7 +106,7 @@ export default function Maps() {
       // 모달 창 데이터 초기화
       setIsEdit(false);
       setSelectedPosition({ lat, lng });
-      setIsDialogOpen(true);
+      setShowDialog(true);
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
@@ -140,7 +140,7 @@ export default function Maps() {
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
-    setIsDialogOpen(true);
+    setShowDialog(true);
     setIsEdit(true);
     setSelectedMarker(marker);
     setDate(marker.date); // 첫 마커 클릭 시 마커 데이터로 렌더링
@@ -211,7 +211,7 @@ export default function Maps() {
 
         // 맵 센터, 모달끄기, 포지션 초기화
         setMapCenter(selectedPosition);
-        setIsDialogOpen(false);
+        setShowDialog(false);
         setSelectedPosition(null);
 
         // 수정 후에 입력 폼 스테이트 초기화
@@ -224,7 +224,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setIsDialogOpen]
+    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog]
   );
   // ✅ [수정]
   const handleUpdate = useCallback(
@@ -251,7 +251,7 @@ export default function Maps() {
         });
         //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
         setMarkers((prev) => prev.map((marker) => (marker._id === selectedMarker._id ? { ...marker, date: date ?? marker.date, content } : marker)));
-        setIsDialogOpen(false);
+        setShowDialog(false);
 
         // 수정 후에 입력 폼 스테이트 초기화
         setDate(undefined);
@@ -263,13 +263,13 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, date, content, selectedMarker, triggerAlert, setIsDialogOpen]
+    [user?.uid, date, content, selectedMarker, triggerAlert, setShowDialog]
   );
 
   useEffect(() => {
     // console.log("✅ 마커 업데이트됨: ", markers);
-    console.log("✅ isDialogOpen 업데이트됨: ", isDialogOpen);
-  }, [isDialogOpen]);
+    console.log("✅ showDialog 업데이트됨: ", showDialog);
+  }, [showDialog]);
 
   // Google API Loader
   const { isLoaded } = useJsApiLoader({
@@ -321,8 +321,8 @@ export default function Maps() {
       {/* 모달 */}
       <MapsDialog
         isEdit={isEdit}
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
+        showDialog={showDialog}
+        setShowDialog={setShowDialog}
         handleSubmit={handleSubmit}
         handleUpdate={handleUpdate}
         markerData={{
