@@ -93,8 +93,6 @@ export default function Maps() {
 
   // POI 클릭 시
   const onClickPOI = (e: google.maps.MapMouseEvent) => {
-    console.log("date: ", date);
-    console.log("content: ", content);
     const placeId = (e as google.maps.IconMouseEvent).placeId;
 
     if (!e.latLng || !mapRef.current) return;
@@ -265,9 +263,10 @@ export default function Maps() {
     [user?.uid, date, content, selectedMarker, triggerAlert, setIsDialogOpen]
   );
 
-  // useEffect(() => {
-  //   console.log("✅ 마커 업데이트됨: ", markers);
-  // }, [markers]);
+  useEffect(() => {
+    // console.log("✅ 마커 업데이트됨: ", markers);
+    console.log("✅ isDialogOpen 업데이트됨: ", isDialogOpen);
+  }, [isDialogOpen]);
 
   // const handleCancel = useCallback(() => {
   //   setIsDialogOpen(false);

@@ -8,6 +8,5 @@ export const useDialog = () => {
     setIsOpen((prev) => !prev);
   };
 
-  console.log("isOpen: ", isOpen);
   return { isOpen, setIsOpen, onClickToggle };
 };
