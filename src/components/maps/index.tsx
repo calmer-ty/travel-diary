@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 import { addDoc, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
-import { firebaseApp } from "@/commons/libraries/firebase/firebaseApp";
-import { useAuth } from "@/commons/hooks/useAuth";
-import { useAlert } from "@/commons/hooks/useAlert";
+import { firebaseApp } from "@/lib/firebase/firebaseApp";
+import { useAuth } from "@/hooks/useAuth";
+import { useAlert } from "@/hooks/useAlert";
 
 import AlertMaps from "./alert";
 
-import { ILogPlace } from "@/commons/types";
-import { useDialog } from "@/commons/hooks/useDialog";
+import { ILogPlace } from "@/types";
+import { useDialog } from "@/hooks/useDialog";
 import MapsDialog from "./dialog";
 
 const containerStyle = {

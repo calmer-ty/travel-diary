@@ -1,7 +1,7 @@
 import { DatePicker01 } from "@/components/commons/datePicker/01";
 import { Textarea } from "@/components/ui/textarea";
 import { ColorList } from "./colorList";
-import { useDialog } from "@/commons/hooks/useDialog";
+import { useDialog } from "@/hooks/useDialog";
 
 // shadcn
 import { Button } from "@/components/ui/button";

@@ -1,8 +1,8 @@
 "use client";
 
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";
-import { useAuth } from "@/commons/hooks/useAuth";
+import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
+import { useAuth } from "@/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
