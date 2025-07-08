@@ -78,7 +78,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                   }}
                 >
                   <img className="w-5 inline-block" src="./images/icon_plus.png" alt="" />
-                  <span>여정 추가하기</span>
+                  <span className="cursor-pointer">여정 추가하기</span>
                 </DropdownMenuItem>
 
                 {/* 여정 북마크 생성 요소 */}
@@ -92,7 +92,10 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                         {ColorList.map(({ color }, idx) => (
                           <li
                             onClick={() => onClickBookmarkColor(color)}
-                            style={{ borderColor: bookmarkState.bookmarkColor === color ? "#000" : "transparent" }}
+                            style={{
+                              backgroundColor: bookmarkState.bookmarkColor === color ? "#F1F5F9" : "transparent",
+                              borderColor: bookmarkState.bookmarkColor === color ? "#ddd" : "transparent",
+                            }}
                             className="cursor-pointer border rounded-sm"
                             key={idx}
                           >
@@ -100,6 +103,13 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                           </li>
                         ))}
                       </ul>
+
+                      <div className="flex  gap-2  justify-end">
+                        <Button variant="outline">닫기</Button>
+                        <Button variant="primary" type="submit">
+                          저장
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 )}
