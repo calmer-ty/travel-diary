@@ -1,7 +1,10 @@
-import * as React from "react";
+import { useState } from "react";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
+
+import { useAuth } from "@/hooks/useAuth";
+import { useUserMarker } from "@/hooks/useUserMarkers";
 
 interface IBookmarkProps {
   id: number;
@@ -33,7 +36,13 @@ const bookmark: IBookmarkProps[] = [
 ];
 
 export default function List() {
-  const [selected, setSelected] = React.useState(bookmark[0]);
+  const { user } = useAuth();
+  // 마커 데이터 조회
+  const { markers } = useUserMarker(user?.uid);
+  console.log("markers: ", markers);
+
+  const [selected, setSelected] = useState(bookmark[0]);
+
   return (
     <article className="grid gap-4 p-8">
       {/* 상단 스크롤 여정 리스트 */}

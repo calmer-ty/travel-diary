@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
-import { addDoc, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
@@ -10,6 +10,7 @@ import AlertMaps from "./alert";
 import { ILogPlace } from "@/types";
 import { useDialog } from "@/hooks/useDialog";
 import MapsDialog from "./dialog";
+import { useUserMarker } from "@/hooks/useUserMarkers";
 
 const containerStyle = {
   width: "100%",
@@ -50,7 +51,7 @@ export default function Maps() {
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
   // 📌 마커 관련
-  const [markers, setMarkers] = useState<ILogPlace[]>([]);
+  // const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
 
   // 🖊️ 폼 관련
@@ -121,22 +122,25 @@ export default function Maps() {
   };
 
   // 마커 보이기
-  const fetchStoredMarkers = useCallback(async () => {
-    const db = getFirestore(firebaseApp);
-    const querySnapshot = await getDocs(collection(db, "travelData"));
+  // const fetchStoredMarkers = useCallback(async () => {
+  //   const db = getFirestore(firebaseApp);
+  //   const querySnapshot = await getDocs(collection(db, "travelData"));
 
-    const storedMarkers = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      date: doc.data().date.toDate(),
-    })) as ILogPlace[];
+  //   const storedMarkers = querySnapshot.docs.map((doc) => ({
+  //     ...doc.data(),
+  //     date: doc.data().date.toDate(),
+  //   })) as ILogPlace[];
 
-    const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
+  //   const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
 
-    setMarkers(userMarkers);
-  }, [user?.uid]);
-  useEffect(() => {
-    fetchStoredMarkers();
-  }, [fetchStoredMarkers]);
+  //   setMarkers(userMarkers);
+  // }, [user?.uid]);
+  // useEffect(() => {
+  //   fetchStoredMarkers();
+  // }, [fetchStoredMarkers]);
+
+  // 마커 데이터 조회
+  const { markers, setMarkers } = useUserMarker(user?.uid);
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
@@ -233,7 +237,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog]
+    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, setMarkers, triggerAlert, setShowDialog]
   );
   // ✅ [수정]
   const handleUpdate = useCallback(
@@ -272,7 +276,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, date, content, selectedMarker, triggerAlert, setShowDialog]
+    [user?.uid, date, content, selectedMarker, setMarkers, triggerAlert, setShowDialog]
   );
 
   useEffect(() => {
