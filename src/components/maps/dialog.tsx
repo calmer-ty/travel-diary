@@ -63,7 +63,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
               {/* 여정 버튼 - 트리거 요소도 버튼이기 때문에 트리거 동작과 버튼 스타일을 갖기 위해선 asChild로 기능을 전달 */}
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                  <img className="w-6 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
+                  <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
                   <span className="inline-block align-middle">여정</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -107,7 +107,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
             </DropdownMenu>
 
             {/* 날짜 선택 */}
-            <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="mb-4" />
+            <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="" />
             {/* 내용 작성 */}
             <Textarea value={markerData.content} onChange={(e) => markerData.setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
             {/* 버튼 */}
