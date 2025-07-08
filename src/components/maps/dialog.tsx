@@ -86,7 +86,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                   <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
                     {/* 이 부분은 자유롭게 마크업 가능 */}
                     <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full mt-3">
-                      <Input className="bg-white" placeholder="여정의 이름을 입력해주세요." value={bookmarkState.bookmarkName} onChange={(e) => bookmarkState.setBookmarkName(e.target.value)} />
+                      <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={bookmarkState.bookmarkName} onChange={(e) => bookmarkState.setBookmarkName(e.target.value)} />
                       <p className="text-sm">여정 색깔을 정해 주세요.</p>
                       <ul className="flex flex-wrap justify-center gap-1 w-full">
                         {ColorList.map(({ color }, idx) => (
@@ -114,7 +114,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline" onClick={onClickCancel}>
-                  Cancel
+                  닫기
                 </Button>
               </DialogClose>
               <Button variant="primary" type="submit">
