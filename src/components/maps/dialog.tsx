@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 interface IMarkerDataProps {
   name: string;
@@ -19,10 +20,8 @@ interface IMarkerDataProps {
   setContent: React.Dispatch<React.SetStateAction<string>>;
 }
 interface IBookmarkStateProps {
-  bookmarkName: string;
-  setBookmarkName: React.Dispatch<React.SetStateAction<string>>;
-  bookmarkColor: string | null;
-  setBookmarkColor: React.Dispatch<React.SetStateAction<string | null>>;
+  bookmark: string | null;
+  setBookmark: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface IMapsDialogProps {
@@ -36,12 +35,29 @@ interface IMapsDialogProps {
 }
 
 export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSubmit, handleUpdate, markerData, bookmarkState }: IMapsDialogProps) {
-  const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList } = useDialog();
+  const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList, setIsOpen } = useDialog();
 
-  const onClickBookmarkColor = (color: string): void => {
-    bookmarkState.setBookmarkColor((prev) => (prev === color ? null : color));
+  // DropdownMenu 색깔
+  const [bookmarkColor, setBookmarkColor] = useState("");
+
+  // dd
+  const [bookmarkName, setBookmarkName] = useState("");
+
+  // DropdownMenu 색깔 정하는 함수
+  const onClickBookmarkColor = (color: string) => {
+    setBookmarkColor((prev) => (prev === color ? "" : color));
   };
 
+  // DropdownMenu 닫기
+  const onclickDropMenuCancel = () => {
+    setIsOpen(false);
+    setBookmarkColor("");
+  };
+
+  // DropdownMenu 데이터 저장
+  const handleDropMenu = () => {};
+
+  // Dialog 닫기
   const onClickCancel = () => {
     markerData.setDate(undefined);
     markerData.setContent("");
@@ -70,6 +86,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
+
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={(e) => {
@@ -85,16 +102,16 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                 {isBookmarkListOpen && (
                   <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
                     {/* 이 부분은 자유롭게 마크업 가능 */}
-                    <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full mt-3">
-                      <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={bookmarkState.bookmarkName} onChange={(e) => bookmarkState.setBookmarkName(e.target.value)} />
+                    <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full py-1">
+                      <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={bookmarkName} onChange={(e) => bookmarkState.setBookmarkName(e.target.value)} />
                       <p className="text-sm">여정 색깔을 정해 주세요.</p>
                       <ul className="flex flex-wrap justify-center gap-1 w-full">
                         {ColorList.map(({ color }, idx) => (
                           <li
                             onClick={() => onClickBookmarkColor(color)}
                             style={{
-                              backgroundColor: bookmarkState.bookmarkColor === color ? "#F1F5F9" : "transparent",
-                              borderColor: bookmarkState.bookmarkColor === color ? "#ddd" : "transparent",
+                              backgroundColor: bookmarkColor === color ? "#F1F5F9" : "transparent",
+                              borderColor: bookmarkColor === color ? "#ddd" : "transparent",
                             }}
                             className="cursor-pointer border rounded-sm"
                             key={idx}
@@ -105,8 +122,10 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                       </ul>
 
                       <div className="flex  gap-2  justify-end">
-                        <Button variant="outline">닫기</Button>
-                        <Button variant="primary" type="submit">
+                        <Button variant="outline" onClick={onclickDropMenuCancel}>
+                          닫기
+                        </Button>
+                        <Button variant="primary" type="submit" onClick={handleDropMenu}>
                           저장
                         </Button>
                       </div>
