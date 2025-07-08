@@ -5,7 +5,7 @@ import { useDialog } from "@/hooks/useDialog";
 
 // shadcn
 import { Button } from "@/components/ui/button";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";

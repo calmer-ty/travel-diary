@@ -1,6 +1,6 @@
 "use client";
 
-import Maps from "@/components/maps";
+import Maps from "@/components/unit/maps";
 
 export default function MapsPage() {
   return <Maps />;
