@@ -64,7 +64,7 @@ export default function Maps() {
 
   // 🔖 북마크
   const [bookmarkName, setBookmarkName] = useState("");
-  const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
+  const [bookmarkColor, setBookmarkColor] = useState("");
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {

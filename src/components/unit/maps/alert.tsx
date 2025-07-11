@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle2Icon } from "lucide-react";
 import { motion } from "framer-motion";
 
