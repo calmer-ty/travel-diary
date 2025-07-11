@@ -12,7 +12,7 @@ interface IDatePicker01Props {
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   className: string;
 }
-export function DatePicker01({ date, setDate, className }: IDatePicker01Props) {
+export default function DatePicker01({ date, setDate, className }: IDatePicker01Props) {
   const [open, setOpen] = React.useState(false);
   // const [date, setDate] = React.useState<Date | undefined>(undefined);
 
