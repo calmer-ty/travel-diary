@@ -1,12 +1,34 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import { ILogPlace, IUserID } from "@/types";
 
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
+
+  // ✅ [등록]
+  const createMarker = async (markerData: ILogPlace) => {
+    // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
+    const travelData = collection(getFirestore(firebaseApp), "travelData");
+    const docRef = await addDoc(travelData, {
+      ...markerData,
+    });
+
+    // 문서 ID를 포함한 데이터로 업데이트
+    await updateDoc(docRef, {
+      _id: docRef.id,
+    });
+
+    // 3. docRef.id를 marker 객체에 넣어서 새로 구성
+    const newMarker = {
+      ...markerData,
+      _id: docRef.id,
+    };
+    // 4. 기존 마커와 그 뒤에 새로운 마커의 데이터를 추가하여 지도에 렌더링 준비
+    setMarkers((prev) => [...prev, newMarker]);
+  };
 
   const fetchMarkers = useCallback(async () => {
     if (!uid) return;
@@ -34,6 +56,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   return {
     markers,
     setMarkers,
+    createMarker,
     refetch: fetchMarkers,
   };
 };

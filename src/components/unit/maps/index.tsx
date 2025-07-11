@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
-import { addDoc, collection, doc, getFirestore, updateDoc } from "firebase/firestore";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
@@ -122,7 +122,7 @@ export default function Maps() {
   };
 
   // 마커 데이터 조회
-  const { markers, setMarkers } = useUserMarkers({ uid: user?.uid });
+  const { markers, setMarkers, createMarker } = useUserMarkers({ uid: user?.uid });
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
@@ -185,25 +185,7 @@ export default function Maps() {
       };
 
       try {
-        // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
-        const travelData = collection(getFirestore(firebaseApp), "travelData");
-        const docRef = await addDoc(travelData, {
-          ...markerData,
-        });
-
-        // 문서 ID를 포함한 데이터로 업데이트
-        await updateDoc(docRef, {
-          _id: docRef.id,
-        });
-
-        // 3. docRef.id를 marker 객체에 넣어서 새로 구성
-        const newMarker = {
-          ...markerData,
-          _id: docRef.id,
-        };
-        // 4. 기존 마커와 그 뒤에 새로운 마커의 데이터를 추가하여 지도에 렌더링 준비
-        setMarkers((prev) => [...prev, newMarker]);
-
+        await createMarker(markerData);
         // 맵 센터, 모달끄기, 포지션 초기화
         setMapCenter(selectedPosition);
         setShowDialog(false);
@@ -219,7 +201,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, setMarkers, triggerAlert, setShowDialog]
+    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog, createMarker]
   );
   // ✅ [수정]
   const handleUpdate = useCallback(
