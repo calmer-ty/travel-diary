@@ -63,7 +63,7 @@ export default function Maps() {
 
   // 🔖 북마크
   const [bookmarkName, setBookmarkName] = useState("");
-  const [bookmarkColor, setBookmarkColor] = useState<string | null>(null);
+  const [bookmarkColor, setBookmarkColor] = useState("");
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -233,7 +233,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog]
+    [user?.uid, mapsAddress, date, content, selectedPosition, triggerAlert, setShowDialog]
   );
   // ✅ [수정]
   const handleUpdate = useCallback(
