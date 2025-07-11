@@ -73,7 +73,7 @@ export default function List() {
 
   const filteredBookmarks = bookmark.filter((b) => selected === b.title);
 
-  console.log("markers: ", filteredBookmarks);
+  console.log("markers: ", markers);
 
   return (
     <article className="grid gap-4 p-8">
