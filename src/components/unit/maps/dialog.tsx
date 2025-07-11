@@ -86,7 +86,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
     if (showDialog) {
       fetchBookmarks();
     }
-  }, [showDialog, user]);
+  }, [user, showDialog, triggerAlert]);
 
   // DropdownMenu 색깔 정하는 함수
   const onClickBookmarkColor = (color: string) => {
