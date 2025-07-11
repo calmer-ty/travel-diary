@@ -62,7 +62,8 @@ export default function Maps() {
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 🔖 북마크
-  const [bookmark, setBookmark] = useState("");
+  const [bookmarkName, setBookmarkName] = useState("");
+  const [bookmarkColor, setBookmarkColor] = useState("");
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -191,7 +192,10 @@ export default function Maps() {
         uid: user?.uid,
         date,
         content,
-        bookmark,
+        bookmark: {
+          bookmarkName,
+          bookmarkColor,
+        },
       };
 
       try {
@@ -339,8 +343,10 @@ export default function Maps() {
           setContent,
         }}
         bookmarkState={{
-          bookmark,
-          setBookmark,
+          bookmarkName,
+          setBookmarkName,
+          bookmarkColor,
+          setBookmarkColor,
         }}
       />
 
