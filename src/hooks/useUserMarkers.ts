@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { addDoc, collection, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import { ILogPlace, IUserID } from "@/types";
@@ -30,6 +30,19 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     setMarkers((prev) => [...prev, newMarker]);
   };
 
+  // ✅ [수정]
+  const updateMarker = async ({ markerId, date, content }: { markerId: string; date: Date | undefined; content: string }) => {
+    const db = getFirestore(firebaseApp);
+    const docRef = doc(db, "travelData", markerId);
+
+    await updateDoc(docRef, {
+      date,
+      content,
+    });
+    //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
+    setMarkers((prev) => prev.map((marker) => (marker._id === markerId ? { ...marker, date: date ?? marker.date, content } : marker)));
+  };
+
   const fetchMarkers = useCallback(async () => {
     if (!uid) return;
 
@@ -55,8 +68,8 @@ export const useUserMarkers = ({ uid }: IUserID) => {
 
   return {
     markers,
-    setMarkers,
     createMarker,
+    updateMarker,
     refetch: fetchMarkers,
   };
 };

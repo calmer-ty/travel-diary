@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import { firebaseApp } from "@/lib/firebase/firebaseApp";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
+import { useUserMarkers } from "@/hooks/useUserMarkers";
+import { useDialog } from "@/hooks/useDialog";
 
+import MapsDialog from "./dialog";
 import AlertMaps from "./alert";
 
 import { ILogPlace } from "@/types";
-import { useDialog } from "@/hooks/useDialog";
-import MapsDialog from "./dialog";
-import { useUserMarkers } from "@/hooks/useUserMarkers";
 
 const containerStyle = {
   width: "100%",
@@ -34,7 +33,7 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
-  const { user } = useAuth();
+  const { uid } = useAuth();
   // 🔧Edit 상태
   const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가
   // 🗺️ 지도 관련 상태
@@ -122,7 +121,7 @@ export default function Maps() {
   };
 
   // 마커 데이터 조회
-  const { markers, setMarkers, createMarker } = useUserMarkers({ uid: user?.uid });
+  const { markers, createMarker, updateMarker } = useUserMarkers({ uid });
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
@@ -139,7 +138,7 @@ export default function Maps() {
       e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
       // 🔒 uid 없을 경우 등록 막기
-      if (!user?.uid) {
+      if (!uid) {
         triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
         return;
       }
@@ -175,7 +174,7 @@ export default function Maps() {
         name: mapsAddress?.name,
         address: mapsAddress?.formatted_address,
         latLng: selectedPosition,
-        uid: user?.uid,
+        uid,
         date,
         content,
         bookmark: {
@@ -201,33 +200,25 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog, createMarker]
+    [uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog, createMarker]
   );
   // ✅ [수정]
   const handleUpdate = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-      if (!user?.uid) {
+      const markerId = selectedMarker?._id;
+      if (!uid) {
         triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+        return;
+      }
+      if (!markerId) {
+        triggerAlert("마커 ID가 없습니다");
         return;
       }
 
       try {
-        // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
-        if (!selectedMarker?._id) {
-          console.error("문서 ID가 없습니다");
-          return;
-        }
-        const db = getFirestore(firebaseApp);
-        const docRef = doc(db, "travelData", selectedMarker._id);
-
-        await updateDoc(docRef, {
-          date,
-          content,
-        });
-        //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
-        setMarkers((prev) => prev.map((marker) => (marker._id === selectedMarker._id ? { ...marker, date: date ?? marker.date, content } : marker)));
+        await updateMarker({ markerId, date, content });
         setShowDialog(false);
 
         // 수정 후에 입력 폼 스테이트 초기화
@@ -240,7 +231,7 @@ export default function Maps() {
         }
       }
     },
-    [user?.uid, date, content, selectedMarker, setMarkers, triggerAlert, setShowDialog]
+    [uid, date, content, selectedMarker, triggerAlert, setShowDialog, updateMarker]
   );
 
   useEffect(() => {
