@@ -43,20 +43,24 @@ interface IMapsDialogProps {
 }
 
 export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSubmit, handleUpdate, markerData, bookmarkState }: IMapsDialogProps) {
+  // 유저 ID
   const { user } = useAuth();
 
-  // ⚠️ 알림창 등
+  // ⚠️ 알림창 관련
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList, setIsOpen } = useDialog();
 
+  // DropdownMenu 이름, 색깔 선택된 값을 담기
   const [bookMarkResult, setBookMarkResult] = useState<{ bookmarkColor: string; bookmarkName: string }[]>([]);
+
   // DropdownMenu 색깔
   const [dropMenuColor, setDropMenuColor] = useState("");
 
   // DropdownMenu 이름
   const [dropMenuName, setDropMenuName] = useState("");
 
+  // 유저의 id값으로 기존 여정리스트들을 필터링
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
@@ -94,7 +98,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   };
 
   // DropdownMenu 닫기
-  const onclickDropMenuCancel = () => {
+  const onClickDropMenuCancel = () => {
     setIsOpen(false);
     setDropMenuColor("");
   };
@@ -111,6 +115,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
         bookmarkName: dropMenuName,
       });
 
+      // DropdownMenu 이름, 색깔 선택된 값을 담기
       setBookMarkResult((prev) => [
         ...prev,
         {
@@ -135,6 +140,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
     markerData.setContent("");
   };
 
+  // travelData에 저장될 값을 담기
   const onChangeName = (name: string, color: string) => {
     bookmarkState.setBookmarkName((prev) => (prev === name ? "" : name));
     bookmarkState.setBookmarkColor((prev) => (prev === color ? "" : color));
@@ -168,6 +174,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
               <DropdownMenuContent>
                 <DropdownMenuLabel>
+                  {/* 여정 리스트 */}
                   {bookMarkResult.length > 0 ? (
                     <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
                       {bookMarkResult.map((el) => (
@@ -183,6 +190,8 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator />
+
+                {/* 여정 추가하기 클릭 영역 */}
                 {!isBookmarkListOpen && (
                   <DropdownMenuItem
                     onClick={(e) => {
@@ -198,7 +207,6 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                 {/* 여정 북마크 생성 요소 */}
                 {isBookmarkListOpen && (
                   <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
-                    {/* 이 부분은 자유롭게 마크업 가능 */}
                     <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full py-1">
                       <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={dropMenuName} onChange={(e) => setDropMenuName(e.target.value)} />
                       <p className="text-sm">여정 색깔을 정해 주세요.</p>
@@ -219,7 +227,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                       </ul>
 
                       <div className="flex  gap-2  justify-end">
-                        <Button variant="outline" onClick={onclickDropMenuCancel}>
+                        <Button variant="outline" onClick={onClickDropMenuCancel}>
                           닫기
                         </Button>
                         <Button variant="primary" type="button" onClick={handleDropMenu}>
