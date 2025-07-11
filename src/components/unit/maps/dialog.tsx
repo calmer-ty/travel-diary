@@ -63,13 +63,13 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   };
 
   // DropdownMenu 닫기
-  const onclickDropMenuCancel = () => {
+  const onClickDropMenuCancel = () => {
     setIsOpen(false);
     setBookmarkColor("");
   };
 
   // bookMarkData 저장
-  const handleDropMenu = async () => {
+  const handleAddBookmark = async () => {
     try {
       const db = getFirestore(firebaseApp);
       const bookMarkData = collection(db, "bookmarkData");
@@ -188,10 +188,10 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                       </ul>
 
                       <div className="flex  gap-2  justify-end">
-                        <Button variant="outline" onClick={onclickDropMenuCancel}>
+                        <Button variant="outline" onClick={onClickDropMenuCancel}>
                           닫기
                         </Button>
-                        <Button variant="primary" type="button" onClick={handleDropMenu}>
+                        <Button variant="primary" type="button" onClick={handleAddBookmark}>
                           저장
                         </Button>
                       </div>
