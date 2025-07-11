@@ -10,7 +10,7 @@ import AlertMaps from "./alert";
 import { ILogPlace } from "@/types";
 import { useDialog } from "@/hooks/useDialog";
 import MapsDialog from "./dialog";
-import { useUserMarker } from "@/hooks/useUserMarkers";
+import { useUserMarkers } from "@/hooks/useUserMarkers";
 
 const containerStyle = {
   width: "100%",
@@ -122,7 +122,7 @@ export default function Maps() {
   };
 
   // 마커 데이터 조회
-  const { markers, setMarkers } = useUserMarker({ uid: user?.uid });
+  const { markers, setMarkers } = useUserMarkers({ uid: user?.uid });
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {

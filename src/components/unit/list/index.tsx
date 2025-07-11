@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useUserMarker } from "@/hooks/useUserMarkers";
+import { useUserMarkers } from "@/hooks/useUserMarkers";
 
 interface IBookmarkProps {
   id: number;
@@ -67,7 +67,7 @@ const bookmark: IBookmarkProps[] = [
 export default function List() {
   const { user } = useAuth();
   // 마커 데이터 조회
-  const { markers } = useUserMarker({ uid: user?.uid });
+  const { markers } = useUserMarkers({ uid: user?.uid });
 
   const [selected, setSelected] = useState(titles[0]);
 

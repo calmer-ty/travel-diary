@@ -5,7 +5,7 @@ import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import { ILogPlace, IUserID } from "@/types";
 
-export const useUserMarker = ({ uid }: IUserID) => {
+export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
 
   const fetchMarkers = useCallback(async () => {
