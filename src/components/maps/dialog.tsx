@@ -60,10 +60,10 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        // if (!user?.uid) {
-        //   triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
-        //   return;
-        // }
+        if (!user?.uid) {
+          triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+          return;
+        }
 
         const db = getFirestore(firebaseApp);
         const bookMarkData = collection(db, "bookMarkData");
