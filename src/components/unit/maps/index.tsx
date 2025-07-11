@@ -121,26 +121,8 @@ export default function Maps() {
     }
   };
 
-  // 마커 보이기
-  // const fetchStoredMarkers = useCallback(async () => {
-  //   const db = getFirestore(firebaseApp);
-  //   const querySnapshot = await getDocs(collection(db, "travelData"));
-
-  //   const storedMarkers = querySnapshot.docs.map((doc) => ({
-  //     ...doc.data(),
-  //     date: doc.data().date.toDate(),
-  //   })) as ILogPlace[];
-
-  //   const userMarkers = storedMarkers.filter((item) => item.uid === user?.uid);
-
-  //   setMarkers(userMarkers);
-  // }, [user?.uid]);
-  // useEffect(() => {
-  //   fetchStoredMarkers();
-  // }, [fetchStoredMarkers]);
-
   // 마커 데이터 조회
-  const { markers, setMarkers } = useUserMarker(user?.uid);
+  const { markers, setMarkers } = useUserMarker({ uid: user?.uid });
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {

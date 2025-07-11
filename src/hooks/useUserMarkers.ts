@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { ILogPlace } from "@/types";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
-export const useUserMarker = (uid: string | undefined) => {
+import { ILogPlace, IUserID } from "@/types";
+
+export const useUserMarker = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
 
   const fetchMarkers = useCallback(async () => {

@@ -14,3 +14,7 @@ export interface ILogPlace {
     bookmarkColor: string | null;
   };
 }
+
+export interface IUserID {
+  uid: string | undefined;
+}
