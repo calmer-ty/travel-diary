@@ -19,10 +19,10 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
       }
 
       const db = getFirestore(firebaseApp);
-      const bookMarkData = collection(db, "bookmarkData");
+      const bookmarkData = collection(db, "bookmarkData");
 
       // 🔥 현재 로그인한 유저의 uid로 필터링
-      const q = query(bookMarkData, where("uid", "==", uid));
+      const q = query(bookmarkData, where("uid", "==", uid));
       const snapshot = await getDocs(q);
 
       const fetchedData = snapshot.docs.map((doc) => ({
