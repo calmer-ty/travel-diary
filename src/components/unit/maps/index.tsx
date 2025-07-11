@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -105,8 +105,8 @@ export default function Maps() {
 
       // 모달 창 데이터 초기화
       setIsEdit(false);
-      setSelectedPosition({ lat, lng });
       setShowDialog(true);
+      setSelectedPosition({ lat, lng });
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
@@ -128,7 +128,7 @@ export default function Maps() {
     setShowDialog(true);
     setIsEdit(true);
     setSelectedMarker(marker);
-    setDate(marker.date); // 첫 마커 클릭 시 마커 데이터로 렌더링
+    setDate(marker.date);
     setContent(marker.content);
   };
 
@@ -185,12 +185,10 @@ export default function Maps() {
 
       try {
         await createMarker(markerData);
-        // 맵 센터, 모달끄기, 포지션 초기화
+        // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
         setMapCenter(selectedPosition);
         setShowDialog(false);
         setSelectedPosition(null);
-
-        // 수정 후에 입력 폼 스테이트 초기화
         setDate(undefined);
         setContent("");
       } catch (error) {
@@ -219,9 +217,8 @@ export default function Maps() {
 
       try {
         await updateMarker({ markerId, date, content });
+        // 수정 후 폼/다이얼로그 초기화
         setShowDialog(false);
-
-        // 수정 후에 입력 폼 스테이트 초기화
         setDate(undefined);
         setContent("");
       } catch (error) {
@@ -234,10 +231,10 @@ export default function Maps() {
     [uid, date, content, selectedMarker, triggerAlert, setShowDialog, updateMarker]
   );
 
-  useEffect(() => {
-    // console.log("✅ 마커 업데이트됨: ", markers);
-    console.log("✅ showDialog 업데이트됨: ", showDialog);
-  }, [showDialog]);
+  // 업데이트 되는 내용 볼 때 사용
+  // useEffect(() => {
+  //   console.log("✅ showDialog 업데이트됨: ", showDialog);
+  // }, [showDialog]);
 
   // Google API Loader
   const { isLoaded } = useJsApiLoader({
