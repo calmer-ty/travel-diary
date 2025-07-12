@@ -1,21 +1,23 @@
-import { DatePicker01 } from "@/components/commons/datePicker/01";
-import { Textarea } from "@/components/ui/textarea";
-import { ColorList } from "./colorList";
+import { useState } from "react";
+import { firebaseApp } from "@/lib/firebase/firebaseApp";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
+
+import { useAuth } from "@/hooks/useAuth";
+import { useAlert } from "@/hooks/useAlert";
+import { useUserBookmarks } from "@/hooks/useUserBookmarks";
 import { useDialog } from "@/hooks/useDialog";
+
+import DatePicker01 from "@/components/commons/datePicker/01";
+import AlertMaps from "./alert";
+
+import { ColorList } from "./colorList";
 
 // shadcn
 import { Button } from "@/components/ui/button";
 import { Input } from "../../ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useEffect, useState } from "react";
-import { firebaseApp } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore";
-import { useAuth } from "@/hooks/useAuth";
-
-import { useAlert } from "@/hooks/useAlert";
-import AlertMaps from "./alert";
 
 interface IMarkerDataProps {
   name: string;
@@ -46,86 +48,50 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   // 유저 ID
   const { user } = useAuth();
 
-  // ⚠️ 알림창 관련
-  const { showAlert, alertValue, triggerAlert } = useAlert();
+  // ⚠️ 알림창 등
+  const { showAlert, alertValue } = useAlert();
 
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList, setIsOpen } = useDialog();
 
-  // DropdownMenu 이름, 색깔 선택된 값을 담기
-  const [bookMarkResult, setBookMarkResult] = useState<{ bookmarkColor: string; bookmarkName: string }[]>([]);
-
-  // DropdownMenu 색깔
-  const [dropMenuColor, setDropMenuColor] = useState("");
-
-  // DropdownMenu 이름
-  const [dropMenuName, setDropMenuName] = useState("");
-
-  // 유저의 id값으로 기존 여정리스트들을 필터링
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      try {
-        if (!user?.uid) {
-          triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
-          return;
-        }
-
-        const db = getFirestore(firebaseApp);
-        const bookMarkData = collection(db, "bookMarkData");
-
-        // 🔥 현재 로그인한 유저의 uid로 필터링
-        const q = query(bookMarkData, where("uid", "==", user?.uid));
-        const snapshot = await getDocs(q);
-
-        const fetchedData = snapshot.docs.map((doc) => ({
-          bookmarkColor: doc.data().bookmarkColor,
-          bookmarkName: doc.data().bookmarkName,
-        }));
-
-        setBookMarkResult(fetchedData);
-      } catch (error) {
-        console.error("Firebase 북마크 불러오기 실패:", error);
-      }
-    };
-
-    if (showDialog) {
-      fetchBookmarks();
-    }
-  }, [user, showDialog, triggerAlert]);
+  // 북마크 관련
+  const { bookmarks, setBookmarks } = useUserBookmarks({ uid: user?.uid });
+  const [bookmarkName, setBookmarkName] = useState("");
+  const [bookmarkColor, setBookmarkColor] = useState("");
 
   // DropdownMenu 색깔 정하는 함수
   const onClickBookmarkColor = (color: string) => {
-    setDropMenuColor((prev) => (prev === color ? "" : color));
+    setBookmarkColor((prev) => (prev === color ? "" : color));
   };
 
   // DropdownMenu 닫기
   const onClickDropMenuCancel = () => {
     setIsOpen(false);
-    setDropMenuColor("");
+    setBookmarkColor("");
   };
 
   // bookMarkData 저장
-  const handleDropMenu = async () => {
+  const handleAddBookmark = async () => {
     try {
       const db = getFirestore(firebaseApp);
-      const bookMarkData = collection(db, "bookMarkData");
+      const bookMarkData = collection(db, "bookmarkData");
 
       await addDoc(bookMarkData, {
         uid: user?.uid,
-        bookmarkColor: dropMenuColor,
-        bookmarkName: dropMenuName,
+        bookmarkName,
+        bookmarkColor,
       });
 
       // DropdownMenu 이름, 색깔 선택된 값을 담기
-      setBookMarkResult((prev) => [
+      setBookmarks((prev) => [
         ...prev,
         {
-          bookmarkColor: dropMenuColor,
-          bookmarkName: dropMenuName,
+          bookmarkName,
+          bookmarkColor,
         },
       ]);
 
-      setDropMenuColor("");
-      setDropMenuName("");
+      setBookmarkName("");
+      setBookmarkColor("");
       setIsOpen(false);
     } catch (error) {
       if (error instanceof Error) {
@@ -173,11 +139,11 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
               </DropdownMenuTrigger>
 
               <DropdownMenuContent>
+                {/* 여정 리스트 */}
                 <DropdownMenuLabel>
-                  {/* 여정 리스트 */}
-                  {bookMarkResult.length > 0 ? (
+                  {bookmarks.length > 0 ? (
                     <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
-                      {bookMarkResult.map((el) => (
+                      {bookmarks.map((el) => (
                         <div key={el.bookmarkName} onClick={() => onChangeName(el.bookmarkName, el.bookmarkColor)} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 rounded">
                           <img src={`./images/bookmark/icon_bookmarker_${el.bookmarkColor}.png`} alt="북마크 아이콘" className="w-5" />
                           <span>{el.bookmarkName}</span>
@@ -208,15 +174,15 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                 {isBookmarkListOpen && (
                   <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
                     <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full py-1">
-                      <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={dropMenuName} onChange={(e) => setDropMenuName(e.target.value)} />
+                      <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={bookmarkName} onChange={(e) => setBookmarkName(e.target.value)} />
                       <p className="text-sm">여정 색깔을 정해 주세요.</p>
                       <ul className="flex flex-wrap justify-center gap-1 w-full">
                         {ColorList.map(({ color }, idx) => (
                           <li
                             onClick={() => onClickBookmarkColor(color)}
                             style={{
-                              backgroundColor: dropMenuColor === color ? "#F1F5F9" : "transparent",
-                              borderColor: dropMenuColor === color ? "#ddd" : "transparent",
+                              backgroundColor: bookmarkColor === color ? "#F1F5F9" : "transparent",
+                              borderColor: bookmarkColor === color ? "#ddd" : "transparent",
                             }}
                             className="cursor-pointer border rounded-sm"
                             key={idx}
@@ -230,7 +196,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                         <Button variant="outline" onClick={onClickDropMenuCancel}>
                           닫기
                         </Button>
-                        <Button variant="primary" type="button" onClick={handleDropMenu}>
+                        <Button variant="primary" type="button" onClick={handleAddBookmark}>
                           저장
                         </Button>
                       </div>
