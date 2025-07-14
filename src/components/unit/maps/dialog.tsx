@@ -49,7 +49,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   const { user } = useAuth();
 
   // ⚠️ 알림창 등
-  const { showAlert, alertValue } = useAlert();
+  const { showAlert, alertValue, triggerAlert } = useAlert();
 
   const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList, setIsOpen } = useDialog();
 
@@ -71,6 +71,13 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
   // bookMarkData 저장
   const handleAddBookmark = async () => {
+    const isDuplicate = bookmarks.some((bm) => bm.bookmarkName === bookmarkName.trim());
+
+    if (isDuplicate) {
+      triggerAlert("이미 존재하는 여정 이름입니다. 다른 이름을 입력해주세요.");
+      return;
+    }
+
     try {
       const db = getFirestore(firebaseApp);
       const bookMarkData = collection(db, "bookmarkData");
