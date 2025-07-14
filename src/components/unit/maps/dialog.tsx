@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 
@@ -26,6 +26,8 @@ interface IMarkerDataProps {
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
+  bookmarkName: string;
+  bookmarkColor: string;
 }
 interface IBookmarkStateProps {
   bookmarkName: string;
@@ -58,6 +60,13 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   const [bookmarkName, setBookmarkName] = useState("");
   const [bookmarkColor, setBookmarkColor] = useState("");
 
+  // 모달 관리
+  useEffect(() => {
+    // 마커에 연결된 북마크가 있으면 설정, 없으면 빈 문자열로 초기화
+    bookmarkState.setBookmarkName(markerData.bookmarkName || "");
+    bookmarkState.setBookmarkColor(markerData.bookmarkColor || "");
+  }, [markerData.name]);
+
   // DropdownMenu 색깔 정하는 함수
   const onClickBookmarkColor = (color: string) => {
     setBookmarkColor((prev) => (prev === color ? "" : color));
@@ -71,7 +80,21 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
   // bookMarkData 저장
   const handleAddBookmark = async () => {
-    const isDuplicate = bookmarks.some((bm) => bm.bookmarkName === bookmarkName.trim());
+    const name = bookmarkName.trim();
+
+    // ✅ 입력값 검증 먼저
+    if (!name) {
+      triggerAlert("여정의 이름을 입력해주세요!");
+      return;
+    }
+
+    if (!bookmarkColor) {
+      triggerAlert("북마크의 색상을 선택해주세요!");
+      return;
+    }
+
+    // ✅ 중복 이름 검사
+    const isDuplicate = bookmarks.some((bm) => bm.bookmarkName === name);
 
     if (isDuplicate) {
       triggerAlert("이미 존재하는 여정 이름입니다. 다른 이름을 입력해주세요.");
@@ -82,21 +105,27 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
       const db = getFirestore(firebaseApp);
       const bookMarkData = collection(db, "bookmarkData");
 
+      // ✅ Firestore 저장
       await addDoc(bookMarkData, {
         uid: user?.uid,
         bookmarkName,
         bookmarkColor,
       });
 
-      // DropdownMenu 이름, 색깔 선택된 값을 담기
+      // ✅ 상태 업데이트
       setBookmarks((prev) => [
         ...prev,
         {
-          bookmarkName,
+          bookmarkName: name,
           bookmarkColor,
         },
       ]);
 
+      // ✅ 저장한 북마크를 바로 선택되게 지정
+      bookmarkState.setBookmarkName(name);
+      bookmarkState.setBookmarkColor(bookmarkColor);
+
+      // ✅ 초기화
       setBookmarkName("");
       setBookmarkColor("");
       setIsOpen(false);
