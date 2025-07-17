@@ -26,8 +26,10 @@ interface IMarkerDataProps {
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   content: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
-  bookmarkName: string;
-  bookmarkColor: string;
+  bookmark: {
+    bookmarkName: string;
+    bookmarkColor: string;
+  };
 }
 interface IBookmarkStateProps {
   bookmarkName: string;
@@ -62,10 +64,11 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
   // 모달 관리
   useEffect(() => {
-    // 마커에 연결된 북마크가 있으면 설정, 없으면 빈 문자열로 초기화
-    bookmarkState.setBookmarkName(markerData.bookmarkName || "");
-    bookmarkState.setBookmarkColor(markerData.bookmarkColor || "");
-  }, [markerData.name]);
+    bookmarkState.setBookmarkName(markerData.bookmark.bookmarkName || "");
+    bookmarkState.setBookmarkColor(markerData.bookmark.bookmarkColor || "");
+  }, [markerData.bookmark]);
+
+  // 북마크 관리
 
   // DropdownMenu 색깔 정하는 함수
   const onClickBookmarkColor = (color: string) => {
