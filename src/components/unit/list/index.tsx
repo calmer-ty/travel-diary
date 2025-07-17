@@ -7,12 +7,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserMarkers } from "@/hooks/useUserMarkers";
 import { useUserBookmarks } from "@/hooks/useUserBookmarks";
 
+import { format } from "date-fns";
+
 export default function List() {
   const { user } = useAuth();
   // 마커 데이터 조회
   const { markers } = useUserMarkers({ uid: user?.uid });
   const { bookmarks } = useUserBookmarks({ uid: user?.uid });
 
+  // 북마크 셀렉터
   const [selected, setSelected] = useState("");
   useEffect(() => {
     if (bookmarks.length > 0) {
@@ -20,7 +23,11 @@ export default function List() {
     }
   }, [bookmarks]);
 
-  const filteredBookmarks = markers.filter((b) => selected === b.bookmark.bookmarkName);
+  // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
+  const filteredMarkers = markers.filter((b) => selected === b.bookmark.bookmarkName);
+
+  // 필터링한 값들의 날짜를 모두 뽑은 값
+  const markersDate = Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
 
   return (
     <article className="grid gap-4 p-8">
@@ -42,15 +49,28 @@ export default function List() {
 
       {/* 하단 상세: 날짜 + 내용 */}
       <div className="w-full p-8 bg-[#FAFAF2] shadow-md">
-        {filteredBookmarks.map((bookmark) => (
-          <Card key={bookmark.name} className=" mb-6">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-[80px_1fr] gap-4 items-start">
-                <div className="text-sm text-muted-foreground font-medium">{bookmark.date.toISOString()}</div>
-                <div className="text-base whitespace-pre-line">{bookmark.content}</div>
-              </div>
-            </CardContent>
-          </Card>
+        {markersDate.map((date, index) => (
+          <div key={`${date}_${index}`} className="flex gap-8">
+            <div className="w-[5.5rem] mt-1 shrink-0">{date}</div>
+            <div className="w-full">
+              {filteredMarkers
+                .filter((marker) => format(marker.date, "yyyy-MM-dd") === date)
+                .map((marker) => (
+                  <Card key={marker.name} className=" mb-6 border-[#9A8C4B]">
+                    <CardContent className="px-12 py-6">
+                      <div className="flex gap-10 items-start">
+                        {/* <div className="text-sm text-muted-foreground font-medium">{format(marker.date, "yyyy-MM-dd")}</div> */}
+                        <div className="grid gap-2 w-2xs">
+                          <h3 className="text-base whitespace-pre-line">{marker.name}</h3>
+                          <span className="text-sm text-muted-foreground font-medium">{marker.address}</span>
+                        </div>
+                        <p>{marker.content}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </div>
         ))}
       </div>
     </article>
