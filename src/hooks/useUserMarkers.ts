@@ -7,6 +7,7 @@ import { ILogPlace, IUserID } from "@/types";
 
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ✅ [등록]
   const createMarker = async (markerData: ILogPlace) => {
@@ -46,6 +47,8 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   const fetchMarkers = useCallback(async () => {
     if (!uid) return;
 
+    setIsLoading(true); // 로딩 시작
+
     const db = getFirestore(firebaseApp);
     const travelData = collection(db, "travelData");
 
@@ -60,6 +63,8 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     })) as ILogPlace[];
 
     setMarkers(fetchedData);
+
+    setIsLoading(false); // 로딩 종료
   }, [uid]);
 
   useEffect(() => {
@@ -71,5 +76,6 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     createMarker,
     updateMarker,
     refetch: fetchMarkers,
+    isLoading,
   };
 };

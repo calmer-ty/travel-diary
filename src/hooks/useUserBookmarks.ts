@@ -8,6 +8,7 @@ import { useAlert } from "./useAlert";
 
 export const useUserBookmarks = ({ uid }: IUserID) => {
   const [bookmarks, setBookmarks] = useState<{ bookmarkColor: string; bookmarkName: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { triggerAlert } = useAlert();
 
@@ -17,6 +18,8 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
         triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
         return;
       }
+
+      setIsLoading(true); // 로딩 시작
 
       const db = getFirestore(firebaseApp);
       const bookmarkData = collection(db, "bookmarkData");
@@ -31,6 +34,8 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
       }));
 
       setBookmarks(fetchedData);
+
+      setIsLoading(false); // 로딩 종료
     } catch (error) {
       console.error("Firebase 북마크 불러오기 실패:", error);
     }
@@ -48,5 +53,6 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
     bookmarks,
     setBookmarks,
     refetch: fetchBookmarks,
+    isLoading,
   };
 };
