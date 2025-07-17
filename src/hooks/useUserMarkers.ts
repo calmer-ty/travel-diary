@@ -31,16 +31,48 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   };
 
   // ✅ [수정]
-  const updateMarker = async ({ markerId, date, content }: { markerId: string; date: Date | undefined; content: string }) => {
+  const updateMarker = async ({
+    markerId,
+    date,
+    content,
+    bookmark,
+  }: {
+    markerId: string;
+    date: Date | undefined;
+    content: string;
+    bookmark: {
+      bookmarkColor: string;
+      bookmarkName: string;
+    };
+  }) => {
     const db = getFirestore(firebaseApp);
     const docRef = doc(db, "travelData", markerId);
 
     await updateDoc(docRef, {
       date,
       content,
+      bookmark: {
+        bookmarkName: bookmark.bookmarkName,
+        bookmarkColor: bookmark.bookmarkColor,
+      },
     });
-    //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
-    setMarkers((prev) => prev.map((marker) => (marker._id === markerId ? { ...marker, date: date ?? marker.date, content } : marker)));
+
+    // 상태도 업데이트
+    setMarkers((prev) =>
+      prev.map((marker) =>
+        marker._id === markerId
+          ? {
+              ...marker,
+              date: date ?? marker.date,
+              content,
+              bookmark: {
+                bookmarkName: bookmark.bookmarkName,
+                bookmarkColor: bookmark.bookmarkColor,
+              },
+            }
+          : marker
+      )
+    );
   };
 
   const fetchMarkers = useCallback(async () => {

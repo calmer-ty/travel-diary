@@ -216,7 +216,15 @@ export default function Maps() {
       }
 
       try {
-        await updateMarker({ markerId, date, content });
+        await updateMarker({
+          markerId,
+          date,
+          content,
+          bookmark: {
+            bookmarkName,
+            bookmarkColor,
+          },
+        });
         // 수정 후 폼/다이얼로그 초기화
         setShowDialog(false);
         setDate(undefined);
@@ -228,7 +236,7 @@ export default function Maps() {
         }
       }
     },
-    [uid, date, content, selectedMarker, triggerAlert, setShowDialog, updateMarker]
+    [uid, date, content, selectedMarker, triggerAlert, setShowDialog, updateMarker, bookmarkName, bookmarkColor]
   );
 
   // 업데이트 되는 내용 볼 때 사용
