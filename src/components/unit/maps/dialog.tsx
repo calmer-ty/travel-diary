@@ -166,10 +166,19 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
   // travelData에 저장될 값을 담기
   const onChangeName = (name: string, color: string) => {
-    bookmarkState.setBookmarkName((prev) => (prev === name ? "" : name));
-    bookmarkState.setBookmarkColor((prev) => (prev === color ? "" : color));
-  };
+    const isSameName = bookmarkState.bookmarkName === name;
+    const isSameColor = bookmarkState.bookmarkColor === color;
 
+    if (isSameName && isSameColor) {
+      // 이름, 색상 모두 같으면 선택 해제
+      bookmarkState.setBookmarkName("");
+      bookmarkState.setBookmarkColor("");
+    } else {
+      // 변경된 항목이 있으면 무조건 반영
+      bookmarkState.setBookmarkName(name);
+      bookmarkState.setBookmarkColor(color);
+    }
+  };
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
