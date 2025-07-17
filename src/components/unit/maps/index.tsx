@@ -297,6 +297,10 @@ export default function Maps() {
           setDate,
           content,
           setContent,
+          bookmark: {
+            bookmarkName,
+            bookmarkColor,
+          },
         }}
         bookmarkState={{
           bookmarkName,
