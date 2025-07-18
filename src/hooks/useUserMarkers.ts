@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import { ILogPlace, IUserID } from "@/types";
@@ -8,6 +8,11 @@ import { ILogPlace, IUserID } from "@/types";
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // 무한스크롤
+  const limitCount = 10;
+  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [hasMore, setHasMore] = useState(true);
 
   // ✅ [등록]
   const createMarker = async (markerData: ILogPlace) => {
@@ -44,7 +49,30 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     setMarkers((prev) => prev.map((marker) => (marker._id === markerId ? { ...marker, date: date ?? marker.date, content } : marker)));
   };
 
-  const fetchMarkers = useCallback(async () => {
+  // const fetchMarkers = useCallback(async () => {
+  //   if (!uid) return;
+
+  //   setIsLoading(true); // 로딩 시작
+
+  //   const db = getFirestore(firebaseApp);
+  //   const travelData = collection(db, "travelData");
+
+  //   // 🔥 현재 로그인한 유저의 uid로 필터링
+  //   // const querySnapshot = await getDocs(collection(db, "travelData"));
+  //   const q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"));
+  //   const snapshot = await getDocs(q);
+
+  //   const fetchedData = snapshot.docs.map((doc) => ({
+  //     ...doc.data(),
+  //     date: doc.data().date.toDate(),
+  //   })) as ILogPlace[];
+
+  //   setMarkers(fetchedData);
+
+  //   setIsLoading(false); // 로딩 종료
+  // }, [uid]);
+
+  const fetchMoreMarkers = useCallback(async () => {
     if (!uid) return;
 
     setIsLoading(true); // 로딩 시작
@@ -53,29 +81,51 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     const travelData = collection(db, "travelData");
 
     // 🔥 현재 로그인한 유저의 uid로 필터링
-    // const querySnapshot = await getDocs(collection(db, "travelData"));
-    const q = query(travelData, where("uid", "==", uid));
+    let q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), limit(limitCount));
+    if (lastDoc) {
+      q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), startAfter(lastDoc), limit(limitCount));
+    }
     const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      const newData = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        date: doc.data().date.toDate(),
+      })) as ILogPlace[];
 
-    const fetchedData = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      date: doc.data().date.toDate(),
-    })) as ILogPlace[];
+      setMarkers((prev) => [...prev, ...newData]);
+      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
 
-    setMarkers(fetchedData);
+      console.log("이번 fetch에서 추가된 마커 수:", newData.length);
 
+      if (snapshot.docs.length < limitCount) setHasMore(false);
+    } else {
+      setHasMore(false);
+    }
     setIsLoading(false); // 로딩 종료
-  }, [uid]);
+  }, [uid, lastDoc]);
+
+  // useEffect(() => {
+  //   fetchMarkers();
+  // }, [fetchMarkers]);
 
   useEffect(() => {
-    fetchMarkers();
-  }, [fetchMarkers]);
+    if (markers.length === 0) {
+      fetchMoreMarkers();
+    }
+  }, [markers.length, fetchMoreMarkers]);
+
+  // hasMore 상태도 출력
+  console.log("hasMore 상태:", hasMore);
+  useEffect(() => {
+    console.log("현재까지 총 마커 개수:", markers.length);
+  }, [markers]);
 
   return {
     markers,
     createMarker,
     updateMarker,
-    refetch: fetchMarkers,
+    fetchMoreMarkers,
+    hasMore,
     isLoading,
   };
 };
