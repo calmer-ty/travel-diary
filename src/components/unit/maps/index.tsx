@@ -50,8 +50,8 @@ export default function Maps() {
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
   // 📌 마커 관련
-  // const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
+  const [markId, setMarkId] = useState("");
 
   // 🖊️ 폼 관련
   const { isOpen: showDialog, setIsOpen: setShowDialog } = useDialog();
@@ -107,6 +107,12 @@ export default function Maps() {
       setIsEdit(false);
       setShowDialog(true);
       setSelectedPosition({ lat, lng });
+
+      // 값들 초기화
+      setDate(undefined);
+      setContent("");
+      setBookmarkName("");
+      setBookmarkColor("");
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
@@ -170,7 +176,7 @@ export default function Maps() {
 
       // 저장할 마커 정보 준비
       const markerData: ILogPlace = {
-        _id: "", // (아직 _id 없음)
+        _id: markId,
         name: mapsAddress?.name,
         address: mapsAddress?.formatted_address,
         latLng: selectedPosition,
@@ -299,6 +305,8 @@ export default function Maps() {
         handleSubmit={handleSubmit}
         handleUpdate={handleUpdate}
         markerData={{
+          setMarkId,
+          _id: isEdit ? selectedMarker?._id ?? "" : markId,
           name: isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음",
           address: isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음",
           date,

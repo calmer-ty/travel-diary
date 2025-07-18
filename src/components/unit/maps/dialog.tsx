@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, deleteDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getFirestore } from "firebase/firestore";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
@@ -12,6 +12,8 @@ import AlertMaps from "./alert";
 
 import { ColorList } from "./colorList";
 
+import { v4 as uuidv4 } from "uuid";
+
 // shadcn
 import { Button } from "@/components/ui/button";
 import { Input } from "../../ui/input";
@@ -20,6 +22,8 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface IMarkerDataProps {
+  setMarkId: React.Dispatch<React.SetStateAction<string>>;
+  _id: string;
   name: string;
   address: string;
   date: Date | undefined;
@@ -59,16 +63,11 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
 
   // 북마크 관련
   const { bookmarks, setBookmarks } = useUserBookmarks({ uid: user?.uid });
-  const [bookmarkName, setBookmarkName] = useState("");
-  const [bookmarkColor, setBookmarkColor] = useState("");
+  // const [bookmarkName, setBookmarkName] = useState("");
+  // const [bookmarkColor, setBookmarkColor] = useState("");
 
-  // 모달 관리
-  useEffect(() => {
-    bookmarkState.setBookmarkName(markerData.bookmark.bookmarkName || "");
-    bookmarkState.setBookmarkColor(markerData.bookmark.bookmarkColor || "");
-  }, [markerData.bookmark]);
-
-  // 북마크 관리
+  const [bookmarkName, setBookmarkName] = useState(markerData.bookmark.bookmarkName || "");
+  const [bookmarkColor, setBookmarkColor] = useState(markerData.bookmark.bookmarkColor || "");
 
   // DropdownMenu 색깔 정하는 함수
   const onClickBookmarkColor = (color: string) => {
@@ -104,6 +103,8 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
       return;
     }
 
+    const newId = uuidv4();
+
     try {
       const db = getFirestore(firebaseApp);
       const bookMarkData = collection(db, "bookmarkData");
@@ -113,12 +114,14 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
         uid: user?.uid,
         bookmarkName,
         bookmarkColor,
+        _id: newId,
       });
 
       // ✅ 상태 업데이트
       setBookmarks((prev) => [
         ...prev,
         {
+          _id: newId,
           bookmarkName: name,
           bookmarkColor,
         },
@@ -140,22 +143,18 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
   };
 
   // bookMarkData 삭제
-  const handleDeleteBookmark = async (name: string) => {
+  const handleDeleteBookmark = async (_id: string) => {
     const db = getFirestore(firebaseApp);
-    const bookmarkRef = collection(db, "bookmarkData");
 
-    const q = query(bookmarkRef, where("uid", "==", user?.uid), where("bookmarkName", "==", name));
-    const snapshot = await getDocs(q);
-
-    snapshot.forEach(async (doc) => {
-      await deleteDoc(doc.ref);
-    });
+    const docRef = collection(db, "bookmarkData");
+    await deleteDoc(doc(docRef, _id));
 
     // 상태에서 제거
-    setBookmarks((prev) => prev.filter((bm) => bm.bookmarkName !== name));
+    setBookmarks((prev) => prev.filter((bm) => bm._id !== _id));
 
     // 선택 중인 북마크가 삭제된 거라면 초기화
-    if (bookmarkState.bookmarkName === name) {
+    const deleted = bookmarks.find((bm) => bm._id === _id);
+    if (bookmarkState.bookmarkName === deleted?.bookmarkName) {
       bookmarkState.setBookmarkName("");
       bookmarkState.setBookmarkColor("");
     }
@@ -176,10 +175,16 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
       // 이름, 색상 모두 같으면 선택 해제
       bookmarkState.setBookmarkName("");
       bookmarkState.setBookmarkColor("");
+
+      localStorage.removeItem("selectedBookmarkName");
+      localStorage.removeItem("selectedBookmarkColor");
     } else {
       // 변경된 항목이 있으면 무조건 반영
       bookmarkState.setBookmarkName(name);
       bookmarkState.setBookmarkColor(color);
+
+      localStorage.setItem("selectedBookmarkName", name);
+      localStorage.setItem("selectedBookmarkColor", color);
     }
   };
   return (
@@ -214,7 +219,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                   {bookmarks.length > 0 ? (
                     <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
                       {bookmarks.map((el) => (
-                        <div key={el.bookmarkName} className="flex items-center gap-3 cursor-pointer ">
+                        <div key={el._id} className="flex items-center gap-3 cursor-pointer ">
                           <div className="flex items-center gap-1 hover:bg-gray-100 p-1 rounded" onClick={() => onChangeName(el.bookmarkName, el.bookmarkColor)}>
                             <img src={`./images/bookmark/icon_bookmarker_${el.bookmarkColor}.png`} alt="북마크 아이콘" className="w-5" />
                             <span>{el.bookmarkName}</span>
@@ -223,7 +228,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSu
                           <button
                             onClick={(e) => {
                               e.stopPropagation(); // 이벤트 버블링 막기
-                              handleDeleteBookmark(el.bookmarkName);
+                              handleDeleteBookmark(el._id);
                             }}
                             type="button"
                             className="w-4 h-4 bg-[url(/images/icon_trash.png)] bg-contain bg-no-repeat "
