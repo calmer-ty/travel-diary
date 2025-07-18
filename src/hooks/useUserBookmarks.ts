@@ -7,7 +7,7 @@ import { IUserID } from "@/types";
 import { useAlert } from "./useAlert";
 
 export const useUserBookmarks = ({ uid }: IUserID) => {
-  const [bookmarks, setBookmarks] = useState<{ bookmarkColor: string; bookmarkName: string; _id: string }[]>([]);
+  const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
 
   const { triggerAlert } = useAlert();
 
@@ -27,8 +27,8 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
 
       const fetchedData = snapshot.docs.map((doc) => ({
         _id: doc.id,
-        bookmarkColor: doc.data().bookmarkColor,
-        bookmarkName: doc.data().bookmarkName,
+        name: doc.data().name,
+        color: doc.data().color,
       }));
 
       setBookmarks(fetchedData);
@@ -48,6 +48,6 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
   return {
     bookmarks,
     setBookmarks,
-    refetch: fetchBookmarks,
+    fetchBookmarks,
   };
 };
