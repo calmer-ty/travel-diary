@@ -9,10 +9,10 @@ export interface ILogPlace {
     lat: number;
     lng: number;
   };
-  bookmark: {
-    bookmarkName: string;
-    bookmarkColor: string | null;
-  };
+  // bookmark: {
+  //   bookmarkName: string;
+  //   bookmarkColor: string | null;
+  // };
 }
 
 export interface IUserID {

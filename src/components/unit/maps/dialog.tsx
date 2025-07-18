@@ -1,301 +1,179 @@
 import { useState } from "react";
-import { firebaseApp } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, deleteDoc, doc, getFirestore } from "firebase/firestore";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
-import { useUserBookmarks } from "@/hooks/useUserBookmarks";
-import { useDialog } from "@/hooks/useDialog";
 
 import DatePicker01 from "@/components/commons/datePicker/01";
 import AlertMaps from "./alert";
 
-import { ColorList } from "./colorList";
-
-import { v4 as uuidv4 } from "uuid";
-
 // shadcn
 import { Button } from "@/components/ui/button";
-import { Input } from "../../ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ILogPlace } from "@/types";
+import { useUserMarkers } from "@/hooks/useUserMarkers";
 
-interface IMarkerDataProps {
-  setMarkId: React.Dispatch<React.SetStateAction<string>>;
-  _id: string;
-  name: string;
-  address: string;
-  date: Date | undefined;
-  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  content: string;
-  setContent: React.Dispatch<React.SetStateAction<string>>;
-  bookmark: {
-    bookmarkName: string;
-    bookmarkColor: string;
-  };
-}
-interface IBookmarkStateProps {
-  bookmarkName: string;
-  setBookmarkName: React.Dispatch<React.SetStateAction<string>>;
-  bookmarkColor: string;
-  setBookmarkColor: React.Dispatch<React.SetStateAction<string>>;
-}
+// interface IMarkerDataProps {
+//   setMarkId: React.Dispatch<React.SetStateAction<string>>;
+//   _id: string;
+//   name: string;
+//   address: string;
+//   date: Date | undefined;
+//   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+//   content: string;
+//   setContent: React.Dispatch<React.SetStateAction<string>>;
+//   bookmark: {
+//     bookmarkName: string;
+//     bookmarkColor: string;
+//   };
+// }
 
 interface IMapsDialogProps {
   isEdit: boolean;
   showDialog: boolean;
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  handleUpdate: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  markerData: IMarkerDataProps;
-  bookmarkState: IBookmarkStateProps;
+  // markerData: IMarkerDataProps;
+
+  selectedMarker: ILogPlace | null;
+  mapsAddress: google.maps.places.PlaceResult | undefined;
+  selectedPosition: google.maps.LatLngLiteral | null;
+  setSelectedPosition: React.Dispatch<React.SetStateAction<google.maps.LatLngLiteral | null>>;
+  setMapCenter: React.Dispatch<
+    React.SetStateAction<{
+      lat: number;
+      lng: number;
+    }>
+  >;
 }
 
-export default function MapsDialog({ isEdit, showDialog, setShowDialog, handleSubmit, handleUpdate, markerData, bookmarkState }: IMapsDialogProps) {
+export default function MapsDialog({ isEdit, showDialog, setShowDialog, mapsAddress, selectedPosition, setSelectedPosition, setMapCenter, selectedMarker }: IMapsDialogProps) {
   // 유저 ID
-  const { user } = useAuth();
+  const { uid } = useAuth();
+
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [content, setContent] = useState<string>("");
 
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
+  const { createMarker, updateMarker } = useUserMarkers({ uid });
 
-  const { isOpen: isBookmarkListOpen, onClickToggle: toggleBookmarkList, setIsOpen } = useDialog();
+  // ✅ [등록]
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-  // 북마크 관련
-  const { bookmarks, setBookmarks } = useUserBookmarks({ uid: user?.uid });
-  // const [bookmarkName, setBookmarkName] = useState("");
-  // const [bookmarkColor, setBookmarkColor] = useState("");
-
-  const [bookmarkName, setBookmarkName] = useState(markerData.bookmark.bookmarkName || "");
-  const [bookmarkColor, setBookmarkColor] = useState(markerData.bookmark.bookmarkColor || "");
-
-  // DropdownMenu 색깔 정하는 함수
-  const onClickBookmarkColor = (color: string) => {
-    setBookmarkColor((prev) => (prev === color ? "" : color));
-  };
-
-  // DropdownMenu 닫기
-  const onClickDropMenuCancel = () => {
-    setIsOpen(false);
-    setBookmarkColor("");
-  };
-
-  // bookMarkData 저장
-  const handleAddBookmark = async () => {
-    const name = bookmarkName.trim();
-
-    // ✅ 입력값 검증 먼저
-    if (!name) {
-      triggerAlert("여정의 이름을 입력해주세요!");
+    // 🔒 uid 없을 경우 등록 막기
+    if (!uid) {
+      triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
       return;
     }
 
-    if (!bookmarkColor) {
-      triggerAlert("북마크의 색상을 선택해주세요!");
+    if (!mapsAddress?.name) {
+      triggerAlert("주소명이 없습니다!");
       return;
     }
 
-    // ✅ 중복 이름 검사
-    const isDuplicate = bookmarks.some((bm) => bm.bookmarkName === name);
-
-    if (isDuplicate) {
-      triggerAlert("이미 존재하는 여정 이름입니다. 다른 이름을 입력해주세요.");
+    if (!mapsAddress?.formatted_address) {
+      triggerAlert("상세주소가 없습니다!");
       return;
     }
 
-    const newId = uuidv4();
+    if (!date) {
+      triggerAlert("기록할 날짜를 선택해 주세요.");
+      return;
+    }
+
+    if (!content) {
+      triggerAlert("기록할 내용을 입력해 주세요.");
+      return;
+    }
+
+    if (!selectedPosition) {
+      triggerAlert("마커를 선택해주세요!");
+      return;
+    }
+
+    // 저장할 마커 정보 준비
+    const markerData: ILogPlace = {
+      _id: "",
+      name: mapsAddress?.name,
+      address: mapsAddress?.formatted_address,
+      latLng: selectedPosition,
+      uid,
+      date,
+      content,
+    };
 
     try {
-      const db = getFirestore(firebaseApp);
-      const bookMarkData = collection(db, "bookmarkData");
+      await createMarker(markerData);
+      // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
+      setShowDialog(false);
 
-      // ✅ Firestore 저장
-      await addDoc(bookMarkData, {
-        uid: user?.uid,
-        bookmarkName,
-        bookmarkColor,
-        _id: newId,
-      });
+      setMapCenter(selectedPosition);
+      setSelectedPosition(null);
 
-      // ✅ 상태 업데이트
-      setBookmarks((prev) => [
-        ...prev,
-        {
-          _id: newId,
-          bookmarkName: name,
-          bookmarkColor,
-        },
-      ]);
-
-      // ✅ 저장한 북마크를 바로 선택되게 지정
-      bookmarkState.setBookmarkName(name);
-      bookmarkState.setBookmarkColor(bookmarkColor);
-
-      // ✅ 초기화
-      setBookmarkName("");
-      setBookmarkColor("");
-      setIsOpen(false);
+      setDate(undefined);
+      setContent("");
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
+        return;
       }
     }
   };
 
-  // bookMarkData 삭제
-  const handleDeleteBookmark = async (_id: string) => {
-    const db = getFirestore(firebaseApp);
+  // ✅ [수정]
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-    const docRef = collection(db, "bookmarkData");
-    await deleteDoc(doc(docRef, _id));
+    const markerId = selectedMarker?._id;
+    if (!uid) {
+      triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+      return;
+    }
+    if (!markerId) {
+      triggerAlert("마커 ID가 없습니다");
+      return;
+    }
 
-    // 상태에서 제거
-    setBookmarks((prev) => prev.filter((bm) => bm._id !== _id));
-
-    // 선택 중인 북마크가 삭제된 거라면 초기화
-    const deleted = bookmarks.find((bm) => bm._id === _id);
-    if (bookmarkState.bookmarkName === deleted?.bookmarkName) {
-      bookmarkState.setBookmarkName("");
-      bookmarkState.setBookmarkColor("");
+    try {
+      await updateMarker({
+        markerId,
+        date,
+        content,
+      });
+      // 수정 후 폼/다이얼로그 초기화
+      setShowDialog(false);
+      setDate(undefined);
+      setContent("");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        return;
+      }
     }
   };
 
   // Dialog 닫기
   const onClickCancel = () => {
-    markerData.setDate(undefined);
-    markerData.setContent("");
+    setDate(undefined);
+    setContent("");
   };
 
-  // travelData에 저장될 값을 담기
-  const onChangeName = (name: string, color: string) => {
-    const isSameName = bookmarkState.bookmarkName === name;
-    const isSameColor = bookmarkState.bookmarkColor === color;
-
-    if (isSameName && isSameColor) {
-      // 이름, 색상 모두 같으면 선택 해제
-      bookmarkState.setBookmarkName("");
-      bookmarkState.setBookmarkColor("");
-
-      localStorage.removeItem("selectedBookmarkName");
-      localStorage.removeItem("selectedBookmarkColor");
-    } else {
-      // 변경된 항목이 있으면 무조건 반영
-      bookmarkState.setBookmarkName(name);
-      bookmarkState.setBookmarkColor(color);
-
-      localStorage.setItem("selectedBookmarkName", name);
-      localStorage.setItem("selectedBookmarkColor", color);
-    }
-  };
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{markerData.name}</DialogTitle>
-            <DialogDescription>{markerData.address}</DialogDescription>
+            <DialogTitle>{isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
+            <DialogDescription>{isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}</DialogDescription>
           </DialogHeader>
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
-            {/* 북마크 */}
-            <DropdownMenu>
-              {/* 여정 버튼 - 트리거 요소도 버튼이기 때문에 트리거 동작과 버튼 스타일을 갖기 위해선 asChild로 기능을 전달 */}
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  {bookmarkState.bookmarkName ? (
-                    <img src={`./images/bookmark/icon_bookmarker_${bookmarkState.bookmarkColor}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
-                  ) : (
-                    <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
-                  )}
-
-                  <span className="inline-block align-middle">{bookmarkState.bookmarkName || "여정"}</span>
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent>
-                {/* 여정 리스트 */}
-                <DropdownMenuLabel>
-                  {bookmarks.length > 0 ? (
-                    <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
-                      {bookmarks.map((el) => (
-                        <div key={el._id} className="flex items-center gap-3 cursor-pointer ">
-                          <div className="flex items-center gap-1 hover:bg-gray-100 p-1 rounded" onClick={() => onChangeName(el.bookmarkName, el.bookmarkColor)}>
-                            <img src={`./images/bookmark/icon_bookmarker_${el.bookmarkColor}.png`} alt="북마크 아이콘" className="w-5" />
-                            <span>{el.bookmarkName}</span>
-                          </div>
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation(); // 이벤트 버블링 막기
-                              handleDeleteBookmark(el._id);
-                            }}
-                            type="button"
-                            className="w-4 h-4 bg-[url(/images/icon_trash.png)] bg-contain bg-no-repeat "
-                          ></button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div>여정을 만들어 보세요.</div>
-                  )}
-                </DropdownMenuLabel>
-
-                <DropdownMenuSeparator />
-
-                {/* 여정 추가하기 클릭 영역 */}
-                {!isBookmarkListOpen && (
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault(); // 메뉴 닫히는 기본 동작 방지
-                      toggleBookmarkList();
-                    }}
-                  >
-                    <img className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘" />
-                    <span>여정 추가하기</span>
-                  </DropdownMenuItem>
-                )}
-
-                {/* 여정 북마크 생성 요소 */}
-                {isBookmarkListOpen && (
-                  <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
-                    <div style={{ display: isBookmarkListOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full py-1">
-                      <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={bookmarkName} onChange={(e) => setBookmarkName(e.target.value)} />
-                      <p className="text-sm">여정 색깔을 정해 주세요.</p>
-                      <ul className="flex flex-wrap justify-center gap-1 w-full">
-                        {ColorList.map(({ color }, idx) => (
-                          <li
-                            onClick={() => onClickBookmarkColor(color)}
-                            style={{
-                              backgroundColor: bookmarkColor === color ? "#F1F5F9" : "transparent",
-                              borderColor: bookmarkColor === color ? "#ddd" : "transparent",
-                            }}
-                            className="cursor-pointer border rounded-sm"
-                            key={idx}
-                          >
-                            <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
-                          </li>
-                        ))}
-                      </ul>
-
-                      <div className="flex  gap-2  justify-end">
-                        <Button variant="outline" onClick={onClickDropMenuCancel}>
-                          닫기
-                        </Button>
-                        <Button variant="primary" type="button" onClick={handleAddBookmark}>
-                          저장
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             {/* 날짜 선택 */}
-            <DatePicker01 date={markerData.date} setDate={markerData.setDate} className="" />
+            <DatePicker01 date={date} setDate={setDate} className="" />
             {/* 내용 작성 */}
-            <Textarea value={markerData.content} onChange={(e) => markerData.setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
+            <Textarea value={content} onChange={(e) => setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
             {/* 버튼 */}
             <DialogFooter>
               <DialogClose asChild>

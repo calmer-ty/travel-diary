@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -51,12 +51,19 @@ export default function Maps() {
 
   // 📌 마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
+  const [markId, setMarkId] = useState("");
 
   // 🖊️ 폼 관련
   const { isOpen: showDialog, setIsOpen: setShowDialog } = useDialog();
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [content, setContent] = useState<string>("");
 
   // ⚠️ 알림창 등
-  const { showAlert, alertValue } = useAlert();
+  const { showAlert, alertValue, triggerAlert } = useAlert();
+
+  // 🔖 북마크
+  const [bookmarkName, setBookmarkName] = useState("");
+  const [bookmarkColor, setBookmarkColor] = useState("");
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -101,6 +108,12 @@ export default function Maps() {
       setShowDialog(true);
       setSelectedPosition({ lat, lng });
 
+      // 값들 초기화
+      setDate(undefined);
+      setContent("");
+      setBookmarkName("");
+      setBookmarkColor("");
+
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && place) {
@@ -114,14 +127,128 @@ export default function Maps() {
   };
 
   // 마커 데이터 조회
-  const { markers } = useUserMarkers({ uid });
+  const { markers, createMarker, updateMarker } = useUserMarkers({ uid });
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
     setShowDialog(true);
     setIsEdit(true);
     setSelectedMarker(marker);
+    setDate(marker.date);
+    setContent(marker.content);
   };
+
+  // ✅ [등록]
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+
+      // 🔒 uid 없을 경우 등록 막기
+      if (!uid) {
+        triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+        return;
+      }
+
+      if (!mapsAddress?.name) {
+        triggerAlert("주소명이 없습니다!");
+        return;
+      }
+
+      if (!mapsAddress?.formatted_address) {
+        triggerAlert("상세주소가 없습니다!");
+        return;
+      }
+
+      if (!date) {
+        triggerAlert("기록할 날짜를 선택해 주세요.");
+        return;
+      }
+
+      if (!content) {
+        triggerAlert("기록할 내용을 입력해 주세요.");
+        return;
+      }
+
+      if (!selectedPosition) {
+        triggerAlert("마커를 선택해주세요!");
+        return;
+      }
+
+      // 저장할 마커 정보 준비
+      const markerData: ILogPlace = {
+        _id: markId,
+        name: mapsAddress?.name,
+        address: mapsAddress?.formatted_address,
+        latLng: selectedPosition,
+        uid,
+        date,
+        content,
+        // bookmark: {
+        //   bookmarkName,
+        //   bookmarkColor,
+        // },
+      };
+
+      try {
+        await createMarker(markerData);
+        // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
+        setMapCenter(selectedPosition);
+        setShowDialog(false);
+        setSelectedPosition(null);
+        setDate(undefined);
+        setContent("");
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+          return;
+        }
+      }
+    },
+    [uid, mapsAddress, date, content, selectedPosition, bookmarkColor, bookmarkName, triggerAlert, setShowDialog, createMarker]
+  );
+  // ✅ [수정]
+  const handleUpdate = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+
+      const markerId = selectedMarker?._id;
+      if (!uid) {
+        triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
+        return;
+      }
+      if (!markerId) {
+        triggerAlert("마커 ID가 없습니다");
+        return;
+      }
+
+      try {
+        await updateMarker({
+          markerId,
+          date,
+          content,
+          bookmark: {
+            bookmarkName,
+            bookmarkColor,
+          },
+        });
+        // 수정 후 폼/다이얼로그 초기화
+        setShowDialog(false);
+        setDate(undefined);
+        setContent("");
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+          return;
+        }
+      }
+    },
+    [uid, date, content, selectedMarker, triggerAlert, setShowDialog, updateMarker, bookmarkName, bookmarkColor]
+  );
+
+  // 업데이트 되는 내용 볼 때 사용
+  // useEffect(() => {
+  //   console.log("✅ showDialog 업데이트됨: ", showDialog);
+  // }, [showDialog]);
 
   // Google API Loader
   const { isLoaded } = useJsApiLoader({
@@ -175,12 +302,28 @@ export default function Maps() {
         isEdit={isEdit}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
-        selectedMarker={selectedMarker}
-        // 맵 데이터
-        mapsAddress={mapsAddress}
-        selectedPosition={selectedPosition}
-        setSelectedPosition={setSelectedPosition}
-        setMapCenter={setMapCenter}
+        handleSubmit={handleSubmit}
+        handleUpdate={handleUpdate}
+        markerData={{
+          setMarkId,
+          _id: isEdit ? selectedMarker?._id ?? "" : markId,
+          name: isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음",
+          address: isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음",
+          date,
+          setDate,
+          content,
+          setContent,
+          bookmark: {
+            bookmarkName,
+            bookmarkColor,
+          },
+        }}
+        bookmarkState={{
+          bookmarkName,
+          setBookmarkName,
+          bookmarkColor,
+          setBookmarkColor,
+        }}
       />
 
       {/* 경고창 */}

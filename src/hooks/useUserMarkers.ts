@@ -35,15 +35,15 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     markerId,
     date,
     content,
-    bookmark,
-  }: {
+  }: // bookmark,
+  {
     markerId: string;
     date: Date | undefined;
     content: string;
-    bookmark: {
-      bookmarkColor: string;
-      bookmarkName: string;
-    };
+    // bookmark: {
+    //   bookmarkColor: string;
+    //   bookmarkName: string;
+    // };
   }) => {
     const db = getFirestore(firebaseApp);
     const docRef = doc(db, "travelData", markerId);
@@ -51,10 +51,10 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     await updateDoc(docRef, {
       date,
       content,
-      bookmark: {
-        bookmarkName: bookmark.bookmarkName,
-        bookmarkColor: bookmark.bookmarkColor,
-      },
+      // bookmark: {
+      //   bookmarkName: bookmark.bookmarkName,
+      //   bookmarkColor: bookmark.bookmarkColor,
+      // },
     });
 
     // 상태도 업데이트
@@ -65,10 +65,10 @@ export const useUserMarkers = ({ uid }: IUserID) => {
               ...marker,
               date: date ?? marker.date,
               content,
-              bookmark: {
-                bookmarkName: bookmark.bookmarkName,
-                bookmarkColor: bookmark.bookmarkColor,
-              },
+              // bookmark: {
+              //   bookmarkName: bookmark.bookmarkName,
+              //   bookmarkColor: bookmark.bookmarkColor,
+              // },
             }
           : marker
       )
