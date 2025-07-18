@@ -8,7 +8,6 @@ import { useDialog } from "@/hooks/useDialog";
 
 import DatePicker01 from "@/components/commons/datePicker/01";
 import AlertMaps from "./alert";
-import Image from "next/image";
 
 // shadcn
 import { Input } from "@/components/ui/input";
@@ -138,6 +137,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, mapsAddr
     try {
       await updateMarker({
         markerId,
+
         date,
         content,
         bookmark: {
@@ -294,9 +294,9 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, mapsAddr
                 <Button variant="outline">
                   {/* 여정 로고 */}
                   {selectedMarker?.bookmark.name ? (
-                    <Image src={`./images/bookmark/icon_bookmarker_${selectedMarker?.bookmark.color}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" unoptimized />
+                    <img src={`./images/bookmark/icon_bookmarker_${selectedMarker?.bookmark.color}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
                   ) : (
-                    <Image className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" unoptimized />
+                    <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
                   )}
                   {/* 여정 텍스트 */}
                   <span className="inline-block align-middle">{selectedMarker?.bookmark.name || "여정"}</span>
@@ -311,7 +311,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, mapsAddr
                       {bookmarks.map((bookmark) => (
                         <div key={bookmark._id} className="flex items-center gap-3 cursor-pointer ">
                           <div className="flex items-center gap-1 hover:bg-gray-100 p-1 rounded" onClick={() => onClickMatchingMark(bookmark.name, bookmark.color)}>
-                            <Image src={`./images/bookmark/icon_bookmarker_${bookmark.color}.png`} alt="북마크 아이콘" className="w-5" unoptimized />
+                            <img src={`./images/bookmark/icon_bookmarker_${bookmark.color}.png`} alt="북마크 아이콘" className="w-5" />
                             <span>{bookmark.name}</span>
                           </div>
 
@@ -341,7 +341,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, mapsAddr
                       onClickToggle();
                     }}
                   >
-                    <Image className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘" unoptimized />
+                    <img className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘" />
                     <span>여정 추가하기</span>
                   </DropdownMenuItem>
                 )}
@@ -363,7 +363,7 @@ export default function MapsDialog({ isEdit, showDialog, setShowDialog, mapsAddr
                             className="cursor-pointer border rounded-sm"
                             key={idx}
                           >
-                            <Image className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" unoptimized />
+                            <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
                           </li>
                         ))}
                       </ul>

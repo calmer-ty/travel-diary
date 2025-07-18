@@ -6,7 +6,7 @@ import { useAlert } from "@/hooks/useAlert";
 import { useUserMarkers } from "@/hooks/useUserMarkers";
 import { useDialog } from "@/hooks/useDialog";
 
-import MapsDialog from "./dialog";
+import MapsWrite from "./write";
 import AlertMaps from "./alert";
 
 import { ILogPlace } from "@/types";
@@ -171,7 +171,7 @@ export default function Maps() {
       </StandaloneSearchBox>
 
       {/* 모달 */}
-      <MapsDialog
+      <MapsWrite
         isEdit={isEdit}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
