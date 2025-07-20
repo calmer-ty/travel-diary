@@ -7,6 +7,7 @@ import type { ILogPlace, IUpdateMarker, IUserID } from "@/types";
 
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 무한스크롤
   const limitCount = 10;
@@ -93,6 +94,8 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   const fetchMoreMarkers = useCallback(async () => {
     if (!uid) return;
 
+    setIsLoading(true); // 로딩 시작
+
     const db = getFirestore(firebaseApp);
     const travelData = collection(db, "travelData");
 
@@ -117,6 +120,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     } else {
       setHasMore(false);
     }
+    setIsLoading(false); // 로딩 종료
   }, [uid, lastDoc]);
 
   // useEffect(() => {
@@ -140,5 +144,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     createMarker,
     updateMarker,
     fetchMoreMarkers,
+    isLoading,
+    hasMore,
   };
 };

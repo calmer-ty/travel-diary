@@ -20,12 +20,12 @@ export default function List() {
   const [selected, setSelected] = useState("");
   useEffect(() => {
     if (bookmarks.length > 0) {
-      setSelected(bookmarks[0].bookmarkName);
+      setSelected(bookmarks[0].name);
     }
   }, [bookmarks]);
 
   // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
-  const filteredMarkers = markers.filter((b) => selected === b.bookmark.bookmarkName);
+  const filteredMarkers = markers.filter((b) => selected === b.bookmark.name);
 
   // 필터링한 값들의 날짜를 모두 뽑은 값
   const markersDate = Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
@@ -60,13 +60,13 @@ export default function List() {
                 ))}
               </div>
             ) : (
-              bookmarks.map(({ bookmarkName }) => (
+              bookmarks.map((bookmark) => (
                 <Card
-                  key={bookmarkName}
-                  onClick={() => setSelected(bookmarkName)}
-                  className={`min-w-10 px-4 py-2 cursor-pointer text-center ${selected === bookmarkName ? "border-blue-500 bg-blue-50" : ""}`}
+                  key={bookmark.name}
+                  onClick={() => setSelected(bookmark.name)}
+                  className={`min-w-10 px-4 py-2 cursor-pointer text-center ${selected === bookmark.name ? "border-blue-500 bg-blue-50" : ""}`}
                 >
-                  <CardContent className="p-0">{bookmarkName}</CardContent>
+                  <CardContent className="p-0">{bookmark.name}</CardContent>
                 </Card>
               ))
             )}

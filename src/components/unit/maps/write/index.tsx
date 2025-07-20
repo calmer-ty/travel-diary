@@ -112,8 +112,8 @@ export default function MapsWrite({
       date,
       content,
       bookmark: {
-        name: bookmarkName,
-        color: bookmarkColor,
+        name: selectedBookmarkName,
+        color: selectedBookmarkColor,
       },
     };
 
@@ -156,8 +156,8 @@ export default function MapsWrite({
         date,
         content,
         bookmark: {
-          name: bookmarkName,
-          color: bookmarkColor,
+          name: selectedBookmarkName,
+          color: selectedBookmarkColor,
         },
       });
       // 수정 후 폼/다이얼로그 초기화
@@ -173,8 +173,9 @@ export default function MapsWrite({
   };
 
   // 🔖 북마크
-  const [bookmarkName, setBookmarkName] = useState("");
-  const [bookmarkColor, setBookmarkColor] = useState("");
+  const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
+  const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
+  // console.log("bookmark Index: ", bookmarkName, bookmarkColor);
 
   // Dialog 닫기
   const onClickCancel = () => {
@@ -193,7 +194,12 @@ export default function MapsWrite({
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
-            <WriteBookmark selectedMarker={selectedMarker} bookmarkName={bookmarkName} setBookmarkName={setBookmarkName} bookmarkColor={bookmarkColor} setBookmarkColor={setBookmarkColor} />
+            <WriteBookmark
+              selectedBookmarkName={selectedBookmarkName}
+              setSelectedBookmarkName={setSelectedBookmarkName}
+              selectedBookmarkColor={selectedBookmarkColor}
+              setSelectedBookmarkColor={setSelectedBookmarkColor}
+            />
             {/* 날짜 선택 */}
             <DatePicker01 date={date} setDate={setDate} className="" />
             {/* 내용 작성 */}
