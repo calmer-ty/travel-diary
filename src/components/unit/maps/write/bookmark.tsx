@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
 import { useUserBookmarks } from "@/hooks/useUserBookmarks";
@@ -13,16 +15,20 @@ import { addDoc, collection, deleteDoc, doc, getFirestore, updateDoc } from "fir
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import { ColorList } from "../colorList";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 interface IMapsDialogProps {
+  savedBookmark: {
+    name: string;
+    color: string;
+  };
   selectedBookmarkName: string;
   setSelectedBookmarkName: Dispatch<SetStateAction<string>>;
   selectedBookmarkColor: string;
   setSelectedBookmarkColor: Dispatch<SetStateAction<string>>;
 }
 
-export default function WriteBookmark({ selectedBookmarkName, setSelectedBookmarkName, selectedBookmarkColor, setSelectedBookmarkColor }: IMapsDialogProps) {
+export default function WriteBookmark({ savedBookmark, selectedBookmarkName, setSelectedBookmarkName, selectedBookmarkColor, setSelectedBookmarkColor }: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
@@ -132,17 +138,20 @@ export default function WriteBookmark({ selectedBookmarkName, setSelectedBookmar
     // setIsOpen(false);
   };
 
+  const displayName = selectedBookmarkName || savedBookmark.name || "여정";
+  const displayColor = selectedBookmarkColor || savedBookmark.color;
+
   return (
     <DropdownMenu>
       {/* 여정 버튼 - 트리거 요소도 버튼이기 때문에 트리거 동작과 버튼 스타일을 갖기 위해선 asChild로 기능을 전달 */}
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {selectedBookmarkColor ? (
-            <img src={`./images/bookmark/icon_bookmarker_${selectedBookmarkColor}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
+          {displayColor ? (
+            <img src={`/images/bookmark/icon_bookmarker_${displayColor}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
           ) : (
             <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
           )}
-          <span className="inline-block align-middle">{selectedBookmarkName || "여정"}</span>
+          <span className="inline-block align-middle">{displayName}</span>
         </Button>
       </DropdownMenuTrigger>
 
