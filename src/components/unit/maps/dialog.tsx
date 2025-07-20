@@ -20,7 +20,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { addDoc, collection, deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
-import { ILogPlace } from "@/types";
+import type { ILogPlace } from "@/types";
 import { ColorList } from "./colorList";
 
 interface IMapsDialogProps {
