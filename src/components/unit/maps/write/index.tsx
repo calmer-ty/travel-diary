@@ -57,6 +57,10 @@ export default function MapsWrite({
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
+  // 🔖 북마크
+  const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
+  const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
+
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
     if (isEdit && selectedMarker) {
@@ -66,6 +70,9 @@ export default function MapsWrite({
       setContent("");
     }
   }, [isEdit, selectedMarker]);
+
+  // selectedMarker가 들어올 경우 동작하도록
+  if (!selectedMarker) return null;
 
   // ✅ [등록]
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -139,7 +146,7 @@ export default function MapsWrite({
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-    const markerId = selectedMarker?._id;
+    const markerId = selectedMarker._id;
     if (!uid) {
       triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
       return;
@@ -172,11 +179,6 @@ export default function MapsWrite({
     }
   };
 
-  // 🔖 북마크
-  const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
-  const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
-  // console.log("bookmark Index: ", bookmarkName, bookmarkColor);
-
   // Dialog 닫기
   const onClickCancel = () => {
     setDate(undefined);
@@ -188,13 +190,14 @@ export default function MapsWrite({
       <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
-            <DialogDescription>{isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}</DialogDescription>
+            <DialogTitle>{isEdit ? selectedMarker.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
+            <DialogDescription>{isEdit ? selectedMarker.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}</DialogDescription>
           </DialogHeader>
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
             <WriteBookmark
+              savedBookmark={selectedMarker.bookmark}
               selectedBookmarkName={selectedBookmarkName}
               setSelectedBookmarkName={setSelectedBookmarkName}
               selectedBookmarkColor={selectedBookmarkColor}

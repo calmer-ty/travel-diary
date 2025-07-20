@@ -11,7 +11,7 @@ export interface ILogPlace {
   };
   bookmark: {
     name: string;
-    color: string | null;
+    color: string;
   };
 }
 
