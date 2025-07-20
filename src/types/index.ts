@@ -15,6 +15,16 @@ export interface ILogPlace {
   };
 }
 
+export interface IUpdateMarker {
+  markerId: string;
+  date: Date | undefined;
+  content: string;
+  bookmark: {
+    name: string;
+    color: string;
+  };
+}
+
 export interface IUserID {
   uid: string | undefined;
 }

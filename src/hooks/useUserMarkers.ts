@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
-import type { ILogPlace, IUserID } from "@/types";
+import type { ILogPlace, IUpdateMarker, IUserID } from "@/types";
 
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
@@ -31,20 +31,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   };
 
   // ✅ [수정]
-  const updateMarker = async ({
-    markerId,
-    date,
-    content,
-    bookmark,
-  }: {
-    markerId: string;
-    date: Date | undefined;
-    content: string;
-    bookmark: {
-      name: string;
-      color: string;
-    };
-  }) => {
+  const updateMarker = async ({ markerId, date, content, bookmark }: IUpdateMarker) => {
     const db = getFirestore(firebaseApp);
     const docRef = doc(db, "travelData", markerId);
 
@@ -102,6 +89,6 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     markers,
     createMarker,
     updateMarker,
-    refetch: fetchMarkers,
+    fetchMarkers,
   };
 };

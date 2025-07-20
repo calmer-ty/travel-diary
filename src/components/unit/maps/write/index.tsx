@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import type { ILogPlace } from "@/types";
+import type { ILogPlace, IUpdateMarker } from "@/types";
 
 interface IMapsDialogProps {
   isEdit: boolean;
@@ -33,20 +33,7 @@ interface IMapsDialogProps {
   // 마커
   selectedMarker: ILogPlace | null;
   createMarker: (markerData: ILogPlace) => Promise<void>;
-  updateMarker: ({
-    markerId,
-    date,
-    content,
-    bookmark,
-  }: {
-    markerId: string;
-    date: Date | undefined;
-    content: string;
-    bookmark: {
-      name: string;
-      color: string;
-    };
-  }) => Promise<void>;
+  updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
 }
 
 export default function MapsWrite({
