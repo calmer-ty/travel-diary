@@ -3,12 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
-import { IUserID } from "@/types";
 import { useAlert } from "./useAlert";
 
+import type { IUserID } from "@/types";
+
 export const useUserBookmarks = ({ uid }: IUserID) => {
-  const [bookmarks, setBookmarks] = useState<{ bookmarkColor: string; bookmarkName: string }[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
 
   const { triggerAlert } = useAlert();
 
@@ -19,8 +19,6 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
         return;
       }
 
-      setIsLoading(true); // 로딩 시작
-
       const db = getFirestore(firebaseApp);
       const bookmarkData = collection(db, "bookmarkData");
 
@@ -29,13 +27,12 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
       const snapshot = await getDocs(q);
 
       const fetchedData = snapshot.docs.map((doc) => ({
-        bookmarkColor: doc.data().bookmarkColor,
-        bookmarkName: doc.data().bookmarkName,
+        _id: doc.id,
+        name: doc.data().name,
+        color: doc.data().color,
       }));
 
       setBookmarks(fetchedData);
-
-      setIsLoading(false); // 로딩 종료
     } catch (error) {
       console.error("Firebase 북마크 불러오기 실패:", error);
     }
@@ -52,7 +49,6 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
   return {
     bookmarks,
     setBookmarks,
-    refetch: fetchBookmarks,
-    isLoading,
+    fetchBookmarks,
   };
 };

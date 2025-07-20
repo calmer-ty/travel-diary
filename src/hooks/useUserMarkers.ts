@@ -3,11 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
-import { ILogPlace, IUserID } from "@/types";
+import type { ILogPlace, IUpdateMarker, IUserID } from "@/types";
 
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // 무한스크롤
   const limitCount = 10;
@@ -37,16 +36,35 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   };
 
   // ✅ [수정]
-  const updateMarker = async ({ markerId, date, content }: { markerId: string; date: Date | undefined; content: string }) => {
+  const updateMarker = async ({ markerId, date, content, bookmark }: IUpdateMarker) => {
     const db = getFirestore(firebaseApp);
     const docRef = doc(db, "travelData", markerId);
 
     await updateDoc(docRef, {
       date,
       content,
+      bookmark: {
+        name: bookmark.name,
+        color: bookmark.color,
+      },
     });
-    //  수정할 부분인 date, content를 선택한 마커 상태를 지도에 뿌려지는 마커들에서 비교 후에 일치하는 경우 수정해줌
-    setMarkers((prev) => prev.map((marker) => (marker._id === markerId ? { ...marker, date: date ?? marker.date, content } : marker)));
+
+    // 상태도 업데이트
+    setMarkers((prev) =>
+      prev.map((marker) =>
+        marker._id === markerId
+          ? {
+              ...marker,
+              date: date ?? marker.date,
+              content,
+              bookmark: {
+                name: bookmark.name,
+                color: bookmark.color,
+              },
+            }
+          : marker
+      )
+    );
   };
 
   // const fetchMarkers = useCallback(async () => {
@@ -75,8 +93,6 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   const fetchMoreMarkers = useCallback(async () => {
     if (!uid) return;
 
-    setIsLoading(true); // 로딩 시작
-
     const db = getFirestore(firebaseApp);
     const travelData = collection(db, "travelData");
 
@@ -101,7 +117,6 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     } else {
       setHasMore(false);
     }
-    setIsLoading(false); // 로딩 종료
   }, [uid, lastDoc]);
 
   // useEffect(() => {
@@ -125,7 +140,5 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     createMarker,
     updateMarker,
     fetchMoreMarkers,
-    hasMore,
-    isLoading,
   };
 };

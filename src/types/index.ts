@@ -10,8 +10,18 @@ export interface ILogPlace {
     lng: number;
   };
   bookmark: {
-    bookmarkName: string;
-    bookmarkColor: string | null;
+    name: string;
+    color: string | null;
+  };
+}
+
+export interface IUpdateMarker {
+  markerId: string;
+  date: Date | undefined;
+  content: string;
+  bookmark: {
+    name: string;
+    color: string;
   };
 }
 
