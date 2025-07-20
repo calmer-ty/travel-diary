@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
@@ -56,6 +56,16 @@ export default function MapsWrite({
 
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
+
+  // selectedMarker가 바뀔 때마다 폼 초기화
+  useEffect(() => {
+    if (isEdit && selectedMarker) {
+      setDate(selectedMarker.date);
+      setContent(selectedMarker.content);
+    } else {
+      setContent("");
+    }
+  }, [isEdit, selectedMarker]);
 
   // ✅ [등록]
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
