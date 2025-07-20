@@ -129,7 +129,7 @@ export default function WriteBookmark({ selectedBookmarkName, setSelectedBookmar
   const onClickSaveBookmark = (name: string, color: string) => {
     setSelectedBookmarkName(name);
     setSelectedBookmarkColor(color);
-    setIsOpen(false);
+    // setIsOpen(false);
   };
 
   return (
@@ -152,11 +152,11 @@ export default function WriteBookmark({ selectedBookmarkName, setSelectedBookmar
           {bookmarks.length > 0 ? (
             <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
               {bookmarks.map((bookmark) => (
-                <div key={bookmark._id} className="flex items-center gap-3 cursor-pointer ">
-                  <div className="flex items-center gap-1 hover:bg-gray-100 p-1 rounded" onClick={() => onClickSaveBookmark(bookmark.name, bookmark.color)}>
+                <div key={bookmark._id} className="flex items-center gap-3 cursor-pointer">
+                  <DropdownMenuItem onClick={() => onClickSaveBookmark(bookmark.name, bookmark.color)} className="flex items-center gap-1">
                     <img src={`./images/bookmark/icon_bookmarker_${bookmark.color}.png`} alt="북마크 아이콘" className="w-5" />
                     <span>{bookmark.name}</span>
-                  </div>
+                  </DropdownMenuItem>
 
                   <button
                     onClick={(e) => {
@@ -164,7 +164,7 @@ export default function WriteBookmark({ selectedBookmarkName, setSelectedBookmar
                       handleDeleteBookmark(bookmark._id);
                     }}
                     type="button"
-                    className="w-4 h-4 bg-[url(/images/icon_trash.png)] bg-contain bg-no-repeat "
+                    className="w-4 h-4 bg-[url(/images/icon_trash.png)] bg-contain bg-no-repeat"
                   ></button>
                 </div>
               ))}
