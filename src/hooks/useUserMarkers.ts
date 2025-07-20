@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
 import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
-import { ILogPlace, IUserID } from "@/types";
+import type { ILogPlace, IUserID } from "@/types";
 
 export const useUserMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);

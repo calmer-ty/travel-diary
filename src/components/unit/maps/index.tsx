@@ -9,7 +9,7 @@ import { useDialog } from "@/hooks/useDialog";
 import MapsWrite from "./write";
 import AlertMaps from "./alert";
 
-import { ILogPlace } from "@/types";
+import type { ILogPlace } from "@/types";
 
 const containerStyle = {
   width: "100%",
