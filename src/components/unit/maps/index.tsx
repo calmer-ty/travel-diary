@@ -51,6 +51,7 @@ export default function Maps() {
 
   // 📌 마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
+  const { markers, createMarker, updateMarker } = useUserMarkers({ uid });
 
   // 🖊️ 폼 관련
   const { isOpen: showDialog, setIsOpen: setShowDialog } = useDialog();
@@ -113,9 +114,6 @@ export default function Maps() {
     }
   };
 
-  // 마커 데이터 조회
-  const { markers } = useUserMarkers({ uid });
-
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
     setShowDialog(true);
@@ -175,12 +173,15 @@ export default function Maps() {
         isEdit={isEdit}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
-        selectedMarker={selectedMarker}
-        // 맵 데이터
+        // 맵
         mapsAddress={mapsAddress}
         selectedPosition={selectedPosition}
         setSelectedPosition={setSelectedPosition}
         setMapCenter={setMapCenter}
+        // 마커
+        selectedMarker={selectedMarker}
+        createMarker={createMarker}
+        updateMarker={updateMarker}
       />
 
       {/* 경고창 */}

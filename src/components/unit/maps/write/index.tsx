@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
-import { useUserMarkers } from "@/hooks/useUserMarkers";
 
 import DatePicker01 from "@/components/commons/datePicker/01";
 import AlertMaps from "../alert";
@@ -21,8 +20,7 @@ interface IMapsDialogProps {
   showDialog: boolean;
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
 
-  // 마커/맵 데이터
-  selectedMarker: ILogPlace | null;
+  // 맵 데이터
   mapsAddress: google.maps.places.PlaceResult | undefined;
   selectedPosition: google.maps.LatLngLiteral | null;
   setSelectedPosition: React.Dispatch<React.SetStateAction<google.maps.LatLngLiteral | null>>;
@@ -32,9 +30,37 @@ interface IMapsDialogProps {
       lng: number;
     }>
   >;
+  // 마커
+  selectedMarker: ILogPlace | null;
+  createMarker: (markerData: ILogPlace) => Promise<void>;
+  updateMarker: ({
+    markerId,
+    date,
+    content,
+    bookmark,
+  }: {
+    markerId: string;
+    date: Date | undefined;
+    content: string;
+    bookmark: {
+      name: string;
+      color: string;
+    };
+  }) => Promise<void>;
 }
 
-export default function MapsWrite({ isEdit, showDialog, setShowDialog, mapsAddress, selectedPosition, setSelectedPosition, setMapCenter, selectedMarker }: IMapsDialogProps) {
+export default function MapsWrite({
+  isEdit,
+  showDialog,
+  setShowDialog,
+  mapsAddress,
+  selectedPosition,
+  setSelectedPosition,
+  setMapCenter,
+  selectedMarker,
+  createMarker,
+  updateMarker,
+}: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
@@ -43,7 +69,6 @@ export default function MapsWrite({ isEdit, showDialog, setShowDialog, mapsAddre
 
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
-  const { createMarker, updateMarker } = useUserMarkers({ uid });
 
   // ✅ [등록]
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
