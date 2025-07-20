@@ -97,6 +97,10 @@ button {
   cursor: pointer;
 }
 
+.keepall {
+  word-break: keep-all;
+}
+
 /*animation*/
 @keyframes slideUp {
   0% {

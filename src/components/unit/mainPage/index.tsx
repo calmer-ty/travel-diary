@@ -8,8 +8,8 @@ const mainItem = [
     href: "/list",
   },
   {
-    title: "",
-    href: "",
+    title: "친구와 게임 하기",
+    href: "/game",
   },
   {
     title: "",
