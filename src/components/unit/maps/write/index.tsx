@@ -64,12 +64,6 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-    // 🔒 uid 없을 경우 등록 막기
-    if (!uid) {
-      triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
-      return;
-    }
-
     if (!mapsAddress?.name) {
       triggerAlert("주소명이 없습니다!");
       return;

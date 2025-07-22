@@ -57,7 +57,7 @@ export default function Maps() {
   const { isOpen, setIsOpen } = useDialog();
 
   // ⚠️ 알림창 등
-  const { showAlert, alertValue } = useAlert();
+  const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 지도 bounds 변경 시 호출
   const handleBoundsChanged = () => {
@@ -86,6 +86,12 @@ export default function Maps() {
 
   // POI 클릭 시
   const onClickPOI = (e: google.maps.MapMouseEvent) => {
+    // 🔒 uid 없을 경우 등록 막기
+    if (!uid) {
+      triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
+      return;
+    }
+
     const placeId = (e as google.maps.IconMouseEvent).placeId;
 
     if (!e.latLng || !mapRef.current) return;
