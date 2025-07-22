@@ -64,13 +64,19 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
+    // 🔒 uid 없을 경우 등록 막기
+    if (!uid) {
+      triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
+      return;
+    }
+
     if (!mapsAddress?.name) {
-      triggerAlert("주소명이 없습니다!");
+      triggerAlert("주소명이 없습니다.");
       return;
     }
 
     if (!mapsAddress?.formatted_address) {
-      triggerAlert("상세주소가 없습니다!");
+      triggerAlert("상세주소가 없습니다.");
       return;
     }
 
@@ -85,7 +91,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
     }
 
     if (!selectedPosition) {
-      triggerAlert("마커를 선택해주세요!");
+      triggerAlert("마커를 선택해주세요.");
       return;
     }
 
