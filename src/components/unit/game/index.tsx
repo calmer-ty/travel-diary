@@ -14,6 +14,7 @@ export default function Game() {
             className={`
                     w-1/3  h-40 rounded-2xl transition-colors duration-200 group
                     ${el.available === true ? "bg-[#FAFAF2] hover:bg-[rgba(0,0,0,0.1)]" : "bg-[rgba(0,0,0,0.1)]"}
+                    ${el.available === true ? "pointer-events-auto" : "pointer-events-none"}
                     md:w-1/5
                 `}
           >

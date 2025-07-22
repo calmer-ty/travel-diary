@@ -66,6 +66,11 @@ export default function Roulette() {
       return;
     }
 
+    if (rouletteItem.includes(trimmed)) {
+      triggerAlert("이미 있는 룰렛 리스트입니다.");
+      return;
+    }
+
     const newColor = `#${Math.floor(Math.random() * 16777215)
       .toString(16)
       .padStart(6, "0")}`;
@@ -121,7 +126,7 @@ export default function Roulette() {
         <audio ref={audioRef} src="/sound/effect_roulette.mp3" />
 
         {/* 화살표 */}
-        <div className="absolute top-0 left-1/2 z-[1] transform -translate-x-1/2  w-13 h-20 bg-[url(/images/game/icon_arrow.png)] bg-contain bg-no-repeat"></div>
+        <div className="absolute top-0 left-1/2 z-[1] transform -translate-x-1/2  w-18 h-25 bg-[url(/images/game/icon_arrow.png)] bg-contain bg-no-repeat"></div>
 
         {/* 룰렛 */}
         <div
