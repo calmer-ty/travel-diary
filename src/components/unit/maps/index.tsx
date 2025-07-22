@@ -86,12 +86,6 @@ export default function Maps() {
 
   // POI 클릭 시
   const onClickPOI = (e: google.maps.MapMouseEvent) => {
-    // 🔒 uid 없을 경우 등록 막기
-    if (!uid) {
-      triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
-      return;
-    }
-
     const placeId = (e as google.maps.IconMouseEvent).placeId;
 
     if (!e.latLng || !mapRef.current) return;
@@ -102,6 +96,12 @@ export default function Maps() {
     // 🔍 POI를 클릭한 경우 (placeId 존재)
     if (placeId) {
       e.stop(); // infoWindow 기본 동작 막기
+
+      // 🔒 uid 없을 경우 등록 막기
+      if (!uid) {
+        triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
+        return;
+      }
 
       // 모달 창 데이터 초기화
       setIsEdit(false);
