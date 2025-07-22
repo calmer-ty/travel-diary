@@ -54,7 +54,7 @@ export default function Maps() {
   const { markers, createMarker, updateMarker } = useUserMarkers({ uid });
 
   // 🖊️ 폼 관련
-  const { isOpen: showDialog, setIsOpen: setShowDialog } = useDialog();
+  const { isOpen, setIsOpen } = useDialog();
 
   // ⚠️ 알림창 등
   const { showAlert, alertValue } = useAlert();
@@ -99,7 +99,7 @@ export default function Maps() {
 
       // 모달 창 데이터 초기화
       setIsEdit(false);
-      setShowDialog(true);
+      setIsOpen(true);
       setSelectedPosition({ lat, lng });
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
@@ -116,7 +116,7 @@ export default function Maps() {
 
   // 마커 클릭
   const onClickMarker = (marker: ILogPlace) => {
-    setShowDialog(true);
+    setIsOpen(true);
     setIsEdit(true);
     setSelectedMarker(marker);
   };
@@ -171,8 +171,8 @@ export default function Maps() {
       {/* 모달 */}
       <MapsWrite
         isEdit={isEdit}
-        showDialog={showDialog}
-        setShowDialog={setShowDialog}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         // 맵
         mapsAddress={mapsAddress}
         selectedPosition={selectedPosition}

@@ -18,10 +18,12 @@ import { ColorList } from "../colorList";
 import type { Dispatch, SetStateAction } from "react";
 
 interface IMapsDialogProps {
-  savedBookmark: {
-    name: string;
-    color: string;
-  };
+  savedBookmark:
+    | {
+        name: string;
+        color: string;
+      }
+    | undefined;
   selectedBookmarkName: string;
   setSelectedBookmarkName: Dispatch<SetStateAction<string>>;
   selectedBookmarkColor: string;
@@ -138,8 +140,8 @@ export default function WriteBookmark({ savedBookmark, selectedBookmarkName, set
     // setIsOpen(false);
   };
 
-  const displayName = selectedBookmarkName || savedBookmark.name || "여정";
-  const displayColor = selectedBookmarkColor || savedBookmark.color;
+  const displayName = selectedBookmarkName || savedBookmark?.name || "여정";
+  const displayColor = selectedBookmarkColor || savedBookmark?.color;
 
   return (
     <DropdownMenu>
