@@ -17,9 +17,9 @@ import type { ILogPlace, IUpdateMarker } from "@/types";
 
 interface IMapsDialogProps {
   isEdit: boolean;
-  showDialog: boolean;
-  setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-
+  // 다이얼로그 창 스테이트
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   // 맵 데이터
   mapsAddress: google.maps.places.PlaceResult | undefined;
   selectedPosition: google.maps.LatLngLiteral | null;
@@ -36,18 +36,7 @@ interface IMapsDialogProps {
   updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
 }
 
-export default function MapsWrite({
-  isEdit,
-  showDialog,
-  setShowDialog,
-  mapsAddress,
-  selectedPosition,
-  setSelectedPosition,
-  setMapCenter,
-  selectedMarker,
-  createMarker,
-  updateMarker,
-}: IMapsDialogProps) {
+export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, selectedPosition, setSelectedPosition, setMapCenter, selectedMarker, createMarker, updateMarker }: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
@@ -70,9 +59,6 @@ export default function MapsWrite({
       setContent("");
     }
   }, [isEdit, selectedMarker]);
-
-  // selectedMarker가 들어올 경우 동작하도록
-  if (!selectedMarker) return null;
 
   // ✅ [등록]
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -131,7 +117,7 @@ export default function MapsWrite({
       setMapCenter(selectedPosition);
       setSelectedPosition(null);
 
-      setShowDialog(false);
+      setIsOpen(false);
       setDate(undefined);
       setContent("");
     } catch (error) {
@@ -146,7 +132,7 @@ export default function MapsWrite({
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-    const markerId = selectedMarker._id;
+    const markerId = selectedMarker?._id;
     if (!uid) {
       triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
       return;
@@ -168,7 +154,7 @@ export default function MapsWrite({
         },
       });
       // 수정 후 폼/다이얼로그 초기화
-      setShowDialog(false);
+      setIsOpen(false);
       setDate(undefined);
       setContent("");
     } catch (error) {
@@ -186,18 +172,18 @@ export default function MapsWrite({
   };
 
   return (
-    <Dialog open={showDialog} onOpenChange={setShowDialog}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{isEdit ? selectedMarker.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
-            <DialogDescription>{isEdit ? selectedMarker.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}</DialogDescription>
+            <DialogTitle>{isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
+            <DialogDescription>{isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}</DialogDescription>
           </DialogHeader>
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
             <WriteBookmark
-              savedBookmark={selectedMarker.bookmark}
+              savedBookmark={selectedMarker?.bookmark}
               selectedBookmarkName={selectedBookmarkName}
               setSelectedBookmarkName={setSelectedBookmarkName}
               selectedBookmarkColor={selectedBookmarkColor}
