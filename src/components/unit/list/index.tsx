@@ -52,7 +52,7 @@ export default function List() {
 
   return (
     <article className="grid gap-4 p-6">
-      {/* ✅ 로딩 중 */}
+      {/* 북마크 선택지 */}
       <div className="flex gap-4 mx-6">
         {isBookmarkersLoading ? (
           // ✅ 로딩 중
@@ -75,6 +75,7 @@ export default function List() {
       </div>
       {/* 하단 상세: 날짜 + 내용 */}
       <ScrollArea className="h-140 p-6 bg-[#FAFAF2] rounded-md">
+        {/* ✅ 로딩중 */}
         {isMarkersLoading ? (
           <div className="space-y-6">
             {[1, 2, 3, 4].map((i) => (
