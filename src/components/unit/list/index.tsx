@@ -29,6 +29,8 @@ export default function List() {
 
   // 필터링한 값들의 날짜를 모두 뽑은 값
   const markersDate = Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
+  console.log("filteredMarkers: ", filteredMarkers.length);
+  console.log("markersDate: ", markersDate.length);
 
   // 스크롤 중
   // const loaderRef = useRef<HTMLDivElement | null>(null);
@@ -85,27 +87,38 @@ export default function List() {
               </div>
             ))}
           </div>
+        ) : markersDate.length === 0 ? (
+          <div className="size-full">기록이 없습니다.</div>
         ) : (
           markersDate.map((date, index) => (
             <div key={`${date}_${index}`} className="flex gap-8 mt-8 first:mt-0">
               <div className="w-23 mt-1 shrink-0">{date}</div>
 
               <div className="w-full">
-                {filteredMarkers
-                  .filter((marker) => format(marker.date, "yyyy-MM-dd") === date)
-                  .map((marker) => (
-                    <Card key={marker.name} className="mt-6 border-[#9A8C4B] first:mt-0">
-                      <CardContent className="px-12">
-                        <div className="flex gap-10 items-start">
-                          <div className="grid gap-2 w-2xs">
-                            <h3 className="text-base whitespace-pre-line">{marker.name}</h3>
-                            <span className="text-sm text-muted-foreground font-medium">{marker.address}</span>
+                {filteredMarkers.length === 0 ? (
+                  <>
+                    <div>없</div>
+                    <div>없</div>
+                    <div>없</div>
+                    <div>없</div>
+                  </>
+                ) : (
+                  filteredMarkers
+                    .filter((marker) => format(marker.date, "yyyy-MM-dd") === date)
+                    .map((marker) => (
+                      <Card key={marker.name} className="mt-6 border-[#9A8C4B] first:mt-0">
+                        <CardContent className="px-12">
+                          <div className="flex gap-10 items-start">
+                            <div className="grid gap-2 w-2xs">
+                              <h3 className="text-base whitespace-pre-line">{marker.name}</h3>
+                              <span className="text-sm text-muted-foreground font-medium">{marker.address}</span>
+                            </div>
+                            <p className="w-3xs">{marker.content}</p>
                           </div>
-                          <p className="w-3xs">{marker.content}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    ))
+                )}
               </div>
             </div>
           ))
