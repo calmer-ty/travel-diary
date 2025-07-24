@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -10,10 +10,12 @@ import { useUserBookmarks } from "@/hooks/useUserBookmarks";
 
 import { format } from "date-fns";
 
+import InfiniteScroll from "react-infinite-scroll-component";
+
 export default function List() {
   const { user } = useAuth();
   // 마커 데이터 조회
-  const { markers, isLoading: isMarkersLoading } = useUserMarkers({ uid: user?.uid });
+  const { markers, isLoading: isMarkersLoading, fetchMoreMarkers, hasMore } = useUserMarkers({ uid: user?.uid });
   const { bookmarks, isLoading: isBookmarkersLoading } = useUserBookmarks({ uid: user?.uid });
 
   // 북마크 셀렉터
@@ -25,32 +27,18 @@ export default function List() {
   }, [bookmarks]);
 
   // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
-  const filteredMarkers = markers.filter((b) => selected === b.bookmark.name);
+  // const filteredMarkers = markers.filter((b) => selected === b.bookmark.name);
+  const filteredMarkers = useMemo(() => {
+    return markers.filter((b) => selected === b.bookmark.name);
+  }, [markers, selected]);
 
   // 필터링한 값들의 날짜를 모두 뽑은 값
-  const markersDate = Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
-  console.log("filteredMarkers: ", filteredMarkers.length);
-  console.log("markersDate: ", markersDate.length);
+  // const markersDate = Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
+  const markersDate = useMemo(() => {
+    return Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
+  }, [filteredMarkers]);
 
-  // 스크롤 중
-  // const loaderRef = useRef<HTMLDivElement | null>(null);
-
-  // useEffect(() => {
-  //   if (!loaderRef.current || !hasMore) return;
-
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       if (entries[0].isIntersecting && !isMarkersLoading) {
-  //         fetchMoreMarkers();
-  //       }
-  //     },
-  //     { threshold: 1.0 } // 100% 노출 시 실행
-  //   );
-
-  //   observer.observe(loaderRef.current);
-
-  //   return () => observer.disconnect();
-  // }, [isMarkersLoading, hasMore, fetchMoreMarkers]);
+  console.log("key check", filteredMarkers.length);
 
   return (
     <article className="grid gap-4 p-6">
@@ -76,37 +64,38 @@ export default function List() {
         )}
       </div>
       {/* 하단 상세: 날짜 + 내용 */}
-      <ScrollArea className="h-140 p-6 bg-[#FAFAF2] rounded-md">
-        {/* ✅ 로딩중 */}
-        {isMarkersLoading ? (
-          <div className="space-y-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex gap-8">
-                <Skeleton className="h-10 w-[5.5rem] rounded-md" />
-                <Skeleton className="h-26 w-full rounded-lg" />
-              </div>
-            ))}
-          </div>
-        ) : markersDate.length === 0 ? (
-          <div className="size-full">기록이 없습니다.</div>
-        ) : (
-          markersDate.map((date, index) => (
-            <div key={`${date}_${index}`} className="flex gap-8 mt-8 first:mt-0">
-              <div className="w-23 mt-1 shrink-0">{date}</div>
+      {/* <ScrollArea className="h-140 p-6 bg-[#FAFAF2] rounded-md"> */}
+      {/* ✅ 로딩중 */}
+      {isMarkersLoading ? (
+        <div className="space-y-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex gap-8">
+              <Skeleton className="h-10 w-[5.5rem] rounded-md" />
+              <Skeleton className="h-26 w-full rounded-lg" />
+            </div>
+          ))}
+        </div>
+      ) : markersDate.length === 0 ? (
+        <div className="size-full">기록이 없습니다.</div>
+      ) : (
+        <div id="scroll-container" className="overflow-auto h-140 p-6 bg-[#FAFAF2] rounded-md">
+          <InfiniteScroll
+            dataLength={filteredMarkers.length} // 현재 데이터 개수
+            next={fetchMoreMarkers} // 더 불러올 함수
+            hasMore={hasMore} // 더 데이터 있는지 여부
+            loader={<h4>Loading...</h4>} // 로딩 표시
+            endMessage={<p>모두 불러왔어요!</p>} // 끝 메시지
+            scrollableTarget="scroll-container" // 이게 포인트!
+          >
+            {markersDate.map((date) => (
+              <div key={`${date}`} className="flex gap-8 mt-8 first:mt-0">
+                <div className="w-23 mt-1 shrink-0">{date}</div>
 
-              <div className="w-full">
-                {filteredMarkers.length === 0 ? (
-                  <>
-                    <div>없</div>
-                    <div>없</div>
-                    <div>없</div>
-                    <div>없</div>
-                  </>
-                ) : (
-                  filteredMarkers
+                <div className="w-full">
+                  {filteredMarkers
                     .filter((marker) => format(marker.date, "yyyy-MM-dd") === date)
                     .map((marker) => (
-                      <Card key={marker.name} className="mt-6 border-[#9A8C4B] first:mt-0">
+                      <Card key={`${marker._id}`} className="mt-6 py-25 border-[#9A8C4B] first:mt-0">
                         <CardContent className="px-12">
                           <div className="flex gap-10 items-start">
                             <div className="grid gap-2 w-2xs">
@@ -117,14 +106,15 @@ export default function List() {
                           </div>
                         </CardContent>
                       </Card>
-                    ))
-                )}
+                    ))}
+                </div>
               </div>
-            </div>
-          ))
-        )}
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+            ))}
+          </InfiniteScroll>
+          {/* <ScrollBar orientation="horizontal" /> */}
+        </div>
+      )}
+      {/* </ScrollArea> */}
     </article>
   );
 }
