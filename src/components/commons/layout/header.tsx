@@ -1,7 +1,5 @@
 "use client";
 
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
 import { useAuth } from "@/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
@@ -9,30 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import Link from "next/link";
 
 export default function Header() {
-  const { user } = useAuth();
-
-  // Google 로그인 처리
-  const handleGoogleLogin = async (): Promise<void> => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      console.log(auth);
-    } catch (error) {
-      console.error("로그인 실패:", error);
-    }
-  };
-
-  // 로그아웃 처리
-  const handleLogout = async (): Promise<void> => {
-    try {
-      await auth.signOut();
-      // setAlertOpen(true);
-      // setRouting("/");
-    } catch (error) {
-      console.error("로그아웃 실패:", error);
-    }
-  };
-
-  console.log("user: ", user);
+  const { user, handleLogin, handleLogout } = useAuth();
 
   return (
     <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
@@ -62,7 +37,7 @@ export default function Header() {
           </DropdownMenu>
         </>
       ) : (
-        <Button variant="outline" onClick={handleGoogleLogin}>
+        <Button variant="outline" onClick={handleLogin}>
           로그인
         </Button>
         // <button onClick={handleGoogleLogin}>로그인</button>
