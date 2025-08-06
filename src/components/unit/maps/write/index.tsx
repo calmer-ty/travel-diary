@@ -185,19 +185,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
-            <WriteBookmark
-              // savedBookmark={selectedMarker?.bookmark}
-              isEdit={isEdit}
-              bookmark={bookmark}
-              setBookmark={setBookmark}
-              selectedBookmarkId={selectedMarker?.bookmark._id}
-              // savedBookmark={selectedMarker?.bookmark}
-              // selectedBookmarkName={selectedBookmarkName}
-              // setSelectedBookmarkName={setSelectedBookmarkName}
-              // selectedBookmarkColor={selectedBookmarkColor}
-              // setSelectedBookmarkColor={setSelectedBookmarkColor}
-              // setSelectedBookmarkId={setSelectedBookmarkId}
-            />
+            <WriteBookmark savedBookmark={selectedMarker?.bookmark} bookmark={bookmark} setBookmark={setBookmark} />
             {/* 날짜 선택 */}
             <DatePicker01 date={date} setDate={setDate} className="" />
             {/* 내용 작성 */}
