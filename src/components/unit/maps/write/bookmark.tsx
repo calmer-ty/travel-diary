@@ -127,8 +127,8 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
     setBookmark({ _id, name, color });
   };
 
-  const bookmarkColor = bookmark?.color ? bookmark.color : selectedMarker?.bookmark?.color ? selectedMarker.bookmark.color : "default";
-  const bookmarkName = bookmark?.name ? bookmark.name : selectedMarker?.bookmark?.name ? selectedMarker.bookmark.name : "여정을 선택하세요";
+  const bookmarkColor = bookmark?.color || selectedMarker?.bookmark?.color || "default";
+  const bookmarkName = bookmark?.name || selectedMarker?.bookmark?.name || "여정을 선택하세요";
 
   return (
     <DropdownMenu>

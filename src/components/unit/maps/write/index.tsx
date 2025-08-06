@@ -68,15 +68,15 @@ export default function MapsWrite({
     _id: "",
   });
 
-  console.log("selectedMarker: ", selectedMarker?.name);
+  console.log("selectedMarker: ", selectedMarker);
   console.log("bookmark: ", bookmark);
 
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
     if (isEdit && selectedMarker) {
       setDate(selectedMarker.date);
-      setContent(selectedMarker.content);
       setBookmark(selectedMarker.bookmark);
+      setContent(selectedMarker.content);
     } else {
       setDate(undefined);
       setBookmark({ name: "", color: "", _id: "" });
@@ -189,6 +189,7 @@ export default function MapsWrite({
       await deleteDoc(doc(db, "travelData", selectedMarkerId));
       console.log(`ID ${selectedMarkerId} 삭제 성공`);
       fetchMarkers();
+      setIsOpen(false);
     } catch (error) {
       console.error(`ID ${selectedMarkerId} 삭제 실패`, error);
     }
