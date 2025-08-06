@@ -137,32 +137,24 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedBookmarkI
     // setIsOpen(false); // 필요 시 주석 해제
   };
 
-  // 화면에 보여줄 이름과 색상
-  // const displayName = selectedBookmarkId ? savedBookmark?.name : "여정";
-  // const displayColor = selectedBookmarkId ? savedBookmark?.color : "";
-  // const displayName = savedBookmark?.name || "여정";
-  // const displayColor = savedBookmark?.color;
-
   // selectedBookmarkId에 해당하는 북마크를 찾기
   const selectedBookmark = isEdit ? bookmarks.find((bm) => bm._id === selectedBookmarkId) : undefined; // 새 등록이면 북마크 없음
-
-  // name과 color를 안전하게 꺼내기
-  const displayName = selectedBookmark?.name || "여정";
-  const displayColor = selectedBookmark?.color || "default";
-
-  // console.log(selectedBookmark);
-  // console.log(displayName, displayColor);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           {selectedBookmarkId ? (
-            <img src={`/images/bookmark/icon_bookmarker_${displayColor}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
+            <>
+              <img src={`/images/bookmark/icon_bookmarker_${selectedBookmark?.color}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
+              <span className="inline-block align-middle">{selectedBookmark?.name}</span>
+            </>
           ) : (
-            <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
+            <>
+              <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
+              <span className="inline-block align-middle">여정</span>
+            </>
           )}
-          <span className="inline-block align-middle">{displayName}</span>
         </Button>
       </DropdownMenuTrigger>
 
