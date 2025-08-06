@@ -54,6 +54,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
               date: date ?? marker.date,
               content,
               bookmark: {
+                _id: bookmark._id,
                 name: bookmark.name,
                 color: bookmark.color,
               },

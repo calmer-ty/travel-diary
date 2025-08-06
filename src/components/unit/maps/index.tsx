@@ -107,6 +107,7 @@ export default function Maps() {
       setIsEdit(false);
       setIsOpen(true);
       setSelectedPosition({ lat, lng });
+      // setSelectedMarker(null);  // POI를 누를 때 기존에 마커 데이터가 그대로 남았기 때문에
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {

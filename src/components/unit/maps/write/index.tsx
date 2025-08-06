@@ -61,20 +61,24 @@ export default function MapsWrite({
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
-  // 🔖 북마크
+  // 🔖 새로 선택되는 북마크
   const [bookmark, setBookmark] = useState({
     name: "",
     color: "",
     _id: "",
   });
 
+  console.log("selectedMarker: ", selectedMarker?.name);
+  console.log("bookmark: ", bookmark);
+
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
     if (isEdit && selectedMarker) {
       setDate(selectedMarker.date);
       setContent(selectedMarker.content);
-      setBookmark(selectedMarker.bookmark ?? { name: "", color: "", _id: "" });
+      setBookmark(selectedMarker.bookmark);
     } else {
+      setDate(undefined);
       setBookmark({ name: "", color: "", _id: "" });
       setContent("");
     }
@@ -164,7 +168,7 @@ export default function MapsWrite({
         markerId,
         date,
         content,
-        bookmark: { ...bookmark },
+        bookmark,
       });
 
       // 폼 초기화
