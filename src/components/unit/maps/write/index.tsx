@@ -47,8 +47,15 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 🔖 북마크
-  const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
-  const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
+  const [bookmark, setBookmark] = useState({
+    name: "",
+    color: "",
+    _id: "",
+  });
+
+  // const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
+  // const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
+  // const [selectedBookmarkId, setSelectedBookmarkId] = useState("");
 
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
@@ -56,7 +63,9 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
       setDate(selectedMarker.date);
       setContent(selectedMarker.content);
     } else {
+      setDate(undefined);
       setContent("");
+      setBookmark({ name: "", color: "", _id: "" });
     }
   }, [isEdit, selectedMarker]);
 
@@ -104,10 +113,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
       uid,
       date,
       content,
-      bookmark: {
-        name: selectedBookmarkName,
-        color: selectedBookmarkColor,
-      },
+      bookmark: bookmark,
     };
 
     try {
@@ -130,7 +136,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
 
   // ✅ [수정]
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+    e.preventDefault(); // 이벤트 기본동작 막기
 
     const markerId = selectedMarker?._id;
     if (!uid) {
@@ -145,22 +151,19 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
     try {
       await updateMarker({
         markerId,
-
         date,
         content,
-        bookmark: {
-          name: selectedBookmarkName,
-          color: selectedBookmarkColor,
-        },
+        bookmark: { ...bookmark },
       });
-      // 수정 후 폼/다이얼로그 초기화
+
+      // 폼 초기화
       setIsOpen(false);
       setDate(undefined);
       setContent("");
+      setBookmark({ name: "", color: "", _id: "" });
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
-        return;
       }
     }
   };
@@ -183,11 +186,17 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
             <WriteBookmark
-              savedBookmark={selectedMarker?.bookmark}
-              selectedBookmarkName={selectedBookmarkName}
-              setSelectedBookmarkName={setSelectedBookmarkName}
-              selectedBookmarkColor={selectedBookmarkColor}
-              setSelectedBookmarkColor={setSelectedBookmarkColor}
+              // savedBookmark={selectedMarker?.bookmark}
+              isEdit={isEdit}
+              bookmark={bookmark}
+              setBookmark={setBookmark}
+              selectedBookmarkId={selectedMarker?.bookmark._id}
+              // savedBookmark={selectedMarker?.bookmark}
+              // selectedBookmarkName={selectedBookmarkName}
+              // setSelectedBookmarkName={setSelectedBookmarkName}
+              // selectedBookmarkColor={selectedBookmarkColor}
+              // setSelectedBookmarkColor={setSelectedBookmarkColor}
+              // setSelectedBookmarkId={setSelectedBookmarkId}
             />
             {/* 날짜 선택 */}
             <DatePicker01 date={date} setDate={setDate} className="" />

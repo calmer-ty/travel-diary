@@ -18,48 +18,50 @@ import { ColorList } from "../colorList";
 import type { Dispatch, SetStateAction } from "react";
 
 interface IMapsDialogProps {
-  savedBookmark:
-    | {
-        name: string;
-        color: string;
-      }
-    | undefined;
-  selectedBookmarkName: string;
-  setSelectedBookmarkName: Dispatch<SetStateAction<string>>;
-  selectedBookmarkColor: string;
-  setSelectedBookmarkColor: Dispatch<SetStateAction<string>>;
+  // savedBookmark?:
+  //   | {
+  //       _id: string;
+  //       name: string;
+  //       color: string;
+  //     }
+  //   | undefined;
+  bookmark: {
+    _id: string;
+    name: string;
+    color: string;
+  };
+  setBookmark: Dispatch<SetStateAction<{ _id: string; name: string; color: string }>>;
+  selectedBookmarkId?: string;
+  isEdit: boolean;
 }
 
-export default function WriteBookmark({ savedBookmark, selectedBookmarkName, setSelectedBookmarkName, selectedBookmarkColor, setSelectedBookmarkColor }: IMapsDialogProps) {
+export default function WriteBookmark({ bookmark, setBookmark, selectedBookmarkId, isEdit }: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
   // ⚠️ 알림창 등
   const { triggerAlert } = useAlert();
 
-  // 🔖 북마크
+  // 🔖 북마크 관련 훅
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
   const { bookmarks, setBookmarks } = useUserBookmarks({ uid });
 
-  const [newBookmarkName, setNewBookmarkName] = useState("");
-  const [newBookmarkColor, setNewBookmarkColor] = useState("");
+  // 새 북마크 이름/색상 상태를 객체로 관리
+  const [newBookmark, setNewBookmark] = useState({ name: "", color: "" });
 
-  // bookMarkData 저장
+  // 새 북마크 추가 함수
   const handleAddBookmark = async () => {
-    // ✅ 입력값 검증 먼저
-    if (newBookmarkName === "") {
+    if (newBookmark.name.trim() === "") {
       triggerAlert("여정의 이름을 입력해주세요!");
       return;
     }
-
-    if (newBookmarkColor === "") {
+    if (newBookmark.color === "") {
       triggerAlert("북마크의 색상을 선택해주세요!");
       return;
     }
 
-    // ✅ 중복 이름 검사
-    const isDuplicate = bookmarks.some((bookmark) => bookmark.name === newBookmarkName);
-
+    // 중복 이름 검사
+    const isDuplicate = bookmarks.some((bm) => bm.name === newBookmark.name);
     if (isDuplicate) {
       triggerAlert("이미 존재하는 여정 이름입니다. 다른 이름을 입력해주세요.");
       return;
@@ -69,35 +71,30 @@ export default function WriteBookmark({ savedBookmark, selectedBookmarkName, set
       const db = getFirestore(firebaseApp);
       const bookMarkData = collection(db, "bookmarkData");
 
-      // ✅ Firestore 저장
+      // Firestore에 저장
       const docRef = await addDoc(bookMarkData, {
         uid,
         _id: "",
-        name: newBookmarkName,
-        color: newBookmarkColor,
+        name: newBookmark.name,
+        color: newBookmark.color,
       });
-      await updateDoc(docRef, {
+      await updateDoc(docRef, { _id: docRef.id });
+
+      const createdBookmark = {
         _id: docRef.id,
-      });
+        name: newBookmark.name,
+        color: newBookmark.color,
+      };
 
-      // ✅ 상태 업데이트
-      setBookmarks((prev) => [
-        ...prev,
-        {
-          _id: docRef.id,
-          name: newBookmarkName,
-          color: newBookmarkColor,
-        },
-      ]);
+      // 상태 업데이트
+      setBookmarks((prev) => [...prev, createdBookmark]);
 
-      // // ✅ 저장한 북마크를 바로 선택되게 지정
-      // setSelectedBookmarkName(newBookmarkName);
-      // setSelectedBookmarkColor(newBookmarkColor);
+      // 새로 만든 북마크 바로 선택
+      setBookmark(createdBookmark);
 
-      // ✅ 생성한 북마크 값 초기화
-      setNewBookmarkName("");
-      setNewBookmarkColor("");
-      // setIsOpen(false);
+      // 입력 초기화 및 닫기
+      setNewBookmark({ name: "", color: "" });
+      setIsOpen(false);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -105,50 +102,62 @@ export default function WriteBookmark({ savedBookmark, selectedBookmarkName, set
     }
   };
 
-  // bookMarkData 삭제
+  // 북마크 삭제 함수
   const handleDeleteBookmark = async (_id: string) => {
     const db = getFirestore(firebaseApp);
-
     const docRef = collection(db, "bookmarkData");
+
     await deleteDoc(doc(docRef, _id));
 
-    // 상태에서 제거
+    // 상태에서 삭제
     setBookmarks((prev) => prev.filter((bm) => bm._id !== _id));
 
-    // 선택 중인 북마크가 삭제된 거라면 초기화
-    // const deleted = bookmarks.find((bm) => bm._id === _id);
-    // if (bookmarkState.bookmarkName === deleted?.bookmarkName) {
-    //   bookmarkState.setBookmarkName("");
-    //   bookmarkState.setBookmarkColor("");
-    // }
+    // 만약 삭제한 북마크가 현재 선택된 북마크라면 초기화
+    if (bookmark._id === _id) {
+      setBookmark({ _id: "", name: "", color: "" });
+    }
   };
-  // 생성할 북마크 색깔 정하는 함수
+
+  // 새 북마크 색상 클릭 시 토글
   const onClickNewBookmarkColor = (color: string) => {
-    setNewBookmarkColor((prev) => (prev === color ? "" : color));
+    setNewBookmark((prev) => ({ ...prev, color: prev.color === color ? "" : color }));
   };
-  // 북마크 생성창 닫기
+
+  // 새 북마크 생성 취소
   const onClickNewBookmarkCancel = () => {
-    setNewBookmarkName("");
-    setNewBookmarkColor("");
+    setNewBookmark({ name: "", color: "" });
     setIsOpen(false);
   };
 
-  // 선택한 북마크 저장하기
-  const onClickSaveBookmark = (name: string, color: string) => {
-    setSelectedBookmarkName(name);
-    setSelectedBookmarkColor(color);
-    // setIsOpen(false);
+  // 기존 북마크 선택 시 상태 업데이트
+  const onClickSaveBookmark = (_id: string, name: string, color: string) => {
+    setBookmark({ _id, name, color });
+
+    console.log("bookmark", bookmark);
+    // setIsOpen(false); // 필요 시 주석 해제
   };
 
-  const displayName = selectedBookmarkName || savedBookmark?.name || "여정";
-  const displayColor = selectedBookmarkColor || savedBookmark?.color;
+  // 화면에 보여줄 이름과 색상
+  // const displayName = selectedBookmarkId ? savedBookmark?.name : "여정";
+  // const displayColor = selectedBookmarkId ? savedBookmark?.color : "";
+  // const displayName = savedBookmark?.name || "여정";
+  // const displayColor = savedBookmark?.color;
+
+  // selectedBookmarkId에 해당하는 북마크를 찾기
+  const selectedBookmark = isEdit ? bookmarks.find((bm) => bm._id === selectedBookmarkId) : undefined; // 새 등록이면 북마크 없음
+
+  // name과 color를 안전하게 꺼내기
+  const displayName = selectedBookmark?.name || "여정";
+  const displayColor = selectedBookmark?.color || "default";
+
+  // console.log(selectedBookmark);
+  // console.log(displayName, displayColor);
 
   return (
     <DropdownMenu>
-      {/* 여정 버튼 - 트리거 요소도 버튼이기 때문에 트리거 동작과 버튼 스타일을 갖기 위해선 asChild로 기능을 전달 */}
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {displayColor ? (
+          {selectedBookmarkId ? (
             <img src={`/images/bookmark/icon_bookmarker_${displayColor}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
           ) : (
             <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
@@ -157,26 +166,26 @@ export default function WriteBookmark({ savedBookmark, selectedBookmarkName, set
         </Button>
       </DropdownMenuTrigger>
 
-      {/* 저장했던 여정 리스트 */}
       <DropdownMenuContent>
         <DropdownMenuLabel>
           {bookmarks.length > 0 ? (
             <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
-              {bookmarks.map((bookmark) => (
-                <div key={bookmark._id} className="flex items-center gap-3 cursor-pointer">
-                  <DropdownMenuItem onClick={() => onClickSaveBookmark(bookmark.name, bookmark.color)} className="flex items-center gap-1">
-                    <img src={`./images/bookmark/icon_bookmarker_${bookmark.color}.png`} alt="북마크 아이콘" className="w-5" />
-                    <span>{bookmark.name}</span>
+              {bookmarks.map((bm) => (
+                <div key={bm._id} className="flex items-center gap-3 cursor-pointer">
+                  <DropdownMenuItem onClick={() => onClickSaveBookmark(bm._id, bm.name, bm.color)} className="flex items-center gap-1">
+                    <img src={`./images/bookmark/icon_bookmarker_${bm.color}.png`} alt="북마크 아이콘" className="w-5" />
+                    <span>{bm.name}</span>
                   </DropdownMenuItem>
 
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // 이벤트 버블링 막기
-                      handleDeleteBookmark(bookmark._id);
+                      e.stopPropagation();
+                      handleDeleteBookmark(bm._id);
                     }}
                     type="button"
                     className="w-4 h-4 bg-[url(/images/icon_trash.png)] bg-contain bg-no-repeat"
-                  ></button>
+                    aria-label="북마크 삭제"
+                  />
                 </div>
               ))}
             </div>
@@ -187,11 +196,10 @@ export default function WriteBookmark({ savedBookmark, selectedBookmarkName, set
 
         <DropdownMenuSeparator />
 
-        {/* 여정 추가하기 클릭 영역 - 클릭 시 여정 북마크 생성 요소 보임 */}
         {!isOpen && (
           <DropdownMenuItem
             onClick={(e) => {
-              e.preventDefault(); // 메뉴 닫히는 기본 동작 방지
+              e.preventDefault();
               onClickToggle();
             }}
           >
@@ -200,22 +208,21 @@ export default function WriteBookmark({ savedBookmark, selectedBookmarkName, set
           </DropdownMenuItem>
         )}
 
-        {/* 여정 북마크 생성 요소 */}
         {isOpen && (
           <div className="mt-2 px-4 py-2 border rounded-md bg-gray-50">
-            <div style={{ display: isOpen ? "flex" : "none" }} className="flex flex-col gap-3 w-full py-1">
-              <Input className="bg-white " placeholder="여정의 이름을 입력해주세요." value={newBookmarkName} onChange={(e) => setNewBookmarkName(e.target.value)} />
+            <div className="flex flex-col gap-3 w-full py-1">
+              <Input className="bg-white" placeholder="여정의 이름을 입력해주세요." value={newBookmark.name} onChange={(e) => setNewBookmark((prev) => ({ ...prev, name: e.target.value }))} />
               <p className="text-sm">여정 색깔을 정해 주세요.</p>
               <ul className="flex flex-wrap justify-center gap-1 w-full">
                 {ColorList.map(({ color }, idx) => (
                   <li
+                    key={idx}
                     onClick={() => onClickNewBookmarkColor(color)}
                     style={{
-                      backgroundColor: newBookmarkColor === color ? "#F1F5F9" : "transparent",
-                      borderColor: newBookmarkColor === color ? "#ddd" : "transparent",
+                      backgroundColor: newBookmark.color === color ? "#F1F5F9" : "transparent",
+                      borderColor: newBookmark.color === color ? "#ddd" : "transparent",
                     }}
                     className="cursor-pointer border rounded-sm"
-                    key={idx}
                   >
                     <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
                   </li>
