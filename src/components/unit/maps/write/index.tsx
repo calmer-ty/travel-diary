@@ -63,9 +63,9 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
       setDate(selectedMarker.date);
       setContent(selectedMarker.content);
     } else {
-      setDate(undefined);
+      // setDate(undefined);
       setContent("");
-      setBookmark({ name: "", color: "", _id: "" });
+      // setBookmark({ name: "", color: "", _id: "" });
     }
   }, [isEdit, selectedMarker]);
 
@@ -169,10 +169,10 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
   };
 
   // Dialog 닫기
-  const onClickCancel = () => {
-    setDate(undefined);
-    setContent("");
-  };
+  // const onClickCancel = () => {
+  //   setDate(undefined);
+  //   setContent("");
+  // };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -193,9 +193,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
             {/* 버튼 */}
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" onClick={onClickCancel}>
-                  닫기
-                </Button>
+                <Button variant="outline">닫기</Button>
               </DialogClose>
               <Button variant="primary" type="submit">
                 {isEdit ? "수정" : "등록"}
