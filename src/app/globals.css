@@ -61,6 +61,14 @@
 }
 
 html {
+  font-size: clamp(14px, 4vw, 18px);
+  /* 
+    최소 크기: 14px
+    뷰포트 너비 기준 크기: 4vw (화면 너비의 4%)
+    최대 크기: 18px
+    즉, 화면 너비에 따라 글자 크기가 14px 이상, 18px 이하로 자동으로 조절돼요. */
+}
+/* html {
   font-size: calc((40 / 9) * 1vw);
   font-family: "JejuGothic";
 }
@@ -78,6 +86,11 @@ html {
   html {
     font-size: 20px;
   }
+} */
+
+/* 전역 or 해당 요소에 적용 */
+::-webkit-scrollbar-button {
+  display: none;
 }
 
 html,
