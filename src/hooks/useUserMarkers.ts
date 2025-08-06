@@ -64,6 +64,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     );
   };
 
+  // ✅ [조회]
   const fetchMarkers = useCallback(async () => {
     if (!uid) return;
 
@@ -88,10 +89,9 @@ export const useUserMarkers = ({ uid }: IUserID) => {
   }, [uid]);
 
   // 무한스크롤
-  const limitCount = 2;
+  const limitCount = 10;
   const [hasMore, setHasMore] = useState(true);
   const lastDocRef = useRef<QueryDocumentSnapshot | null>(null);
-  // const isFetchingRef = useRef(false);
 
   const fetchMoreMarkers = useCallback(async () => {
     if (!uid) return;
@@ -102,7 +102,7 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     const travelData = collection(db, "travelData");
 
     // 🔥 현재 로그인한 유저의 uid로 필터링
-    // 기본적으로 limitCount(4개)만 가져오기 (첫 페이지)
+    // 기본적으로 limitCount만 가져오기 (첫 페이지)
     let q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), limit(limitCount));
     if (lastDocRef.current) {
       // 이전에 가져온 마지막 문서(lastDoc) 이후부터 다음 limitCount만큼 가져오기 (다음 페이지)
