@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { ILogPlace, IUpdateMarker } from "@/types";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
 interface IMapsDialogProps {
   isEdit: boolean;
@@ -34,9 +36,22 @@ interface IMapsDialogProps {
   selectedMarker: ILogPlace | null;
   createMarker: (markerData: ILogPlace) => Promise<void>;
   updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
+  fetchMarkers: () => Promise<void>;
 }
 
-export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, selectedPosition, setSelectedPosition, setMapCenter, selectedMarker, createMarker, updateMarker }: IMapsDialogProps) {
+export default function MapsWrite({
+  isEdit,
+  isOpen,
+  setIsOpen,
+  mapsAddress,
+  selectedPosition,
+  setSelectedPosition,
+  setMapCenter,
+  selectedMarker,
+  createMarker,
+  updateMarker,
+  fetchMarkers,
+}: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
@@ -53,19 +68,15 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
     _id: "",
   });
 
-  // const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
-  // const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
-  // const [selectedBookmarkId, setSelectedBookmarkId] = useState("");
-
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
     if (isEdit && selectedMarker) {
       setDate(selectedMarker.date);
       setContent(selectedMarker.content);
+      setBookmark(selectedMarker.bookmark ?? { name: "", color: "", _id: "" });
     } else {
-      // setDate(undefined);
+      setBookmark({ name: "", color: "", _id: "" });
       setContent("");
-      // setBookmark({ name: "", color: "", _id: "" });
     }
   }, [isEdit, selectedMarker]);
 
@@ -113,19 +124,19 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
       uid,
       date,
       content,
-      bookmark: bookmark,
+      bookmark,
     };
 
     try {
       await createMarker(markerData);
       // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
-
       setMapCenter(selectedPosition);
       setSelectedPosition(null);
 
       setIsOpen(false);
       setDate(undefined);
       setContent("");
+      setBookmark({ name: "", color: "", _id: "" });
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -168,11 +179,17 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
     }
   };
 
-  // Dialog 닫기
-  // const onClickCancel = () => {
-  //   setDate(undefined);
-  //   setContent("");
-  // };
+  // 삭제 함수
+  const handleDelete = async (selectedMarkerId: string) => {
+    try {
+      await deleteDoc(doc(db, "travelData", selectedMarkerId));
+      console.log(`ID ${selectedMarkerId} 삭제 성공`);
+      fetchMarkers();
+    } catch (error) {
+      console.error(`ID ${selectedMarkerId} 삭제 실패`, error);
+    }
+    // }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -185,7 +202,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
-            <WriteBookmark savedBookmark={selectedMarker?.bookmark} bookmark={bookmark} setBookmark={setBookmark} />
+            <WriteBookmark selectedMarker={selectedMarker} bookmark={bookmark} setBookmark={setBookmark} />
             {/* 날짜 선택 */}
             <DatePicker01 date={date} setDate={setDate} className="" />
             {/* 내용 작성 */}
@@ -195,6 +212,15 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
               <DialogClose asChild>
                 <Button variant="outline">닫기</Button>
               </DialogClose>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  handleDelete(selectedMarker?._id ?? "");
+                }}
+              >
+                삭제
+              </Button>
               <Button variant="primary" type="submit">
                 {isEdit ? "수정" : "등록"}
               </Button>
