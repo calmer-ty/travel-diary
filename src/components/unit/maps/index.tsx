@@ -51,7 +51,7 @@ export default function Maps() {
 
   // 📌 마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
-  const { markers, createMarker, updateMarker } = useUserMarkers({ uid });
+  const { markers, createMarker, updateMarker, fetchMarkers } = useUserMarkers({ uid });
 
   // 🖊️ 폼 관련
   const { isOpen, setIsOpen } = useDialog();
@@ -189,6 +189,7 @@ export default function Maps() {
         selectedMarker={selectedMarker}
         createMarker={createMarker}
         updateMarker={updateMarker}
+        fetchMarkers={fetchMarkers}
       />
 
       {/* 경고창 */}
