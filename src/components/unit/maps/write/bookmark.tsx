@@ -16,36 +16,19 @@ import { firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import { ColorList } from "../colorList";
 import type { Dispatch, SetStateAction } from "react";
+import type { ILogPlace } from "@/types";
 
 interface IMapsDialogProps {
-  // savedBookmark?:
-  //   | {
-  //       _id: string;
-  //       name: string;
-  //       color: string;
-  //     }
-  //   | undefined;
+  selectedMarker: ILogPlace | null;
   bookmark: {
     _id: string;
     name: string;
     color: string;
   };
   setBookmark: Dispatch<SetStateAction<{ _id: string; name: string; color: string }>>;
-  selectedBookmarkId?: string;
-  isEdit: boolean;
-  selectedMarker: {
-    markerId: string;
-    date: Date | undefined;
-    content: string;
-    bookmark: {
-      _id: string;
-      name: string;
-      color: string;
-    };
-  };
 }
 
-export default function WriteBookmark({ bookmark, setBookmark, selectedBookmarkId, isEdit, selectedMarker }: IMapsDialogProps) {
+export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
@@ -142,29 +125,17 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedBookmarkI
   // 기존 북마크 선택 시 상태 업데이트
   const onClickSaveBookmark = (_id: string, name: string, color: string) => {
     setBookmark({ _id, name, color });
-
-    console.log("bookmark", bookmark);
-    // setIsOpen(false); // 필요 시 주석 해제
   };
 
-  // selectedBookmarkId에 해당하는 북마크를 찾기
-  const selectedBookmark = isEdit ? bookmarks.find((bm) => bm._id === selectedBookmarkId) : undefined; // 새 등록이면 북마크 없음
+  const bookmarkColor = bookmark?.color || selectedMarker?.bookmark?.color || "default";
+  const bookmarkName = bookmark?.name || selectedMarker?.bookmark?.name || "여정을 선택하세요";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {selectedBookmarkId ? (
-            <>
-              <img src={`/images/bookmark/icon_bookmarker_${selectedBookmark?.color}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
-              <span className="inline-block align-middle">{selectedBookmark?.name}</span>
-            </>
-          ) : (
-            <>
-              <img className="w-5 inline-block align-middle mr-1" src="./images/bookmark/icon_bookmarker_default.png" alt="" />
-              <span className="inline-block align-middle">여정</span>
-            </>
-          )}
+          <img src={`/images/bookmark/icon_bookmarker_${bookmarkColor}.png`} alt="북마크 아이콘" className="w-5 inline-block mr-1" />
+          <span className="inline-block align-middle">{bookmarkName}</span>
         </Button>
       </DropdownMenuTrigger>
 
