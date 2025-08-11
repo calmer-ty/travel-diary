@@ -107,6 +107,7 @@ export default function Maps() {
       setIsEdit(false);
       setIsOpen(true);
       setSelectedPosition({ lat, lng });
+      setSelectedMarker(null);
 
       const service = new window.google.maps.places.PlacesService(mapRef.current);
       service.getDetails({ placeId }, (place, status) => {
