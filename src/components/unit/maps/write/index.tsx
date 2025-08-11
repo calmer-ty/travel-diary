@@ -215,7 +215,7 @@ export default function MapsWrite({
             {/* 버튼 */}
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">닫기</Button>
+                <Button variant="close">닫기</Button>
               </DialogClose>
               <Button
                 variant="destructive"
