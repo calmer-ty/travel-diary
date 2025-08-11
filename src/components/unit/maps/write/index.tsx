@@ -191,6 +191,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
               bookmark={bookmark}
               setBookmark={setBookmark}
               selectedBookmarkId={selectedMarker?.bookmark._id}
+              selectedMarker={selectedMarker}
               // savedBookmark={selectedMarker?.bookmark}
               // selectedBookmarkName={selectedBookmarkName}
               // setSelectedBookmarkName={setSelectedBookmarkName}

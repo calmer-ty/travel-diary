@@ -33,9 +33,19 @@ interface IMapsDialogProps {
   setBookmark: Dispatch<SetStateAction<{ _id: string; name: string; color: string }>>;
   selectedBookmarkId?: string;
   isEdit: boolean;
+  selectedMarker: {
+    markerId: string;
+    date: Date | undefined;
+    content: string;
+    bookmark: {
+      _id: string;
+      name: string;
+      color: string;
+    };
+  };
 }
 
-export default function WriteBookmark({ bookmark, setBookmark, selectedBookmarkId, isEdit }: IMapsDialogProps) {
+export default function WriteBookmark({ bookmark, setBookmark, selectedBookmarkId, isEdit, selectedMarker }: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
