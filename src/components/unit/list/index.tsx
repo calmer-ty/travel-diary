@@ -64,8 +64,8 @@ export default function List() {
         {isMarkersLoading ? (
           // 로딩중
           <div className="space-y-6">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-31 w-full rounded-lg" />
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-42 w-full rounded-lg" />
             ))}
           </div>
         ) : markersDate.length === 0 ? (
@@ -73,7 +73,7 @@ export default function List() {
           <div className="size-full ">기록이 없습니다.</div>
         ) : (
           // 리스트
-          <div id="scroll-container" className="overflow-auto h-full pr-2 rounded-md">
+          <div id="scroll-container" className="overflow-auto h-full rounded-md">
             <InfiniteScroll
               dataLength={filteredMarkers.length} // 현재 데이터 개수
               next={fetchMoreMarkers} // 더 불러올 함수
@@ -85,7 +85,7 @@ export default function List() {
               {markersDate.map((date) => (
                 <div
                   key={`${date}`}
-                  className="flex gap-x-8 gap-y-4 p-8 bg-[#FAFAF2] border border-[#9A8C4B] rounded-md
+                  className="flex gap-x-8 gap-y-4 px-8 py-5 bg-[#FAFAF2] border border-[#9A8C4B] rounded-md
                   mt-8 first:mt-0
                   flex-col sm:flex-row
                   "
@@ -96,12 +96,12 @@ export default function List() {
                     {filteredMarkers
                       .filter((marker) => format(marker.date, "yyyy-MM-dd") === date)
                       .map((marker) => (
-                        <Card key={`${marker._id}`} className="mt-6 first:mt-0">
+                        <Card key={`${marker._id}`} className="mt-6 py-5 first:mt-0">
                           <CardContent className="px-8 sm:px-12">
-                            <div className="flex flex-col gap-6 items-start">
+                            <div className="flex flex-col gap-3 items-start">
                               <div>
                                 <h3 className="text-base whitespace-pre-line">{marker.name}</h3>
-                                <span className="text-sm text-muted-foreground font-medium">{marker.address}</span>
+                                <span className="text-xs text-muted-foreground font-medium">{marker.address}</span>
                               </div>
                               <p>{marker.content}</p>
                             </div>
