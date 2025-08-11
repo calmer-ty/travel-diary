@@ -203,7 +203,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
               </ul>
 
               <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={onClickNewBookmarkCancel}>
+                <Button variant="close" onClick={onClickNewBookmarkCancel}>
                   닫기
                 </Button>
                 <Button variant="primary" type="button" onClick={handleAddBookmark}>
