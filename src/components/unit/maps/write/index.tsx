@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { ILogPlace, IUpdateMarker } from "@/types";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
 interface IMapsDialogProps {
   isEdit: boolean;
@@ -34,9 +36,22 @@ interface IMapsDialogProps {
   selectedMarker: ILogPlace | null;
   createMarker: (markerData: ILogPlace) => Promise<void>;
   updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
+  fetchMarkers: () => Promise<void>;
 }
 
-export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, selectedPosition, setSelectedPosition, setMapCenter, selectedMarker, createMarker, updateMarker }: IMapsDialogProps) {
+export default function MapsWrite({
+  isEdit,
+  isOpen,
+  setIsOpen,
+  mapsAddress,
+  selectedPosition,
+  setSelectedPosition,
+  setMapCenter,
+  selectedMarker,
+  createMarker,
+  updateMarker,
+  fetchMarkers,
+}: IMapsDialogProps) {
   // 유저 ID
   const { uid } = useAuth();
 
@@ -46,16 +61,25 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
   // ⚠️ 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
-  // 🔖 북마크
-  const [selectedBookmarkName, setSelectedBookmarkName] = useState("");
-  const [selectedBookmarkColor, setSelectedBookmarkColor] = useState("");
+  // 🔖 새로 선택되는 북마크
+  const [bookmark, setBookmark] = useState({
+    name: "",
+    color: "",
+    _id: "",
+  });
+
+  console.log("selectedMarker: ", selectedMarker);
+  console.log("bookmark: ", bookmark);
 
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
     if (isEdit && selectedMarker) {
       setDate(selectedMarker.date);
+      setBookmark(selectedMarker.bookmark);
       setContent(selectedMarker.content);
     } else {
+      setDate(undefined);
+      setBookmark({ name: "", color: "", _id: "" });
       setContent("");
     }
   }, [isEdit, selectedMarker]);
@@ -104,22 +128,19 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
       uid,
       date,
       content,
-      bookmark: {
-        name: selectedBookmarkName,
-        color: selectedBookmarkColor,
-      },
+      bookmark,
     };
 
     try {
       await createMarker(markerData);
       // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
-
       setMapCenter(selectedPosition);
       setSelectedPosition(null);
 
       setIsOpen(false);
       setDate(undefined);
       setContent("");
+      setBookmark({ name: "", color: "", _id: "" });
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -130,7 +151,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
 
   // ✅ [수정]
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
+    e.preventDefault(); // 이벤트 기본동작 막기
 
     const markerId = selectedMarker?._id;
     if (!uid) {
@@ -145,30 +166,34 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
     try {
       await updateMarker({
         markerId,
-
         date,
         content,
-        bookmark: {
-          name: selectedBookmarkName,
-          color: selectedBookmarkColor,
-        },
+        bookmark,
       });
-      // 수정 후 폼/다이얼로그 초기화
+
+      // 폼 초기화
       setIsOpen(false);
       setDate(undefined);
       setContent("");
+      setBookmark({ name: "", color: "", _id: "" });
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
-        return;
       }
     }
   };
 
-  // Dialog 닫기
-  const onClickCancel = () => {
-    setDate(undefined);
-    setContent("");
+  // 삭제 함수
+  const handleDelete = async (selectedMarkerId: string) => {
+    try {
+      await deleteDoc(doc(db, "travelData", selectedMarkerId));
+      console.log(`ID ${selectedMarkerId} 삭제 성공`);
+      fetchMarkers();
+      setIsOpen(false);
+    } catch (error) {
+      console.error(`ID ${selectedMarkerId} 삭제 실패`, error);
+    }
+    // }
   };
 
   return (
@@ -182,13 +207,7 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
 
           {/* 다이얼로그 */}
           <div className="grid gap-3 mt-4">
-            <WriteBookmark
-              savedBookmark={selectedMarker?.bookmark}
-              selectedBookmarkName={selectedBookmarkName}
-              setSelectedBookmarkName={setSelectedBookmarkName}
-              selectedBookmarkColor={selectedBookmarkColor}
-              setSelectedBookmarkColor={setSelectedBookmarkColor}
-            />
+            <WriteBookmark selectedMarker={selectedMarker} bookmark={bookmark} setBookmark={setBookmark} />
             {/* 날짜 선택 */}
             <DatePicker01 date={date} setDate={setDate} className="" />
             {/* 내용 작성 */}
@@ -196,10 +215,17 @@ export default function MapsWrite({ isEdit, isOpen, setIsOpen, mapsAddress, sele
             {/* 버튼 */}
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" onClick={onClickCancel}>
-                  닫기
-                </Button>
+                <Button variant="close">닫기</Button>
               </DialogClose>
+              <Button
+                variant="destructive"
+                type="button"
+                onClick={() => {
+                  handleDelete(selectedMarker?._id ?? "");
+                }}
+              >
+                삭제
+              </Button>
               <Button variant="primary" type="submit">
                 {isEdit ? "수정" : "등록"}
               </Button>

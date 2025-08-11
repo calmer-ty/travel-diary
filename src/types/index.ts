@@ -10,6 +10,7 @@ export interface ILogPlace {
     lng: number;
   };
   bookmark: {
+    _id: string;
     name: string;
     color: string;
   };
@@ -20,6 +21,7 @@ export interface IUpdateMarker {
   date: Date | undefined;
   content: string;
   bookmark: {
+    _id: string;
     name: string;
     color: string;
   };
