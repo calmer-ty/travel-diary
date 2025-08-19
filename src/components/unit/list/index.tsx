@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useUserMarkers } from "@/hooks/useUserMarkers";
 import { useUserBookmarks } from "@/hooks/useUserBookmarks";
 
-import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 
-import InfiniteScroll from "react-infinite-scroll-component";
+import { format } from "date-fns";
 
 export default function List() {
   const { user } = useAuth();
@@ -36,9 +35,9 @@ export default function List() {
   }, [filteredMarkers]);
 
   return (
-    <article className="flex flex-col gap-6 h-full p-8">
+    <article className="">
       {/* 북마크 선택지 */}
-      <div className="flex gap-4 mx-6">
+      <div className="flex gap-4 px-8 py-6 bg-white sticky top-12 z-50">
         {isBookmarkersLoading ? (
           // 로딩 중
           <div className="flex gap-5">
@@ -59,7 +58,7 @@ export default function List() {
         )}
       </div>
       {/* 하단 상세: 날짜 + 내용 */}
-      <div className="max-h-160">
+      <div className="px-8">
         {isMarkersLoading ? (
           // 로딩중
           <div className="space-y-6">
@@ -72,7 +71,7 @@ export default function List() {
           <div className="size-full ">기록이 없습니다.</div>
         ) : (
           // 리스트
-          <div id="scroll-container" className="overflow-auto h-full rounded-md">
+          <div id="scroll-container" className="">
             <InfiniteScroll
               dataLength={filteredMarkers.length} // 현재 데이터 개수
               next={fetchMoreMarkers} // 더 불러올 함수
@@ -85,8 +84,7 @@ export default function List() {
                 <div
                   key={`${date}`}
                   className="flex gap-x-8 gap-y-4 px-8 py-5 bg-[#FAFAF2] border border-none rounded-md shadow-[6px_6px_0px_#AAAAAA] mr-2 mb-10
-                  
-                  flex-col sm:flex-row
+                    flex-col sm:flex-row
                   "
                 >
                   <div className="w-23 mt-1 shrink-0">{date}</div>
