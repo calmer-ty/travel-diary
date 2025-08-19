@@ -26,7 +26,6 @@ export default function List() {
   }, [bookmarks]);
 
   // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
-  // const filteredMarkers = markers.filter((b) => selected === b.bookmark.name);
   const filteredMarkers = useMemo(() => {
     return markers.filter((b) => selected === b.bookmark.name);
   }, [markers, selected]);
@@ -85,8 +84,8 @@ export default function List() {
               {markersDate.map((date) => (
                 <div
                   key={`${date}`}
-                  className="flex gap-x-8 gap-y-4 px-8 py-5 bg-[#FAFAF2] border border-[#9A8C4B] rounded-md
-                  mt-8 first:mt-0
+                  className="flex gap-x-8 gap-y-4 px-8 py-5 bg-[#FAFAF2] border border-none rounded-md shadow-[6px_6px_0px_#AAAAAA] mr-2 mb-10
+                  
                   flex-col sm:flex-row
                   "
                 >
