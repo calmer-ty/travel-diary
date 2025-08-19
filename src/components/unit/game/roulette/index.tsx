@@ -121,17 +121,19 @@ export default function Roulette() {
     <div className="flex flex-col items-center size-full gap-10  p-10">
       <div className="text-2xl">롤렛 돌리기</div>
 
-      <div className="relative  ">
+      <div className="relative overflow-hidden ">
         {/* 게임 사운드 */}
         <audio ref={audioRef} src="/sound/effect_roulette.mp3" />
 
         {/* 화살표 */}
-        <div className="absolute top-0 left-1/2 z-[1] transform -translate-x-1/2  w-18 h-25 bg-[url(/images/game/icon_arrow.png)] bg-contain bg-no-repeat"></div>
+        <div className="absolute top-0 left-1/2 z-[1] transform -translate-x-1/2  w-18 h-25 bg-[url(/images/game/icon_arrow.png)] bg-contain bg-no-repeat max-[510px]:w-12"></div>
 
         {/* 룰렛 */}
         <div
           className={`
             w-[500px] h-[500px]  rounded-full border-[5px] rounded-full  ease-out transition-transform duration-[3000ms] border-[#CEDE89]
+            max-[510px]:w-[400px] max-[510px]:h-[400px]
+            max-[410px]:w-[350px] max-[410px]:h-[350px]
             ${!isSpinning && selectedItem ? "pointer-events-none" : "pointer-events-auto"}
             `}
           style={{
@@ -141,7 +143,7 @@ export default function Roulette() {
         >
           {/* 게임 시작 버튼 */}
           <button
-            className="absolute top-1/2 left-1/2 z-[1] transform -translate-x-1/2 -translate-y-1/2 w-30 h-20 bg-[url(/images/game/btn_start.png)] bg-contain bg-no-repeat"
+            className="absolute top-1/2 left-1/2 z-[1] transform -translate-x-1/2 -translate-y-1/2 w-30 h-20 bg-[url(/images/game/btn_start.png)] bg-contain bg-no-repeat max-[510px]:w-25"
             onClick={rouletteSpin}
             disabled={isSpinning}
           ></button>
@@ -171,7 +173,7 @@ export default function Roulette() {
         {/* 추가한 룰렛 아이템 보여주기 */}
         <div className="flex flex-wrap  mt-5 gap-3">
           {rouletteItem.map((el) => (
-            <div className="relative flex justify-center items-center min-w-25 h-10 bg-[#D9D9D9] rounded-2xl p-2 pl-6 pr-6" key={el}>
+            <div className="relative flex justify-center items-center min-w-25 h-10 bg-[#D9D9D9] rounded-lg p-2 pl-6 pr-6" key={el}>
               {el}
               <button
                 onClick={() => handelDeleteItem(el)}
