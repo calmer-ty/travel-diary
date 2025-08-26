@@ -1,0 +1,65 @@
+import { Button } from "@/components/ui/button";
+
+import { useAudio } from "@/hooks/useAudio";
+import { useState } from "react";
+
+export default function Dice() {
+  const { audioRef } = useAudio();
+
+  const [rolling, setRolling] = useState(false);
+
+  const [end, setEnd] = useState(false);
+
+  const randomIndex = Math.floor(Math.random() * 6) + 1;
+
+  const onClickDice = () => {
+    setEnd(false);
+    setRolling(true);
+    // 소리 재생
+    if (audioRef.current) {
+      (audioRef.current as HTMLAudioElement).loop = true;
+      (audioRef.current as HTMLAudioElement).play();
+    }
+
+    setTimeout(() => {
+      if (audioRef.current) {
+        audioRef.current.loop = false;
+        audioRef.current.pause(); // 재생 멈추기
+        audioRef.current.currentTime = 0; // 처음부터 다시 재생 가능
+      }
+      setRolling(false);
+      setEnd(true);
+    }, 3000);
+  };
+
+  return (
+    <div className="flex flex-col size-full gap-10  p-10">
+      <div className="text-2xl">주사위를 굴려 보세요!</div>
+
+      <div className="relative flex justify-center item-center  w-full">
+        <div className="relative  item-center text-center  w-full ">
+          <img className={`h-110 ${rolling || end ? "hidden" : ""} block mx-auto`} src="/images/game/btn_start_dice.png" alt="" />
+
+          {/* 게임 사운드 */}
+          <audio ref={audioRef} src="/sound/effect_dice.mp3" />
+
+          {/* 주사위 굴러 가는 중 */}
+          {rolling && <div className="h-103 w-full leading-100 bg-[rgba(0,0,0,0.5)]  text-white ">주사위 굴러가는 중...</div>}
+
+          {/* 주사위 완료 */}
+          {end && (
+            <div className=" flex flex-col justify-center items-center gap-5 w-full ">
+              <img className="h-90" src={`/images/game/icon_dice0${randomIndex}.png`} alt="" />
+              <div className="text-2xl">{randomIndex}</div>
+            </div>
+          )}
+
+          {/* 시작 버튼 */}
+          <Button onClick={onClickDice} className="mt-10 bg-[#E97C50]  shadow-[inset_-2px_-2px_0px_#F3642A] hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E97C50] ">
+            굴리기
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

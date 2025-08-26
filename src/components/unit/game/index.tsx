@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Game() {
   return (
     <div className="size-full  p-10">
-      <div className="text-2xl">게임을 통해 친구와 내기를 해보세요!</div>
+      <div className="text-2xl break-keep">게임을 통해 친구와 내기를 해보세요!</div>
 
       <div className="flex flex-wrap justify-center gap-3 w-full mt-8 pb-20 lg:mb-0">
         {GameList.map((el, index) => (

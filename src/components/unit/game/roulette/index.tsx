@@ -1,7 +1,11 @@
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRef, useState } from "react";
+
 import { useAlert } from "@/hooks/useAlert";
+import { useAudio } from "@/hooks/useAudio";
+
 import AlertMaps from "../../maps/alert";
 
 export default function Roulette() {
@@ -13,9 +17,9 @@ export default function Roulette() {
 
   const [colors, setColors] = useState<string[]>([]);
 
-  const audioRef = useRef(null);
-
   const { showAlert, alertValue, triggerAlert } = useAlert();
+
+  const { audioRef } = useAudio();
 
   // 롤렛 돌리기
   const rouletteSpin = () => {
