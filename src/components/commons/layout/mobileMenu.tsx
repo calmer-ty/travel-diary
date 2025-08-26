@@ -22,7 +22,7 @@ export default function MobileMenu() {
             <Link href="/maps" className="w-7 h-7 bg-contain bg-no-repeat bg-[url(/images/icon_diary.png)]"></Link>
           </li>
           <li className="flex justify-center items-center w-1/4 h-full">
-            <Link href="" className="w-7 h-7 bg-contain bg-no-repeat bg-[url(/images/icon_balloon.png)]"></Link>
+            <Link href="/" className="w-7 h-7 bg-contain bg-no-repeat bg-[url(/images/icon_balloon.png)]"></Link>
           </li>
           <li className="flex justify-center items-center w-1/4 h-full">
             <Link
