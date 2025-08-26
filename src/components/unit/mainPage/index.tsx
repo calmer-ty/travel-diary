@@ -27,7 +27,7 @@ export default function MainPage() {
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   return (
-    <div className="flex-col relative size-full flex items-center p-14 sm:flex-row gap-8 pb-25">
+    <div className="flex-col relative size-full flex items-center p-14 sm:flex-row gap-8 pb-25 lg:pb-14">
       <motion.div
         // onClick={onClickMap}
         initial={{ opacity: 0, y: 50 }}

@@ -6,7 +6,7 @@ export default function Game() {
     <div className="size-full  p-10">
       <div className="text-2xl">게임을 통해 친구와 내기를 해보세요!</div>
 
-      <div className="flex flex-wrap justify-center gap-3 w-full mt-8 ">
+      <div className="flex flex-wrap justify-center gap-3 w-full mt-8 pb-20 lg:mb-0">
         {GameList.map((el, index) => (
           <Link
             href={`/game/${el.src}`}
