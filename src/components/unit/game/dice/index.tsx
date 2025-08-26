@@ -1,7 +1,9 @@
+import { useState } from "react";
+
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 import { useAudio } from "@/hooks/useAudio";
-import { useState } from "react";
 
 export default function Dice() {
   const { audioRef } = useAudio();
@@ -33,12 +35,12 @@ export default function Dice() {
   };
 
   return (
-    <div className="flex flex-col size-full gap-10  p-10">
-      <div className="text-2xl">주사위를 굴려 보세요!</div>
+    <div className="flex flex-col items-center size-full gap-10  p-10">
+      <div className="text-2xl ">주사위 굴리기</div>
 
-      <div className="relative flex justify-center item-center  w-full">
-        <div className="relative  item-center text-center  w-full ">
-          <img className={`h-110 ${rolling || end ? "hidden" : ""} block mx-auto`} src="/images/game/btn_start_dice.png" alt="" />
+      <div className="relative flex justify-center  w-full">
+        <div className="relative  text-center  w-full ">
+          <img className={`h-110 ${rolling || end ? "hidden" : "block"}  mx-auto`} src="/images/game/btn_start_dice.png" alt="" />
 
           {/* 게임 사운드 */}
           <audio ref={audioRef} src="/sound/effect_dice.mp3" />
@@ -48,10 +50,15 @@ export default function Dice() {
 
           {/* 주사위 완료 */}
           {end && (
-            <div className=" flex flex-col justify-center items-center gap-5 w-full ">
+            <motion.div
+              className="h-103 flex flex-col justify-center items-center gap-5 w-full"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
+            >
               <img className="h-90" src={`/images/game/icon_dice0${randomIndex}.png`} alt="" />
               <div className="text-2xl">{randomIndex}</div>
-            </div>
+            </motion.div>
           )}
 
           {/* 시작 버튼 */}
