@@ -54,6 +54,8 @@ export default function Roulette() {
 
       if (audioRef.current) {
         (audioRef.current as HTMLAudioElement).loop = false;
+        audioRef.current.pause(); // 재생 멈추기
+        audioRef.current.currentTime = 0; // 처음부터 다시 재생 가능
       }
     }, 3000);
   };
@@ -122,7 +124,7 @@ export default function Roulette() {
   };
 
   return (
-    <div className="flex flex-col items-center size-full gap-10  p-10">
+    <div className="flex flex-col items-center  size-full gap-10  p-10 ">
       <div className="text-2xl">롤렛 돌리기</div>
 
       <div className="relative overflow-hidden ">
@@ -135,7 +137,7 @@ export default function Roulette() {
         {/* 룰렛 */}
         <div
           className={`
-            w-[500px] h-[500px]  rounded-full border-[5px] rounded-full  ease-out transition-transform duration-[3000ms] border-[#CEDE89]
+            w-[500px] h-[500px]  rounded-full border-[5px] rounded-full  ease-out transition-transform duration-[3000ms] border-[#CEDE89] mx-auto
             max-[510px]:w-[400px] max-[510px]:h-[400px]
             max-[410px]:w-[350px] max-[410px]:h-[350px]
             ${!isSpinning && selectedItem ? "pointer-events-none" : "pointer-events-auto"}
@@ -164,18 +166,18 @@ export default function Roulette() {
         {/* 룰렛 아이템 추가하기 */}
         <div
           className={`
-            flex gap-5 mt-5
+            flex gap-3 mt-5 p-1 
             ${!isSpinning && selectedItem ? "pointer-events-none" : "pointer-events-auto"}
             `}
         >
-          <Input type="text" value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
-          <Button variant="primary" onClick={handleAddItem}>
+          <Input type="text " value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
+          <Button className={`${isSpinning ? "pointer-events-none" : "pointer-events-auto"}`} variant="primary" onClick={handleAddItem}>
             입력
           </Button>
         </div>
 
         {/* 추가한 룰렛 아이템 보여주기 */}
-        <div className="flex flex-wrap  mt-5 gap-3">
+        <div className="flex flex-wrap  mt-5 gap-3 ">
           {rouletteItem.map((el) => (
             <div className="relative flex justify-center items-center min-w-25 h-10 bg-[#D9D9D9] rounded-lg p-2 pl-6 pr-6" key={el}>
               {el}
@@ -183,7 +185,7 @@ export default function Roulette() {
                 onClick={() => handelDeleteItem(el)}
                 className={`
                 absolute top-1 right-1 w-5 h-5 bg-[url(/images/game/btn_close.png)] bg-contain bg-no-repeat
-                ${!isSpinning && selectedItem ? "pointer-events-none" : "pointer-events-auto"}
+                ${isSpinning || selectedItem ? "pointer-events-none" : "pointer-events-auto"}
                 `}
               ></button>
             </div>
@@ -197,7 +199,7 @@ export default function Roulette() {
             absolute top-1/2 left-1/2 z-[10]
             flex items-center justify-center
             transform -translate-x-1/2 -translate-y-1/2
-            w-150 h-80 bg-white bg-[url(/images/game/bg_result.png)]
+            w-[90%] h-80 bg-white bg-[url(/images/game/bg_result.png)]
             bg-cover rounded-2xl shadow-[3px_3px_0px_rgba(0,0,0,0.3)] border text-4xl
             transition-all duration-500 ease-out
             ${!isSpinning && selectedItem ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-75 pointer-events-none"}

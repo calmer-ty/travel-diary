@@ -56,7 +56,7 @@ export default function Dice() {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 500, damping: 20 }}
             >
-              <img className="h-90" src={`/images/game/icon_dice0${randomIndex}.png`} alt="" />
+              <img className="h-90 object-contain" src={`/images/game/icon_dice0${randomIndex}.png`} alt="" />
               <div className="text-2xl">{randomIndex}</div>
             </motion.div>
           )}
