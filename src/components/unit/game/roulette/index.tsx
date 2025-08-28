@@ -9,62 +9,53 @@ import { useAudio } from "@/hooks/useAudio";
 import AlertMaps from "../../maps/alert";
 
 export default function Roulette() {
-  const [rouletteItem, setRouletteItem] = useState<string[]>([]);
+  // 룰렛 아이템 (라벨 + 색상)
+  const [items, setItems] = useState<{ label: string; color: string }[]>([]);
   const [inputValue, setInputValue] = useState("");
+
+  // 룰렛 회전 관련
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("");
 
-  const [colors, setColors] = useState<string[]>([]);
+  // 당첨된 아이템
+  const [selectedItem, setSelectedItem] = useState<null | { label: string; color: string }>(null);
 
+  // hook 사용
   const { showAlert, alertValue, triggerAlert } = useAlert();
-
-  const { audioRef } = useAudio();
+  const { audioRef, playLoop, audioStop } = useAudio();
 
   // 롤렛 돌리기
   const rouletteSpin = () => {
-    if (isSpinning || rouletteItem.length === 0) {
-      triggerAlert("롤렛 리스트를 입력하세요.");
-      return;
-    }
-
-    if (isSpinning || rouletteItem.length === 1) {
+    if (isSpinning) return;
+    if (items.length < 2) {
       triggerAlert("롤렛 리스트를 2개 이상 입력하세요.");
       return;
     }
 
     const spins = 5;
-    const degreesPerItem = 360 / rouletteItem.length;
-    const randomIndex = Math.floor(Math.random() * rouletteItem.length);
+    const degreesPerItem = 360 / items.length;
+    const randomIndex = Math.floor(Math.random() * items.length);
     const finalAngle = 360 * spins + randomIndex * degreesPerItem + degreesPerItem / 2;
 
-    const selected = rouletteItem[randomIndex];
+    const selected = items[randomIndex];
 
     setAngle(finalAngle);
     setIsSpinning(true);
-    setSelectedItem(selected); // 이건 UI 표시용
+    setSelectedItem(selected);
 
-    if (audioRef.current) {
-      (audioRef.current as HTMLAudioElement).loop = true;
-      (audioRef.current as HTMLAudioElement).play();
-    }
+    playLoop();
 
     setTimeout(() => {
       setIsSpinning(false);
-
-      if (audioRef.current) {
-        (audioRef.current as HTMLAudioElement).loop = false;
-        audioRef.current.pause(); // 재생 멈추기
-        audioRef.current.currentTime = 0; // 처음부터 다시 재생 가능
-      }
+      audioStop();
     }, 3000);
   };
 
-  // 롤렛 아이템 추가~
   const onChangeItem = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
+  // 아이템 추가
   const handleAddItem = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) {
@@ -72,7 +63,7 @@ export default function Roulette() {
       return;
     }
 
-    if (rouletteItem.includes(trimmed)) {
+    if (items.some((item) => item.label === trimmed)) {
       triggerAlert("이미 있는 룰렛 리스트입니다.");
       return;
     }
@@ -80,30 +71,23 @@ export default function Roulette() {
     const newColor = `#${Math.floor(Math.random() * 16777215)
       .toString(16)
       .padStart(6, "0")}`;
-    setRouletteItem([...rouletteItem, trimmed]);
-    setColors([...colors, newColor]);
+
+    setItems([...items, { label: trimmed, color: newColor }]);
     setInputValue("");
   };
 
-  // 롤렛 아이템 삭제
-  const handelDeleteItem = (itemToDelete: string) => {
-    const index = rouletteItem.findIndex((item) => item === itemToDelete);
-
-    const updatedItems = rouletteItem.filter((_, i) => i !== index);
-    const updatedColors = colors.filter((_, i) => i !== index);
-
-    setRouletteItem(updatedItems);
-    setColors(updatedColors);
+  // 아이템 삭제
+  const handleDeleteItem = (label: string) => {
+    setItems(items.filter((item) => item.label !== label));
   };
 
-  // 룰렛 랜덤 색상 지정
-  const degreesPerItem = 360 / rouletteItem.length;
-
+  // 룰렛 배경 색상 계산
+  const degreesPerItem = 360 / items.length;
   let startDeg = 0;
-  const gradientColors = colors
-    ?.map((color) => {
+  const gradientColors = items
+    .map((item) => {
       const endDeg = startDeg + degreesPerItem;
-      const colorStop = `${color} ${startDeg}deg ${endDeg}deg`;
+      const colorStop = `${item.color} ${startDeg}deg ${endDeg}deg`;
       startDeg = endDeg;
       return colorStop;
     })
@@ -112,39 +96,36 @@ export default function Roulette() {
   // 게임 리셋
   const onClickReset = () => {
     setIsSpinning(false);
-    setRouletteItem([]);
+    setItems([]);
     setInputValue("");
     setAngle(0);
-    setColors([]);
-
-    // 마지막에 selectedItem 초기화 (리렌더링 트리거 강하게 유도)
-    setTimeout(() => {
-      setSelectedItem("");
-    }, 0);
+    setTimeout(() => setSelectedItem(null), 0);
   };
 
+  const isDisabled = isSpinning || !!selectedItem;
+
   return (
-    <div className="flex flex-col items-center  size-full gap-10  p-10 ">
+    <div className="flex flex-col items-center size-full gap-10 p-10">
       <div className="text-2xl">롤렛 돌리기</div>
 
-      <div className="relative overflow-hidden ">
+      <div className="relative overflow-hidden">
         {/* 게임 사운드 */}
         <audio ref={audioRef} src="/sound/effect_roulette.mp3" />
 
         {/* 화살표 */}
-        <div className="absolute top-0 left-1/2 z-[1] transform -translate-x-1/2  w-18 h-25 bg-[url(/images/game/icon_arrow.png)] bg-contain bg-no-repeat max-[510px]:w-12"></div>
+        <div className="absolute top-0 left-1/2 z-[1] transform -translate-x-1/2 w-18 h-25 bg-[url(/images/game/icon_arrow.png)] bg-contain bg-no-repeat max-[510px]:w-12"></div>
 
         {/* 룰렛 */}
         <div
           className={`
-            w-[500px] h-[500px]  rounded-full border-[5px] rounded-full  ease-out transition-transform duration-[3000ms] border-[#CEDE89] mx-auto
+            w-[500px] h-[500px] rounded-full border-[5px] ease-out transition-transform duration-[3000ms] border-[#CEDE89] mx-auto
             max-[510px]:w-[400px] max-[510px]:h-[400px]
             max-[410px]:w-[350px] max-[410px]:h-[350px]
-            ${!isSpinning && selectedItem ? "pointer-events-none" : "pointer-events-auto"}
-            `}
+            ${isDisabled ? "pointer-events-none" : "pointer-events-auto"}
+          `}
           style={{
             transform: `rotate(${angle}deg)`,
-            background: rouletteItem.length > 0 ? `conic-gradient(${gradientColors})` : "none",
+            background: items.length > 0 ? `conic-gradient(${gradientColors})` : "none",
           }}
         >
           {/* 게임 시작 버튼 */}
@@ -153,39 +134,31 @@ export default function Roulette() {
             onClick={rouletteSpin}
             disabled={isSpinning}
           ></button>
-
-          {rouletteItem.map((el, i) => {
-            return (
-              <div className="absolute top-1/2 left-1/2 w-1/2 h-6 origin-left transform  flex items-center justify-start text-[0px] " key={i}>
-                {el}
-              </div>
-            );
-          })}
         </div>
 
-        {/* 룰렛 아이템 추가하기 */}
+        {/* 아이템 입력 */}
         <div
           className={`
             flex gap-3 mt-5 p-1 
-            ${!isSpinning && selectedItem ? "pointer-events-none" : "pointer-events-auto"}
-            `}
+            ${isDisabled ? "pointer-events-none" : "pointer-events-auto"}
+          `}
         >
-          <Input type="text " value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
-          <Button className={`${isSpinning ? "pointer-events-none" : "pointer-events-auto"}`} variant="primary" onClick={handleAddItem}>
+          <Input type="text" value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
+          <Button className={isSpinning ? "pointer-events-none" : "pointer-events-auto"} variant="primary" onClick={handleAddItem}>
             입력
           </Button>
         </div>
 
-        {/* 추가한 룰렛 아이템 보여주기 */}
-        <div className="flex flex-wrap  mt-5 gap-3 ">
-          {rouletteItem.map((el) => (
-            <div className="relative flex justify-center items-center min-w-25 h-10 bg-[#D9D9D9] rounded-lg p-2 pl-6 pr-6" key={el}>
-              {el}
+        {/* 추가한 아이템 보여주기 */}
+        <div className="flex flex-wrap mt-5 gap-3">
+          {items.map((item) => (
+            <div className="relative flex justify-center items-center min-w-25 h-10 bg-[#D9D9D9] rounded-lg p-2 pl-6 pr-6" key={item.label}>
+              {item.label}
               <button
-                onClick={() => handelDeleteItem(el)}
+                onClick={() => handleDeleteItem(item.label)}
                 className={`
-                absolute top-1 right-1 w-5 h-5 bg-[url(/images/game/btn_close.png)] bg-contain bg-no-repeat
-                ${isSpinning || selectedItem ? "pointer-events-none" : "pointer-events-auto"}
+                  absolute top-1 right-1 w-5 h-5 bg-[url(/images/game/btn_close.png)] bg-contain bg-no-repeat
+                  ${isDisabled ? "pointer-events-none" : "pointer-events-auto"}
                 `}
               ></button>
             </div>
@@ -196,23 +169,23 @@ export default function Roulette() {
       {/* 결과 모달 */}
       <div
         className={`
-            absolute top-1/2 left-1/2 z-[10]
-            flex items-center justify-center
-            transform -translate-x-1/2 -translate-y-1/2
-            w-[90%] h-80 bg-white bg-[url(/images/game/bg_result.png)]
-            bg-cover rounded-2xl shadow-[3px_3px_0px_rgba(0,0,0,0.3)] border text-4xl
-            transition-all duration-500 ease-out
-            ${!isSpinning && selectedItem ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-75 pointer-events-none"}
+          absolute top-1/2 left-1/2 z-[10]
+          flex items-center justify-center
+          transform -translate-x-1/2 -translate-y-1/2
+          w-[90%] h-80 bg-white bg-[url(/images/game/bg_result.png)]
+          bg-cover rounded-2xl shadow-[3px_3px_0px_rgba(0,0,0,0.3)] border text-4xl
+          transition-all duration-500 ease-out
+          ${!isSpinning && selectedItem ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-75 pointer-events-none"}
         `}
       >
-        <div className="text-center">
+        <div className="text-center word-keep">
           <p>축하드립니다!</p>
           <p className="mt-2">
-            <span className="text-[#E9897B]">{selectedItem}</span> 당첨입니다!
+            <span className="text-[#E9897B]">{selectedItem?.label}</span> 당첨입니다!
           </p>
         </div>
 
-        <Button variant="primary" onClick={onClickReset} className="absolute bottom-5 left-1/2 transform -translate-x-1/2 ">
+        <Button variant="primary" onClick={onClickReset} className="absolute bottom-5 left-1/2 transform -translate-x-1/2">
           다시 하기
         </Button>
       </div>

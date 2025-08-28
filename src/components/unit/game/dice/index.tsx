@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAudio } from "@/hooks/useAudio";
 
 export default function Dice() {
-  const { audioRef } = useAudio();
+  const { audioRef, playLoop, audioStop } = useAudio();
 
   const [rolling, setRolling] = useState(false);
 
@@ -18,17 +18,10 @@ export default function Dice() {
     setEnd(false);
     setRolling(true);
     // 소리 재생
-    if (audioRef.current) {
-      (audioRef.current as HTMLAudioElement).loop = true;
-      (audioRef.current as HTMLAudioElement).play();
-    }
+    playLoop();
 
     setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.loop = false;
-        audioRef.current.pause(); // 재생 멈추기
-        audioRef.current.currentTime = 0; // 처음부터 다시 재생 가능
-      }
+      audioStop();
       setRolling(false);
       setEnd(true);
     }, 3000);
