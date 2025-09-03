@@ -1,16 +1,18 @@
 "use client";
 
+import Link from "next/link";
+
 import { useAuth } from "@/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 
 export default function Header() {
   const { user, handleLogin, handleLogout } = useAuth();
 
   return (
-    <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
+    // <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
+    <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md sticky top-0 z-100">
       <h1 className="w-30 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat text-[0px]">
         <Link href="/" className="block size-full">
           Travel Diary
