@@ -14,8 +14,6 @@ export default function ListHeader({ uid, selectedBookmark, setSelectedBookmark 
   // 마커 데이터 조회
   const { bookmarks, isLoading: isBookmarkersLoading } = useUserBookmarks({ uid });
 
-  // 북마크 셀렉터
-  //   const [selected, setSelected] = useState("");
   useEffect(() => {
     if (bookmarks.length > 0) {
       setSelectedBookmark(bookmarks[0].name);

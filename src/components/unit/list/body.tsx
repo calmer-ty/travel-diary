@@ -34,7 +34,7 @@ export default function ListBody({ uid, selectedBookmark }: IListBodyProps) {
         // 로딩중
         <div className="space-y-6">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-42 w-full rounded-lg" />
+            <Skeleton key={i} className="h-49 w-full rounded-lg" />
           ))}
         </div>
       ) : markersDate.length === 0 ? (
