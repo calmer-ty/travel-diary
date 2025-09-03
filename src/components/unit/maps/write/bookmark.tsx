@@ -32,10 +32,10 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
   // 유저 ID
   const { uid } = useAuth();
 
-  // ⚠️ 알림창 등
+  // 알림창 등
   const { triggerAlert } = useAlert();
 
-  // 🔖 북마크 관련 훅
+  // 북마크 관련 훅
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
   const { bookmarks, setBookmarks } = useUserBookmarks({ uid });
 

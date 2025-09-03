@@ -25,7 +25,7 @@ export default function Game() {
                 alt=""
               />
 
-              {el.available === true ? (
+              {el.available ? (
                 <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-xl keepall">
                   {el.name}
                 </span>
