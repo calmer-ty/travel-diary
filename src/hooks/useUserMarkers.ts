@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
-import { firebaseApp } from "@/lib/firebase/firebaseApp";
+import { db, firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import type { QueryDocumentSnapshot } from "firebase/firestore";
 import type { ILogPlace, IUpdateMarker, IUserID } from "@/types";
@@ -71,11 +71,9 @@ export const useUserMarkers = ({ uid }: IUserID) => {
 
     setIsLoading(true); // 로딩 시작
 
-    const db = getFirestore(firebaseApp);
     const travelData = collection(db, "travelData");
 
     // 🔥 현재 로그인한 유저의 uid로 필터링
-    // const querySnapshot = await getDocs(collection(db, "travelData"));
     const q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"));
     const snapshot = await getDocs(q);
 
