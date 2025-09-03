@@ -11,8 +11,7 @@ export default function Header() {
   const { user, handleLogin, handleLogout } = useAuth();
 
   return (
-    // <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
-    <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md sticky top-0 z-100">
+    <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10">
       <h1 className="w-30 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat text-[0px]">
         <Link href="/" className="block size-full">
           Travel Diary
