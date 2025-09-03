@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
-import { firebaseApp } from "@/lib/firebase/firebaseApp";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
 import { useAlert } from "./useAlert";
 
@@ -22,12 +22,12 @@ export const useUserBookmarks = ({ uid }: IUserID) => {
 
       setIsLoading(true); // 로딩 시작
 
-      const db = getFirestore(firebaseApp);
+      // const db = getFirestore(firebaseApp);
       const bookmarkData = collection(db, "bookmarkData");
 
-      // 🔥 현재 로그인한 유저의 uid로 필터링
-      const q = query(bookmarkData, where("uid", "==", uid));
-      const snapshot = await getDocs(q);
+      // 현재 로그인한 유저의 uid로 필터링
+      const user = query(bookmarkData, where("uid", "==", uid));
+      const snapshot = await getDocs(user);
 
       const fetchedData = snapshot.docs.map((doc) => ({
         _id: doc.id,

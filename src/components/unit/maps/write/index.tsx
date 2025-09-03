@@ -8,7 +8,6 @@ import AlertMaps from "../alert";
 import WriteBookmark from "./bookmark";
 
 // shadcn
-
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -58,18 +57,18 @@ export default function MapsWrite({
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState<string>("");
 
-  // ⚠️ 알림창 등
+  // 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
-  // 🔖 새로 선택되는 북마크
+  // 새로 선택되는 북마크
   const [bookmark, setBookmark] = useState({
     name: "",
     color: "",
     _id: "",
   });
 
-  console.log("selectedMarker: ", selectedMarker);
-  console.log("bookmark: ", bookmark);
+  // console.log("selectedMarker: ", selectedMarker);
+  // console.log("bookmark: ", bookmark);
 
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
@@ -84,11 +83,11 @@ export default function MapsWrite({
     }
   }, [isEdit, selectedMarker]);
 
-  // ✅ [등록]
+  // [등록]
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
-    // 🔒 uid 없을 경우 등록 막기
+    // uid 없을 경우 등록 막기
     if (!uid) {
       triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
       return;
@@ -149,7 +148,7 @@ export default function MapsWrite({
     }
   };
 
-  // ✅ [수정]
+  // [수정]
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 이벤트 기본동작 막기
 
