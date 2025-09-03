@@ -6,6 +6,8 @@ import { useAlert } from "@/hooks/useAlert";
 import { useUserMarkers } from "@/hooks/useUserMarkers";
 import { useDialog } from "@/hooks/useDialog";
 
+import { Loader2 } from "lucide-react";
+
 import MapsWrite from "./write";
 import AlertMaps from "./alert";
 
@@ -139,7 +141,7 @@ export default function Maps() {
     mapRef.current = map;
   };
 
-  if (!isLoaded) return <div>Loading Map...</div>;
+  if (!isLoaded) return <Loader2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 animate-spin text-muted-foreground" aria-label="Loading" />;
 
   return (
     <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={13} options={mapOptions} onLoad={onLoadMap} onClick={onClickPOI} onBoundsChanged={handleBoundsChanged}>
