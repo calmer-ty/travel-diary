@@ -136,11 +136,6 @@ export const useUserMarkers = ({ uid }: IUserID) => {
     fetchMoreMarkers();
   }, [fetchMoreMarkers]);
 
-  // console.log("markers: ", markers);
-  // console.log("hasMore: ", hasMore);
-  // console.log("lastDocRef: ", lastDocRef.current);
-  // console.log("markers: ", markers);
-
   return {
     markers,
     createMarker,
