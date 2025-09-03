@@ -13,8 +13,8 @@ export default function Game() {
             key={index}
             className={`
                     w-1/3  h-40 rounded-2xl transition-colors duration-200 group
-                    ${el.available === true ? "bg-[#FAFAF2] hover:bg-[rgba(0,0,0,0.1)]" : "bg-[rgba(0,0,0,0.1)]"}
-                    ${el.available === true ? "pointer-events-auto" : "pointer-events-none"}
+                    ${el.available ? "bg-[#FAFAF2] hover:bg-[rgba(0,0,0,0.1)]" : "bg-[rgba(0,0,0,0.1)]"}
+                    ${el.available ? "pointer-events-auto" : "pointer-events-none"}
                     md:w-1/5
                 `}
           >
@@ -25,7 +25,7 @@ export default function Game() {
                 alt=""
               />
 
-              {el.available === true ? (
+              {el.available ? (
                 <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-xl keepall">
                   {el.name}
                 </span>
