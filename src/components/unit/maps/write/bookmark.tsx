@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
@@ -11,11 +12,11 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // firebase - 추후 리팩토링 필요
-import { addDoc, collection, deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
-import { firebaseApp } from "@/lib/firebase/firebaseApp";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
 import { ColorList } from "../colorList";
-import type { Dispatch, SetStateAction } from "react";
+
 import type { ILogPlace } from "@/types";
 
 interface IMapsDialogProps {
@@ -61,7 +62,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
     }
 
     try {
-      const db = getFirestore(firebaseApp);
+      // const db = getFirestore(firebaseApp);
       const bookMarkData = collection(db, "bookmarkData");
 
       // Firestore에 저장
@@ -97,7 +98,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
 
   // 북마크 삭제 함수
   const handleDeleteBookmark = async (_id: string) => {
-    const db = getFirestore(firebaseApp);
+    // const db = getFirestore(firebaseApp);
     const docRef = collection(db, "bookmarkData");
 
     await deleteDoc(doc(docRef, _id));
