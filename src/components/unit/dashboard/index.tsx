@@ -1,11 +1,10 @@
-// import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { useAlert } from "@/hooks/useAlert";
 import { useAuth } from "@/hooks/useAuth";
 
-import AlertMaps from "../maps/alert";
+import AlertMaps from "@/components/unit/maps/alert";
 
 const mainItem = [
   {
@@ -22,7 +21,7 @@ const mainItem = [
   },
 ];
 
-export default function MainPage() {
+export default function Dashboard() {
   const { uid } = useAuth();
   const { showAlert, alertValue, triggerAlert } = useAlert();
 

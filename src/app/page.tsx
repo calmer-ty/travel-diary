@@ -1,7 +1,7 @@
 "use client";
 
-import MainPage from "@/components/unit/mainPage";
+import Started from "@/components/unit/started";
 
 export default function Home() {
-  return <MainPage />;
+  return <Started />;
 }
