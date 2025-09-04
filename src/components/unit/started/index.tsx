@@ -3,13 +3,12 @@ import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/c
 // import { useAuth } from "@/contexts/authContext";
 
 // 외부 요소
-import { FcGoogle } from "react-icons/fc";
 // import { FlagIcon } from "react-flag-kit";
 // import { Button } from "@mui/material";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Monitor, Package, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const points = [
   {
@@ -35,9 +34,13 @@ const points = [
 ];
 
 export default function StartedUI() {
-  const { handleLogin } = useAuth();
+  const router = useRouter();
 
   const MotionCard = motion(Card);
+
+  const onClickMoveToHome = () => {
+    router.push("/dashboard");
+  };
 
   return (
     <article>
@@ -96,10 +99,9 @@ export default function StartedUI() {
               //   },
               // }}
               className="flex items-center justify-center gap-2"
-              onClick={handleLogin}
+              onClick={onClickMoveToHome}
             >
-              <FcGoogle size={20} />
-              구글 로그인 하고 시작하기
+              지금 시작하기
             </Button>
             <Button
               variant="default"
