@@ -39,7 +39,7 @@ export default function MainPage() {
         <Link href="/maps" className="block size-full pt-15 pl-7  break-keep sm:pl-10 pr-4">
           <div className="text-5xl">여행 일기</div>
 
-          <div className="text-xl mt-8">
+          <div className="text-xl mt-8 sm:mt-5">
             <p>여행 장소를 지도에 남기고,</p>
             <p>당신만의 이야기를 기록해보세요!</p>
           </div>
