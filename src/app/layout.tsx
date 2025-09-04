@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Header />
-        <main className="">{children}</main>
+        <main className="h-[calc(100%-3rem)]">{children}</main>
         <div className="block sm:hidden">
           <MobileMenu />
         </div>
