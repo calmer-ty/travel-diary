@@ -3,6 +3,7 @@ import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
 
 import type { User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useAuth = (): {
@@ -13,6 +14,7 @@ export const useAuth = (): {
 } => {
   const [user, setUser] = useState<User | null>(null);
   const uid = user?.uid;
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -33,7 +35,7 @@ export const useAuth = (): {
   const handleLogin = async (): Promise<void> => {
     try {
       await signInWithPopup(auth, googleProvider);
-      console.log(auth);
+      router.push("/dashboard"); // 로그인 시 첫 진입 페이지
     } catch (error) {
       console.error("로그인 실패:", error);
     }
@@ -43,8 +45,7 @@ export const useAuth = (): {
   const handleLogout = async (): Promise<void> => {
     try {
       await auth.signOut();
-      // setAlertOpen(true);
-      // setRouting("/");
+      router.push("/");
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }

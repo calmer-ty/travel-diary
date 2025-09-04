@@ -1,7 +1,7 @@
 "use client";
 
-import Dashboard from "@/components/unit/dashboard";
+import Started from "@/components/unit/started";
 
 export default function Home() {
-  return <Dashboard />;
+  return <Started />;
 }

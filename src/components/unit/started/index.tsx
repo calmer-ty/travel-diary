@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Monitor, Package, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const points = [
   {
@@ -34,7 +35,7 @@ const points = [
 ];
 
 export default function StartedUI() {
-  // const { handleLogin } = useAuth();
+  const { handleLogin } = useAuth();
 
   const MotionCard = motion(Card);
 
@@ -95,7 +96,7 @@ export default function StartedUI() {
               //   },
               // }}
               className="flex items-center justify-center gap-2"
-              // onClick={handleLogin}
+              onClick={handleLogin}
             >
               <FcGoogle size={20} />
               구글 로그인 하고 시작하기
