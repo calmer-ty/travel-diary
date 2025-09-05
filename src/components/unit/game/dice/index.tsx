@@ -31,7 +31,7 @@ export default function Dice() {
     <div className="flex flex-col items-center size-full gap-10  p-10">
       <div className="text-2xl ">주사위 굴리기</div>
 
-      <div className="relative flex justify-center  w-full">
+      <div className="relative flex justify-center  w-full overflow-hidden">
         <div className="relative  text-center  w-full ">
           <img className={`h-110 ${rolling || end ? "hidden" : "block"}  mx-auto`} src="/images/game/btn_start_dice.png" alt="" />
 
