@@ -28,7 +28,7 @@ export default function Dice() {
   };
 
   return (
-    <div className="flex flex-col items-center size-full gap-10  p-10">
+    <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className="relative flex flex-col items-center size-full gap-10  p-10 bg-cover bg-bottom bg-no-repeat">
       <div className="text-2xl ">주사위 굴리기</div>
 
       <div className="relative flex justify-center  w-full overflow-hidden">
@@ -60,6 +60,8 @@ export default function Dice() {
           </Button>
         </div>
       </div>
+
+      <p className="absolute bottom-0 right-0 text-xs">이미지 출처: freepik</p>
     </div>
   );
 }

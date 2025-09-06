@@ -105,7 +105,7 @@ export default function Roulette() {
   const isDisabled = isSpinning || !!selectedItem;
 
   return (
-    <div className="flex flex-col items-center size-full gap-10 p-10">
+    <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className="flex flex-col items-center size-full gap-10 p-10 bg-cover bg-bottom bg-no-repeat">
       <div className="text-2xl">롤렛 돌리기</div>
 
       <div className="relative overflow-hidden">
@@ -118,14 +118,14 @@ export default function Roulette() {
         {/* 룰렛 */}
         <div
           className={`
-            w-[500px] h-[500px] rounded-full border-[5px] ease-out transition-transform duration-[3000ms] border-[#CEDE89] mx-auto
+            w-[500px] h-[500px] rounded-full border-[5px] ease-out transition-transform duration-[3000ms] border-[#CEDE89] mx-auto 
             max-[510px]:w-[400px] max-[510px]:h-[400px]
             max-[410px]:w-[350px] max-[410px]:h-[350px]
             ${isDisabled ? "pointer-events-none" : "pointer-events-auto"}
           `}
           style={{
             transform: `rotate(${angle}deg)`,
-            background: items.length > 0 ? `conic-gradient(${gradientColors})` : "none",
+            background: items.length > 0 ? `conic-gradient(${gradientColors})` : "#ffffff",
           }}
         >
           {/* 게임 시작 버튼 */}
@@ -143,7 +143,7 @@ export default function Roulette() {
             ${isDisabled ? "pointer-events-none" : "pointer-events-auto"}
           `}
         >
-          <Input type="text" value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
+          <Input type="text " className="bg-[#ffffff]" value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
           <Button className={isSpinning ? "pointer-events-none" : "pointer-events-auto"} variant="primary" onClick={handleAddItem}>
             입력
           </Button>
@@ -192,6 +192,8 @@ export default function Roulette() {
 
       {/* 경고창 */}
       {showAlert && <AlertMaps alertValue={alertValue} />}
+
+      <p className="absolute bottom-0 right-0 text-xs">이미지 출처: freepik</p>
     </div>
   );
 }

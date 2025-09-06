@@ -69,7 +69,7 @@ export default function Dashboard() {
               {item.title}
             </Link>
 
-            <img className="hidden absolute bottom-6 right-6 h-[50%] lg:h-40 sm:block" src={`./images/${item.img}.png`} alt="" />
+            <img className="hidden absolute bottom-6 right-6 h-[50%] lg:h-40 sm:block" src={`./images/${item.img}.png`} alt="출처:figma" />
           </motion.div>
         ))}
       </div>
