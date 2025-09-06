@@ -2,44 +2,47 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
+const waveText = [
+  { text: "T", color: "#E9897B" },
+  { text: "r", color: "#EDE3CA" },
+  { text: "a", color: "#EDE3CA" },
+  { text: "v", color: "#EDE3CA" },
+  { text: "e", color: "#EDE3CA" },
+  { text: "l", color: "#EDE3CA" },
+  { text: " ", color: "#EDE3CA" },
+  { text: "D", color: "#DFB489" },
+  { text: "i", color: "#EDE3CA" },
+  { text: "a", color: "#EDE3CA" },
+  { text: "r", color: "#EDE3CA" },
+  { text: "y", color: "#EDE3CA" },
+];
+const moveImages = ["./images/img_map.png", "./images/img_folder.png", "./images/img_game.png"];
+
 export default function StartedUI() {
   const router = useRouter();
-
-  const waveText = [
-    { text: "T", color: "#E9897B" },
-    { text: "r", color: "#EDE3CA" },
-    { text: "a", color: "#EDE3CA" },
-    { text: "v", color: "#EDE3CA" },
-    { text: "e", color: "#EDE3CA" },
-    { text: "l", color: "#EDE3CA" },
-    { text: " ", color: "#EDE3CA" },
-    { text: "D", color: "#DFB489" },
-    { text: "i", color: "#EDE3CA" },
-    { text: "a", color: "#EDE3CA" },
-    { text: "r", color: "#EDE3CA" },
-    { text: "y", color: "#EDE3CA" },
-  ];
-
-  const moveImages = ["./images/img_map.png", "./images/img_folder.png", "./images/img_game.png"];
 
   const onClickMoveToHome = () => {
     router.push("/dashboard");
   };
 
   return (
-    <section style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className="relative  p-8 md:pl-25 md:pr-25  md:p-15 overflow-x-hidden bg-cover bg-bottom bg-no-repeat">
-      <div className="flex gap-1 ">
-        {waveText.map((el, i) => (
+    <section
+      style={{ backgroundImage: "url('/images/img_bg.jpg')" }}
+      className="relative p-8  overflow-x-hidden bg-cover bg-bottom bg-no-repeat
+        md:pl-25 md:pr-25 md:p-15"
+    >
+      <div className="flex gap-1">
+        {waveText.map((el, idx) => (
           <motion.span
-            key={i}
+            key={idx}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: [20, -10, 0], opacity: 1 }}
             transition={{
               duration: 0.8,
-              delay: i * 0.1, // 글자마다 순차적으로 딜레이
+              delay: idx * 0.1, // 글자마다 순차적으로 딜레이
               ease: "easeInOut",
             }}
-            className="inline-block  text-5xl md:text-7xl"
+            className="inline-block text-5xl md:text-7xl"
             style={{ color: el.color, textShadow: "0px 2px 2px rgba(0,0,0,0.35)" }}
           >
             {el.text}
@@ -47,7 +50,7 @@ export default function StartedUI() {
         ))}
       </div>
 
-      <div className="flex flex-col justify-between items-start  break-keep mt-10 ">
+      <div className="flex flex-col justify-between items-start break-keep mt-18">
         {/* text 영역 */}
         <div className="text-4xl ">당신의 여행 기록을 쉽고 재미있게 기록하기!</div>
 
@@ -77,7 +80,12 @@ export default function StartedUI() {
         </div>
 
         <div className="mx-auto">
-          <Button variant="default" className="bg-[#E9897B] shadow-[inset_-2px_-2px_0px_#F3642A] hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E9897B]" onClick={onClickMoveToHome}>
+          <Button
+            variant="default"
+            className="bg-[#E9897B] shadow-[inset_-2px_-2px_0px_#F3642A] 
+              hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E9897B]"
+            onClick={onClickMoveToHome}
+          >
             지금 시작하기
           </Button>
         </div>
