@@ -50,7 +50,16 @@ export default function StartedUI() {
         ))}
       </h2>
 
-      <div className="flex flex-col justify-between items-start break-keep mt-18">
+      <motion.div
+        className="flex flex-col justify-between items-start break-keep mt-18"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: waveText.length * 0.1 + 0.4, // h2 애니메이션 끝난 뒤 약간의 추가 딜레이
+          duration: 0.7,
+          ease: "easeOut",
+        }}
+      >
         {/* text 영역 */}
         <div className="text-4xl ">당신의 여행 기록을 쉽고 재미있게 기록하기!</div>
 
@@ -89,7 +98,7 @@ export default function StartedUI() {
             지금 시작하기
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       <footer className="opacity-0">배경 이미지 출처: freepik</footer>
     </section>
