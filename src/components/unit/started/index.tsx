@@ -31,7 +31,7 @@ export default function StartedUI() {
       className="relative p-8  overflow-x-hidden bg-cover bg-bottom bg-no-repeat
         md:pl-25 md:pr-25 md:p-15"
     >
-      <div className="flex gap-1">
+      <h2 className="flex gap-1">
         {waveText.map((el, idx) => (
           <motion.span
             key={idx}
@@ -48,7 +48,7 @@ export default function StartedUI() {
             {el.text}
           </motion.span>
         ))}
-      </div>
+      </h2>
 
       <div className="flex flex-col justify-between items-start break-keep mt-18">
         {/* text 영역 */}
@@ -91,7 +91,7 @@ export default function StartedUI() {
         </div>
       </div>
 
-      <p className="absolute bottom-0 right-0 text-xs">이미지 출처: freepik</p>
+      <footer className="opacity-0">배경 이미지 출처: freepik</footer>
     </section>
   );
 }
