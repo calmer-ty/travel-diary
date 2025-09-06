@@ -27,7 +27,7 @@ export default function StartedUI() {
   };
 
   return (
-    <section className="relative w-screen h-screen p-8  md:p-15 overflow-x-hidden ">
+    <section style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className="relative  p-8 md:pl-25 md:pr-25  md:p-15 overflow-x-hidden bg-cover bg-bottom bg-no-repeat">
       <div className="flex gap-1 ">
         {waveText.map((el, i) => (
           <motion.span
@@ -47,11 +47,11 @@ export default function StartedUI() {
         ))}
       </div>
 
-      <div className="flex flex-col justify-between items-start  break-keep mt-10 h-150">
+      <div className="flex flex-col justify-between items-start  break-keep mt-10 ">
         {/* text 영역 */}
         <div className="text-4xl ">당신의 여행 기록을 쉽고 재미있게 기록하기!</div>
 
-        <div className="text-2xl mt-5 ">
+        <div className="text-2xl mt-5 leading-relaxed">
           <p>당신의 여행을 기록해 보세요!</p>
           <p>지도에 찍고, 사진과 일기로 남기는 나만의 여행 기록!</p>
           <p>나의 여행을 한눈에 확인하기!</p>
@@ -59,14 +59,14 @@ export default function StartedUI() {
         </div>
 
         {/* img 영역*/}
-        <div className="flex items-center justify-center md:justify-end gap-5 w-full ">
+        <div className="flex items-center justify-end gap-5 w-full mb-10">
           {moveImages.map((src, i) => (
             <motion.img
               key={i}
               src={src}
               alt=""
-              className={`w-28 md:w-48`}
-              animate={{ y: [0, -20, 0] }} // 위로 15px 떠오르고 다시 내려오는 애니메이션
+              className={i === 0 ? "h-30 md:h-40" : "h-30 md:h-55"}
+              animate={{ y: [0, -20, 0] }}
               transition={{
                 duration: 2 + i * 0.3, // 이미지마다 약간 다른 속도
                 repeat: Infinity, // 무한 반복
