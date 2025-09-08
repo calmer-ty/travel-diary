@@ -55,7 +55,7 @@ export default function Dice() {
           )}
 
           {/* 시작 버튼 */}
-          <Button onClick={onClickDice} className="mt-10 bg-[#E97C50]  shadow-[inset_-2px_-2px_0px_#F3642A] hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E97C50] ">
+          <Button onClick={onClickDice} className="mt-10 bg-[#E97C50] shadow-[inset_-2px_-2px_0px_#F3642A] hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E97C50] ">
             굴리기
           </Button>
         </div>

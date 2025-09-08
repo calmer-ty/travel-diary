@@ -28,7 +28,7 @@ export default function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline">
                       <div className="flex items-center gap-2">
-                        <img className="w-4 h-4" src="/images/icon_people.png" alt="" />
+                        <img className="w-4 h-4" src="/images/icon_people.png" alt="출처: figma" />
                         <span>{user.displayName}</span>
                       </div>
                     </Button>

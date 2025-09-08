@@ -10,14 +10,16 @@ const mainItem = [
   {
     title: "나의 여행 기록",
     href: "/list",
-    img: "img_folder",
+    imgUrl: "img_folder",
     loginCheck: true,
+    alt: "폴더",
   },
   {
     title: "친구와 게임 하기",
     href: "/game",
-    img: "img_game",
+    imgUrl: "img_game",
     loginCheck: false,
+    alt: "게임기",
   },
 ];
 
@@ -43,16 +45,16 @@ export default function Dashboard() {
             <p>당신만의 이야기를 기록해보세요!</p>
           </div>
 
-          <img className="absolute bottom-6 right-6 hidden w-[50%] lg:w-70 sm:block" src="./images/img_map.png" alt="" />
+          <img className="absolute bottom-6 right-6 hidden w-[50%] lg:w-70 sm:block" src="./images/img_map.png" alt="지도, 출처: figma" />
         </Link>
       </motion.div>
       <div className="size-full flex justify-between items-center flex-col gap-8 size-full sm:w-[42%] ">
-        {mainItem.map((item, i) => (
+        {mainItem.map((item, idx) => (
           <motion.div
-            key={i}
+            key={item.title}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: i * 0.1, ease: "easeOut" }}
+            transition={{ duration: 0.2, delay: idx * 0.1, ease: "easeOut" }}
             whileHover={{ scale: 1.03, boxShadow: "8px 8px 0px #888888" }}
             className="relative w-full h-[50%] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-3xl border border-gray-300 cursor-pointer sm:pt-10 sm:pl-8 sm:pr-8 pt-0 pl-0 pr-0"
           >
@@ -69,7 +71,7 @@ export default function Dashboard() {
               {item.title}
             </Link>
 
-            <img className="hidden absolute bottom-6 right-6 h-[50%] lg:h-40 sm:block" src={`./images/${item.img}.png`} alt="출처:figma" />
+            <img className="hidden absolute bottom-6 right-6 h-[50%] lg:h-40 sm:block" src={`./images/${item.imgUrl}.png`} alt={`${item.alt}, 출처: figma`} />
           </motion.div>
         ))}
       </div>

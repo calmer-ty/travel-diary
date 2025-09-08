@@ -76,7 +76,7 @@ export default function StartedUI() {
             <motion.img
               key={i}
               src={src}
-              alt="출처:figma"
+              alt="출처: figma"
               className={i === 0 ? "h-30 md:h-40" : "h-30 md:h-55"}
               animate={{ y: [0, -20, 0] }}
               transition={{
