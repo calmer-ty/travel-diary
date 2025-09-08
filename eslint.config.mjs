@@ -16,6 +16,14 @@ const eslintConfig = [
       "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
     },
   },
+
+  // 특정 디렉토리 예외 (shadcn/ui)
+  {
+    files: ["src/components/ui/**"],
+    rules: {
+      "@typescript-eslint/consistent-type-imports": "off",
+    },
+  },
 ];
 
 export default eslintConfig;
