@@ -177,7 +177,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
               onClickToggle();
             }}
           >
-            <img className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘" />
+            <img className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘, 출처: figma" />
             <span>여정 추가하기</span>
           </DropdownMenuItem>
         )}
@@ -198,7 +198,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
                     }}
                     className="cursor-pointer border rounded-sm"
                   >
-                    <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="" />
+                    <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="북마크 아이콘, 출처: figma" />
                   </li>
                 ))}
               </ul>
