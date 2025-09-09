@@ -33,7 +33,7 @@ export default function Dice() {
 
       <div className="relative flex justify-center  w-full overflow-hidden">
         <div className="relative  text-center  w-full ">
-          <img className={`h-110 ${rolling || end ? "hidden" : "block"}  mx-auto`} src="/images/game/btn_start_dice.png" alt="" />
+          <img className={`h-110 ${rolling || end ? "hidden" : "block"}  mx-auto`} src="/images/game/btn_start_dice.png" alt="주사위 출처: figma" />
 
           {/* 게임 사운드 */}
           <audio ref={audioRef} src="/sound/effect_dice.mp3" />
