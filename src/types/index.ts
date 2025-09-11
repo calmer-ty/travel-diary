@@ -9,11 +9,17 @@ export interface ILogPlace {
     lat: number;
     lng: number;
   };
-  bookmark: {
-    _id: string;
-    name: string;
-    color: string;
-  };
+  bookmark: IBookmark;
+}
+
+export interface IBookmark {
+  _id: string;
+  name: string;
+  color: string;
+}
+export interface INewBookmark {
+  name: string;
+  color: string;
 }
 
 export interface IUpdateMarker {
@@ -25,6 +31,10 @@ export interface IUpdateMarker {
     name: string;
     color: string;
   };
+}
+
+export interface ICreateMarkerParams {
+  markerToSave: ILogPlace;
 }
 
 export interface IUserID {

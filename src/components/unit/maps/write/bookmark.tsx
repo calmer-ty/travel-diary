@@ -17,7 +17,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 
 import { ColorList } from "../colorList";
 
-import type { ILogPlace } from "@/types";
+import type { IBookmark, ILogPlace } from "@/types";
 
 interface IMapsDialogProps {
   selectedMarker: ILogPlace | null;
@@ -40,7 +40,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
   const { bookmarks, setBookmarks } = useBookmarks({ uid });
 
-  // 새 북마크 이름/색상 상태를 객체로 관리
+  // 새 북마크 추가 시 사용하는 상태
   const [newBookmark, setNewBookmark] = useState({ name: "", color: "" });
 
   // 새 북마크 추가 함수
@@ -61,30 +61,34 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
       return;
     }
 
+    // 저장할 마커 정보 준비
+    const bookmarkToSave: IBookmark = {
+      _id: "",
+      name: newBookmark.name,
+      color: newBookmark.color,
+    };
+
     try {
-      // const db = getFirestore(firebaseApp);
-      const bookMarkData = collection(db, "bookmarkData");
+      const bookmarkData = collection(db, "bookmarkData");
 
       // Firestore에 저장
-      const docRef = await addDoc(bookMarkData, {
+      const docRef = await addDoc(bookmarkData, {
         uid,
-        _id: "",
-        name: newBookmark.name,
-        color: newBookmark.color,
+        ...bookmarkToSave,
       });
       await updateDoc(docRef, { _id: docRef.id });
 
-      const createdBookmark = {
+      const newBookmarkToSave = {
         _id: docRef.id,
         name: newBookmark.name,
         color: newBookmark.color,
       };
 
       // 상태 업데이트
-      setBookmarks((prev) => [...prev, createdBookmark]);
+      setBookmarks((prev) => [...prev, newBookmarkToSave]);
 
       // 새로 만든 북마크 바로 선택
-      setBookmark(createdBookmark);
+      setBookmark(newBookmarkToSave);
 
       // 입력 초기화 및 닫기
       setNewBookmark({ name: "", color: "" });
