@@ -78,17 +78,17 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
       });
       await updateDoc(docRef, { _id: docRef.id });
 
-      const newBookmarkToSave = {
+      const savedBookmark = {
         _id: docRef.id,
         name: newBookmark.name,
         color: newBookmark.color,
       };
 
       // 상태 업데이트
-      setBookmarks((prev) => [...prev, newBookmarkToSave]);
+      setBookmarks((prev) => [...prev, savedBookmark]);
 
       // 새로 만든 북마크 바로 선택
-      setBookmark(newBookmarkToSave);
+      setBookmark(savedBookmark);
 
       // 입력 초기화 및 닫기
       setNewBookmark({ name: "", color: "" });

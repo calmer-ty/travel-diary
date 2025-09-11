@@ -1,42 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { addDoc, collection, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { useAlert } from "./useAlert";
 
-import type { IBookmark, INewBookmark, IUserID } from "@/types";
-interface ICreateBookmarkParams {
-  bookmarkToSave: IBookmark;
-  newBookmark: INewBookmark;
-}
+import type { IUserID } from "@/types";
 
 export const useBookmarks = ({ uid }: IUserID) => {
   const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const { triggerAlert } = useAlert();
-
-  // ✅ [등록]
-  const createBookmark = async ({ bookmarkToSave, newBookmark }: ICreateBookmarkParams) => {
-    const bookMarkData = collection(db, "bookmarkData");
-
-    // Firestore에 저장
-    const docRef = await addDoc(bookMarkData, {
-      uid,
-      ...bookmarkToSave,
-    });
-    await updateDoc(docRef, { _id: docRef.id });
-
-    const newBookmarkToSave = {
-      _id: docRef.id,
-      name: newBookmark.name,
-      color: newBookmark.color,
-    };
-
-    // 상태 업데이트
-    setBookmarks((prev) => [...prev, newBookmarkToSave]);
-  };
 
   // ✅ [조회]
   const fetchBookmarks = useCallback(async () => {
@@ -75,7 +50,6 @@ export const useBookmarks = ({ uid }: IUserID) => {
   return {
     bookmarks,
     setBookmarks,
-    createBookmark,
     fetchBookmarks,
     isLoading,
   };
