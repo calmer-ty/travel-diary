@@ -4,18 +4,18 @@ import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, 
 import { db, firebaseApp } from "@/lib/firebase/firebaseApp";
 
 import type { QueryDocumentSnapshot } from "firebase/firestore";
-import type { ILogPlace, IUpdateMarker, IUserID } from "@/types";
+import type { ICreateMarkerParams, ILogPlace, IUpdateMarker, IUserID } from "@/types";
 
 export const useMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // ✅ [등록]
-  const createMarker = async (markerData: ILogPlace) => {
+  const createMarker = async ({ markerToSave }: ICreateMarkerParams) => {
     // Firestore에 문서 생성 (이 시점에서 ID 생성됨)
-    const travelData = collection(getFirestore(firebaseApp), "travelData");
+    const travelData = collection(db, "travelData");
     const docRef = await addDoc(travelData, {
-      ...markerData,
+      ...markerToSave,
     });
 
     // 문서 ID를 포함한 데이터로 업데이트
@@ -25,7 +25,7 @@ export const useMarkers = ({ uid }: IUserID) => {
 
     // 3. docRef.id를 marker 객체에 넣어서 새로 구성
     const newMarker = {
-      ...markerData,
+      ...markerToSave,
       _id: docRef.id,
     };
     // 4. 기존 마커와 그 뒤에 새로운 마커의 데이터를 추가하여 지도에 렌더링 준비
@@ -34,7 +34,6 @@ export const useMarkers = ({ uid }: IUserID) => {
 
   // ✅ [수정]
   const updateMarker = async ({ markerId, date, content, bookmark }: IUpdateMarker) => {
-    const db = getFirestore(firebaseApp);
     const docRef = doc(db, "travelData", markerId);
 
     await updateDoc(docRef, {

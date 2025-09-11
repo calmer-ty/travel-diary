@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import type { ILogPlace, IUpdateMarker } from "@/types";
+import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
@@ -33,7 +33,7 @@ interface IMapsDialogProps {
   >;
   // 마커
   selectedMarker: ILogPlace | null;
-  createMarker: (markerData: ILogPlace) => Promise<void>;
+  createMarker: ({ markerToSave }: ICreateMarkerParams) => Promise<void>;
   updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
   fetchMarkers: () => Promise<void>;
 }
@@ -60,15 +60,12 @@ export default function MapsWrite({
   // 알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
-  // 새로 선택되는 북마크
+  // 현재 선택하는 북마크
   const [bookmark, setBookmark] = useState({
     name: "",
     color: "",
     _id: "",
   });
-
-  // console.log("selectedMarker: ", selectedMarker);
-  // console.log("bookmark: ", bookmark);
 
   // selectedMarker가 바뀔 때마다 폼 초기화
   useEffect(() => {
@@ -119,7 +116,7 @@ export default function MapsWrite({
     }
 
     // 저장할 마커 정보 준비
-    const markerData: ILogPlace = {
+    const markerToSave: ILogPlace = {
       _id: "",
       name: mapsAddress?.name,
       address: mapsAddress?.formatted_address,
@@ -131,7 +128,7 @@ export default function MapsWrite({
     };
 
     try {
-      await createMarker(markerData);
+      await createMarker({ markerToSave });
       // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
       setMapCenter(selectedPosition);
       setSelectedPosition(null);
