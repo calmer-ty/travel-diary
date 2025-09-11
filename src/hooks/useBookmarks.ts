@@ -7,7 +7,7 @@ import { useAlert } from "./useAlert";
 
 import type { IUserID } from "@/types";
 
-export const useUserBookmarks = ({ uid }: IUserID) => {
+export const useBookmarks = ({ uid }: IUserID) => {
   const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

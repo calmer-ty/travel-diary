@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
-import { useUserBookmarks } from "@/hooks/useUserBookmarks";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import { useDialog } from "@/hooks/useDialog";
 
 // shadcn
@@ -38,7 +38,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
 
   // 북마크 관련 훅
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
-  const { bookmarks, setBookmarks } = useUserBookmarks({ uid });
+  const { bookmarks, setBookmarks } = useBookmarks({ uid });
 
   // 새 북마크 이름/색상 상태를 객체로 관리
   const [newBookmark, setNewBookmark] = useState({ name: "", color: "" });

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useUserMarkers } from "@/hooks/useUserMarkers";
+import { useMarkers } from "@/hooks/useMarkers";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,7 +15,7 @@ interface IListBodyProps {
 
 export default function ListBody({ uid, selectedBookmark }: IListBodyProps) {
   // 마커 데이터 조회
-  const { markers, isLoading: isMarkersLoading, fetchMoreMarkers, hasMore } = useUserMarkers({ uid });
+  const { markers, isLoading: isMarkersLoading, fetchMoreMarkers, hasMore } = useMarkers({ uid });
 
   // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
   // const filteredMarkers = markers.filter((b) => selected === b.bookmark.name);

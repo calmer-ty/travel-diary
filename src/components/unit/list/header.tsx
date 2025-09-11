@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useUserBookmarks } from "@/hooks/useUserBookmarks";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +12,7 @@ interface IListHeaderProps {
 }
 export default function ListHeader({ uid, selectedBookmark, setSelectedBookmark }: IListHeaderProps) {
   // 마커 데이터 조회
-  const { bookmarks, isLoading: isBookmarkersLoading } = useUserBookmarks({ uid });
+  const { bookmarks, isLoading: isBookmarkersLoading } = useBookmarks({ uid });
 
   useEffect(() => {
     if (bookmarks.length > 0) {

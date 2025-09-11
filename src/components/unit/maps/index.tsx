@@ -3,7 +3,7 @@ import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-g
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
-import { useUserMarkers } from "@/hooks/useUserMarkers";
+import { useMarkers } from "@/hooks/useMarkers";
 import { useDialog } from "@/hooks/useDialog";
 
 import { Loader2 } from "lucide-react";
@@ -53,7 +53,7 @@ export default function Maps() {
 
   // 📌 마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
-  const { markers, createMarker, updateMarker, fetchMarkers } = useUserMarkers({ uid });
+  const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers({ uid });
 
   // 🖊️ 폼 관련
   const { isOpen, setIsOpen } = useDialog();

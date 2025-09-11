@@ -6,7 +6,7 @@ import { db, firebaseApp } from "@/lib/firebase/firebaseApp";
 import type { QueryDocumentSnapshot } from "firebase/firestore";
 import type { ILogPlace, IUpdateMarker, IUserID } from "@/types";
 
-export const useUserMarkers = ({ uid }: IUserID) => {
+export const useMarkers = ({ uid }: IUserID) => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
