@@ -3,11 +3,12 @@ import next from "next";
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
+
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev, conf: { distDir: ".next" } });
 const handle = app.getRequestHandler();
 
-export const nextServer = functions.https.onRequest(async (req, res) => {
+export const nextjsFunc = functions.https.onRequest(async (req, res) => {
   try {
     // Next.js 준비
     await app.prepare();
