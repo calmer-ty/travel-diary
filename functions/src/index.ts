@@ -8,9 +8,8 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev, conf: { distDir: ".next" } });
 const handle = app.getRequestHandler();
 
-export const nextjsFunc = functions.https.onRequest(async (req, res) => {
+export const nextjsFunc = functions.https.onRequest({ region: "asia-northeast2" }, async (req, res) => {
   try {
-    // Next.js 준비
     await app.prepare();
     return handle(req, res);
   } catch (error) {
