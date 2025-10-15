@@ -1,5 +1,7 @@
 import { useState } from "react";
-import type { Dispatch, SetStateAction } from "react";
+// firebase - 추후 리팩토링 필요
+import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
@@ -11,12 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-// firebase - 추후 리팩토링 필요
-import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase/firebaseApp";
-
 import { ColorList } from "../colorList";
 
+import type { Dispatch, SetStateAction } from "react";
 import type { IBookmark, ILogPlace } from "@/types";
 
 interface IMapsDialogProps {

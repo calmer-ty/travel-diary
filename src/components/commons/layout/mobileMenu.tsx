@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAlert } from "@/hooks/useAlert";
 import { useAuth } from "@/hooks/useAuth";
 
-import AlertMaps from "@/components/unit/maps/alert";
+import MotionAlert from "../MotionAlert";
 
 export default function MobileMenu() {
   const { uid } = useAuth();
@@ -39,7 +39,7 @@ export default function MobileMenu() {
         </ul>
       </nav>
 
-      {showAlert && <AlertMaps alertValue={alertValue} />}
+      {showAlert && <MotionAlert alertValue={alertValue} />}
     </div>
   );
 }

@@ -1,15 +1,15 @@
 import { useRef, useState } from "react";
-import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
 import { useMarkers } from "@/hooks/useMarkers";
 import { useDialog } from "@/hooks/useDialog";
 
+import { Marker, GoogleMap, StandaloneSearchBox, useJsApiLoader } from "@react-google-maps/api";
 import { Loader2 } from "lucide-react";
 
+import MotionAlert from "@/components/commons/MotionAlert";
 import MapsWrite from "./write";
-import AlertMaps from "./alert";
 
 import type { ILogPlace } from "@/types";
 
@@ -195,7 +195,7 @@ export default function Maps() {
       />
 
       {/* 경고창 */}
-      {showAlert && <AlertMaps alertValue={alertValue} />}
+      {showAlert && <MotionAlert alertValue={alertValue} />}
     </GoogleMap>
   );
 }

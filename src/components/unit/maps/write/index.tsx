@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
 
 import DatePicker01 from "@/components/commons/datePicker/01";
-import AlertMaps from "../alert";
-import WriteBookmark from "./bookmark";
+import MotionAlert from "@/components/commons/MotionAlert";
+import WriteBookmark from "./WriteBookmark";
 
 // shadcn
 import { Button } from "@/components/ui/button";
@@ -13,8 +15,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
-import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/lib/firebase/firebaseApp";
 
 interface IMapsDialogProps {
   isEdit: boolean;
@@ -231,7 +231,7 @@ export default function MapsWrite({
       </DialogContent>
 
       {/* 경고창 */}
-      {showAlert && <AlertMaps alertValue={alertValue} />}
+      {showAlert && <MotionAlert alertValue={alertValue} />}
     </Dialog>
   );
 }

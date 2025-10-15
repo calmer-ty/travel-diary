@@ -2,11 +2,11 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle2Icon } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface IAlertProps {
+interface IMotionAlertProps {
   alertValue: string;
 }
 
-export default function AlertMaps(props: IAlertProps) {
+export default function MotionAlert(props: IMotionAlertProps) {
   return (
     <motion.div
       initial={{ x: 0, opacity: 0 }}

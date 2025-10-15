@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
 import { useAlert } from "@/hooks/useAlert";
 import { useAudio } from "@/hooks/useAudio";
 
-import AlertMaps from "../../maps/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import MotionAlert from "@/components/commons/MotionAlert";
 
 export default function Roulette() {
   // 룰렛 아이템 (라벨 + 색상)
@@ -191,7 +191,7 @@ export default function Roulette() {
       </div>
 
       {/* 경고창 */}
-      {showAlert && <AlertMaps alertValue={alertValue} />}
+      {showAlert && <MotionAlert alertValue={alertValue} />}
       <footer className="opacity-0">배경 이미지 출처: freepik</footer>
     </div>
   );

@@ -1,7 +1,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
-export function Slider() {
+export function StartedSlider() {
   const [emblaRef] = useEmblaCarousel({ loop: false }, [Autoplay()]);
 
   const sliderItem = ["./images/start/img_slider01.png", "./images/start/img_slider02.png", "./images/start/img_slider03.png"];

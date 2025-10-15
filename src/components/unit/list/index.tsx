@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 
-import ListHeader from "./header";
-import ListBody from "./body";
+import ListHeader from "./ListHeader";
+import ListBody from "./LIstBody";
 
 export default function List() {
   const { uid } = useAuth();

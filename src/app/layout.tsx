@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/commons/layout/header";
-import MobileMenu from "@/components/commons/layout/mobileMenu";
+import LayoutHeader from "@/components/commons/layout/LayoutHeader";
+import MobileMenu from "@/components/commons/layout/MobileMenu";
 
 import "./globals.css";
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Header />
+        <LayoutHeader />
         <main className="h-[calc(100%-3rem)]">{children}</main>
         <div className="block sm:hidden">
           <MobileMenu />

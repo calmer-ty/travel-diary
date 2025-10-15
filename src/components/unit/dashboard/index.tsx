@@ -1,10 +1,11 @@
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { useAlert } from "@/hooks/useAlert";
 import { useAuth } from "@/hooks/useAuth";
 
-import AlertMaps from "@/components/unit/maps/alert";
+import Link from "next/link";
+
+import MotionAlert from "@/components/commons/MotionAlert";
 
 const mainItem = [
   {
@@ -76,7 +77,7 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {showAlert && <AlertMaps alertValue={alertValue} />}
+      {showAlert && <MotionAlert alertValue={alertValue} />}
     </div>
   );
 }
