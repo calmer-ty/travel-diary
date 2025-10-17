@@ -1,7 +1,7 @@
 "use client";
 
-import Dice from "@/components/unit/game/dice";
+import DiceGame from "@/components/unit/game/DiceGame";
 
-export default function DicePage() {
-  return <Dice />;
+export default function DiceGamePage() {
+  return <DiceGame />;
 }

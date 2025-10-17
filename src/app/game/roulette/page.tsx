@@ -1,7 +1,7 @@
 "use client";
 
-import Roulette from "@/components/unit/game/roulette";
+import RouletteGame from "@/components/unit/game/RouletteGame";
 
-export default function RoulettePage() {
-  return <Roulette />;
+export default function RouletteGamePage() {
+  return <RouletteGame />;
 }

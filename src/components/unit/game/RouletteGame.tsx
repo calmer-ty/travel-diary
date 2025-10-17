@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 
 import MotionAlert from "@/components/commons/MotionAlert";
 
-export default function Roulette() {
+export default function RouletteGame() {
   // 룰렛 아이템 (라벨 + 색상)
   const [items, setItems] = useState<{ label: string; color: string }[]>([]);
   const [inputValue, setInputValue] = useState("");

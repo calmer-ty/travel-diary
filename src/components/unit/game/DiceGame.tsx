@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 
 import { useAudio } from "@/hooks/useAudio";
 
-export default function Dice() {
+export default function DiceGame() {
   const { audioRef, playLoop, audioStop } = useAudio();
 
   const [rolling, setRolling] = useState(false);
-
   const [end, setEnd] = useState(false);
 
   const randomIndex = Math.floor(Math.random() * 6) + 1;

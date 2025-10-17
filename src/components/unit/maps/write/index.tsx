@@ -5,7 +5,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
 
-import DatePicker01 from "@/components/commons/datePicker/01";
+import DatePicker from "@/components/commons/DatePicker";
 import MotionAlert from "@/components/commons/MotionAlert";
 import WriteBookmark from "./WriteBookmark";
 
@@ -183,7 +183,7 @@ export default function MapsWrite({
   const handleDelete = async (selectedMarkerId: string) => {
     try {
       await deleteDoc(doc(db, "travelData", selectedMarkerId));
-      console.log(`ID ${selectedMarkerId} 삭제 성공`);
+      // console.log(`ID ${selectedMarkerId} 삭제 성공`);
       fetchMarkers();
       setIsOpen(false);
     } catch (error) {
@@ -205,7 +205,7 @@ export default function MapsWrite({
           <div className="grid gap-3 mt-4">
             <WriteBookmark selectedMarker={selectedMarker} bookmark={bookmark} setBookmark={setBookmark} />
             {/* 날짜 선택 */}
-            <DatePicker01 date={date} setDate={setDate} className="" />
+            <DatePicker date={date} setDate={setDate} className="" />
             {/* 내용 작성 */}
             <Textarea value={content} onChange={(e) => setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
             {/* 버튼 */}

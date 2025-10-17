@@ -18,11 +18,10 @@ export default function ListBody({ uid, selectedBookmark }: IListBodyProps) {
   const { markers, isLoading: isMarkersLoading, fetchMoreMarkers, hasMore } = useMarkers({ uid });
 
   // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
-  // const filteredMarkers = markers.filter((b) => selected === b.bookmark.name);
   const filteredMarkers = useMemo(() => {
     return markers.filter((b) => selectedBookmark === b.bookmark.name);
   }, [markers, selectedBookmark]);
-  console.log("filteredMarkers: ", filteredMarkers);
+
   // 필터링한 값들의 날짜를 모두 뽑은 값
   const markersDate = useMemo(() => {
     return Array.from(new Set(filteredMarkers.map((marker) => format(marker.date, "yyyy-MM-dd"))));
