@@ -34,11 +34,8 @@ export default function LayoutHeader() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="start">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+                    {/* <DropdownMenuLabel>설정 정보</DropdownMenuLabel> */}
+                    <DropdownMenuItem onClick={handleLogout}>로그아웃</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>

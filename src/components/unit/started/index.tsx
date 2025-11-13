@@ -28,7 +28,7 @@ export default function StartedUI() {
   return (
     <section
       style={{ backgroundImage: "url('/images/img_bg.jpg')" }}
-      className="relative p-8  overflow-x-hidden bg-cover bg-bottom bg-no-repeat
+      className="relative p-10 overflow-x-hidden bg-cover bg-bottom bg-no-repeat
         md:pl-25 md:pr-25 md:p-15"
     >
       <h2 className="flex gap-1">
