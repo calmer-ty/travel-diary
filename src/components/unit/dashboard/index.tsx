@@ -29,7 +29,7 @@ export default function Dashboard() {
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   return (
-    <div className="flex-col relative size-full h-190 p-14 flex items-center p-0 sm:flex-row gap-8">
+    <div className="flex-col gap-8 relative size-full h-full p-14 pb-24 flex items-center p-0 sm:flex-row">
       <motion.div
         // onClick={onClickMap}
         initial={{ opacity: 0, y: 50 }}
@@ -38,15 +38,15 @@ export default function Dashboard() {
         transition={{ duration: 0.2, ease: "easeOut" }}
         className="w-full h-full relative bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-3xl border border-gray-300 cursor-pointer sm:w-[54%]"
       >
-        <Link href="/maps" className="block size-full pt-15 pl-7  break-keep sm:pl-10 pr-4">
-          <div className="text-5xl">여행 일기</div>
+        <Link href="/maps" className="flex flex-col justify-center size-full p-6 break-keep sm:block sm:pt-15 sm:pl-10 sm:pr-4">
+          <div className="text-5xl text-center sm:text-left">여행 일기</div>
 
-          <div className="text-xl mt-8 md:mt-3">
-            <p>여행 장소를 지도에 남기고,</p>
-            <p>당신만의 이야기를 기록해보세요!</p>
+          <div className="flex flex-col mt-6 text-xl text-center sm:text-left">
+            <span>여행 장소를 지도에 남기고,</span>
+            <span>당신만의 이야기를 기록해보세요!</span>
           </div>
 
-          <img className="absolute bottom-6 right-6 hidden w-[50%] lg:w-70 sm:block" src="./images/img_map.png" alt="지도, 출처: figma" />
+          <img className="absolute bottom-6 right-6 hidden w-[50%] sm:block lg:w-70" src="./images/img_map.png" alt="지도, 출처: figma" />
         </Link>
       </motion.div>
       <div className="size-full flex justify-between items-center flex-col gap-8 size-full sm:w-[42%] ">
@@ -57,7 +57,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: idx * 0.1, ease: "easeOut" }}
             whileHover={{ scale: 1.03, boxShadow: "8px 8px 0px #888888" }}
-            className="relative w-full h-[50%] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-3xl border border-gray-300 cursor-pointer sm:pt-10 sm:pl-8 sm:pr-8 pt-0 pl-0 pr-0"
+            className="relative w-full h-[50%] bg-[#FAFAF2] shadow-[6px_6px_0px_#AAAAAA] rounded-3xl border border-gray-300 cursor-pointer sm:pt-10 sm:pl-8"
           >
             <Link
               onClick={(e) => {
@@ -67,12 +67,12 @@ export default function Dashboard() {
                 }
               }}
               href={item.href}
-              className=" size-full  text-3xl flex justify-center items-center sm:block"
+              className=" size-full text-3xl flex justify-center items-center sm:block"
             >
               {item.title}
             </Link>
 
-            <img className="hidden absolute bottom-6 right-6 h-[50%] lg:h-40 sm:block" src={`./images/${item.imgUrl}.png`} alt={`${item.alt}, 출처: figma`} />
+            <img className="hidden absolute bottom-6 right-6 h-[50%] sm:block lg:h-40" src={`./images/${item.imgUrl}.png`} alt={`${item.alt}, 출처: figma`} />
           </motion.div>
         ))}
       </div>

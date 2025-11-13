@@ -194,7 +194,7 @@ export default function MapsWrite({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:w-140 lg:w-180 bg-[#F9F9F9]">
+      <DialogContent className="bg-[#F9F9F9] sm:w-140 lg:w-180">
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
             <DialogTitle>{isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
