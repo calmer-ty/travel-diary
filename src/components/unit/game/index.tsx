@@ -18,12 +18,14 @@ export default function Game() {
                 md:w-[calc(25%-1rem)]
             `}
           >
-            <img
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-15
+            {el.available && (
+              <img
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-15
                 group-hover:opacity-20 transition-opacity duration-200"
-              src={`./images/game/icon_${el.src}.png`}
-              alt={el.src ? "출처: figma" : ""}
-            />
+                src={`./images/game/icon_${el.src}.png`}
+                alt={el.src ? "출처: figma" : ""}
+              />
+            )}
             {el.available ? (
               <span
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 
