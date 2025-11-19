@@ -105,8 +105,8 @@ export default function RouletteGame() {
   const isDisabled = isSpinning || !!selectedItem;
 
   return (
-    <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className="flex flex-col items-center size-full gap-10 p-10 bg-cover bg-bottom bg-no-repeat">
-      <h2 className="text-2xl">롤렛 돌리기</h2>
+    <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className=" size-full gap-10 p-10 bg-cover bg-bottom bg-no-repeat ">
+      <h2 className="text-2xl text-center">롤렛 돌리기</h2>
 
       <div className="relative overflow-hidden">
         {/* 게임 사운드 */}
@@ -139,18 +139,18 @@ export default function RouletteGame() {
         {/* 아이템 입력 */}
         <div
           className={`
-            flex gap-3 mt-5 p-1 
+            flex justify-center gap-3 mt-5 p-1 max-w-[550px] mx-auto
             ${isDisabled ? "pointer-events-none" : "pointer-events-auto"}
           `}
         >
-          <Input type="text " className="bg-[#ffffff]" value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
+          <Input type="text " className="bg-[#ffffff] " value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
           <Button className={isSpinning ? "pointer-events-none" : "pointer-events-auto"} variant="primary" onClick={handleAddItem}>
             입력
           </Button>
         </div>
 
         {/* 추가한 아이템 보여주기 */}
-        <div className="flex flex-wrap mt-5 gap-3">
+        <div className="flex flex-wrap mt-3 gap-3 max-w-[550px] mx-auto">
           {items.map((item) => (
             <div className="relative flex justify-center items-center min-w-25 h-10 bg-[#D9D9D9] rounded-lg p-2 pl-6 pr-6" key={item.label}>
               {item.label}
