@@ -16,7 +16,7 @@ const mainItem = [
     alt: "폴더",
   },
   {
-    title: "친구와 게임 하기",
+    title: "친구와 내기 하기",
     href: "/game",
     imgUrl: "img_game",
     loginCheck: false,
@@ -29,7 +29,7 @@ export default function Dashboard() {
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   return (
-    <div className="flex-col gap-8 relative size-full h-full p-14 pb-24 flex items-center p-0 sm:flex-row">
+    <div className="flex-col gap-8 relative size-full h-full p-14  flex items-center p-0 sm:flex-row">
       <motion.div
         // onClick={onClickMap}
         initial={{ opacity: 0, y: 50 }}

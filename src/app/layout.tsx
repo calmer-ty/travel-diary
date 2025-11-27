@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 
 import "./globals.css";
-import MobileMenu from "@/components/commons/layout/mobileMenu";
+// import MobileMenu from "@/components/commons/layout/mobileMenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +30,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LayoutHeader />
         <main className="h-[calc(100%-3rem)]">{children}</main>
-        <div className="block sm:hidden">
+        {/* <div className="block sm:hidden">
           <MobileMenu />
-        </div>
+        </div> */}
       </body>
     </html>
   );
