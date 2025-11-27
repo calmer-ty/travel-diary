@@ -136,6 +136,8 @@ export default function Maps() {
     throw new Error("Google Maps API Key is missing!");
   }
 
+  console.log("GOOGLE KEY:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: mapsKey,
     libraries: LIBRARIES,

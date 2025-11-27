@@ -20,6 +20,8 @@ const buttonVariants = cva(
         close: "bg-background  rounded-md shadow-[inset_-2px_-2px_0px_#BCBBBB] hover:shadow-[inset_2px_2px_0px_#BCBBBB]",
         // 등록 수정
         primary: "self-end px-4 py-1 bg-[#5F9EA0] text-white rounded-md shadow-[inset_-2px_-2px_0px_#347B7D] hover:shadow-[inset_2px_2px_0px_#347B7D]",
+        // 검색
+        search: " bg-[#316192] rounded-md shadow-[inset_-2px_-2px_0px_#1D538A] text-white",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
