@@ -8,7 +8,7 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev, conf: { distDir: ".next" } });
 const handle = app.getRequestHandler();
 
-export const nextjsFunc = functions.https.onRequest({ region: "asia-northeast2" }, async (req, res) => {
+export const nextjsFunc = functions.https.onRequest({ region: "asia-northeast3" }, async (req, res) => {
   try {
     await app.prepare();
     return handle(req, res);

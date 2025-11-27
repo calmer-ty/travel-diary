@@ -131,8 +131,13 @@ export default function Maps() {
   };
 
   // Google API Loader
+  const mapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  if (!mapsKey) {
+    throw new Error("Google Maps API Key is missing!");
+  }
+
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+    googleMapsApiKey: mapsKey,
     libraries: LIBRARIES,
   });
 
