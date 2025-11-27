@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 
-import { useAuth } from "@/hooks/useAuth";
 import { useAlert } from "@/hooks/useAlert";
 import { useMarkers } from "@/hooks/useMarkers";
 import { useDialog } from "@/hooks/useDialog";
@@ -35,7 +34,6 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
-  const { uid } = useAuth();
   // 🔧Edit 상태
   const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가
   // 🗺️ 지도 관련 상태
@@ -53,7 +51,7 @@ export default function Maps() {
 
   // 📌 마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
-  const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers({ uid });
+  const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers();
 
   // 🖊️ 폼 관련
   const { isOpen, setIsOpen } = useDialog();
@@ -135,8 +133,6 @@ export default function Maps() {
   if (!mapsKey) {
     throw new Error("Google Maps API Key is missing!");
   }
-
-  console.log("GOOGLE KEY:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: mapsKey,

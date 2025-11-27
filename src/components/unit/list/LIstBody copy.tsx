@@ -19,8 +19,8 @@ interface IListBodyProps {
 
 export default function ListBody({ uid, selectedBookmark }: IListBodyProps) {
   // 마커 데이터 조회
-  const { markers, isLoading: isMarkersLoading, fetchMoreMarkers, hasMore } = useMarkers({ uid });
-  const { bookmarks, isLoading: isBookmarkersLoading } = useBookmarks({ uid });
+  const { markers, isLoading: isMarkersLoading, fetchMoreMarkers, hasMore } = useMarkers();
+  const { bookmarks, isLoading: isBookmarkersLoading } = useBookmarks();
 
   // 셀렉터 스테이트 값에 마커를 비교하여 필터링한 값
   const filteredMarkers = useMemo(() => {

@@ -3,10 +3,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
 import { db, firebaseApp } from "@/lib/firebase/firebaseApp";
 
-import type { QueryDocumentSnapshot } from "firebase/firestore";
-import type { ICreateMarkerParams, ILogPlace, IUpdateMarker, IUserID } from "@/types";
+import { useAuth } from "@/contexts/authContext";
 
-export const useMarkers = ({ uid }: IUserID) => {
+import type { QueryDocumentSnapshot } from "firebase/firestore";
+import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
+
+export const useMarkers = () => {
+  const { uid } = useAuth();
+
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

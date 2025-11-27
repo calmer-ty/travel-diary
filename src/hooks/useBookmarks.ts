@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
+import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "./useAlert";
 
-import type { IUserID } from "@/types";
-
-export const useBookmarks = ({ uid }: IUserID) => {
+export const useBookmarks = () => {
   const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { uid } = useAuth();
 
   const { triggerAlert } = useAlert();
 

@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { useBookmarks } from "@/hooks/useBookmarks";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,9 +8,9 @@ interface IListHeaderProps {
   selectedBookmark: string;
   setSelectedBookmark: React.Dispatch<React.SetStateAction<string>>;
 }
-export default function ListHeader({ uid, selectedBookmark, setSelectedBookmark }: IListHeaderProps) {
+export default function ListHeader({ selectedBookmark, setSelectedBookmark }: IListHeaderProps) {
   // 북마크 데이터 조회
-  const { bookmarks, isLoading: isBookmarkersLoading } = useBookmarks({ uid });
+  const { bookmarks, isLoading: isBookmarkersLoading } = useBookmarks();
 
   // console.log("bookmarks: ", bookmarks);
   // useEffect(() => {

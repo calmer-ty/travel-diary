@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
+import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "@/hooks/useAlert";
-import { useAuth } from "@/hooks/useAuth";
 
 import MotionAlert from "../MotionAlert";
 

@@ -10,14 +10,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronsUpDown, Clock, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface IListBodyProps {
-  uid: string | undefined;
-}
-
-export default function ListBody({ uid }: IListBodyProps) {
+export default function ListBody() {
   // 마커 데이터 조회
-  const { markers, isLoading } = useMarkers({ uid });
-  const { bookmarks } = useBookmarks({ uid });
+  const { markers, isLoading } = useMarkers();
+  const { bookmarks } = useBookmarks();
 
   // 개별 open 상태
   const [isOpen, setIsOpen] = useState<{ [key: string]: boolean }>({});

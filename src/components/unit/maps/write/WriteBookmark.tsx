@@ -3,7 +3,7 @@ import { useState } from "react";
 import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "@/hooks/useAlert";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useDialog } from "@/hooks/useDialog";
@@ -37,7 +37,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
 
   // 북마크 관련 훅
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
-  const { bookmarks, setBookmarks } = useBookmarks({ uid });
+  const { bookmarks, setBookmarks } = useBookmarks();
 
   // 새 북마크 추가 시 사용하는 상태
   const [newBookmark, setNewBookmark] = useState({ name: "", color: "" });
