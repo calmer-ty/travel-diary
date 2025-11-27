@@ -11,14 +11,15 @@ interface IListHeaderProps {
   setSelectedBookmark: React.Dispatch<React.SetStateAction<string>>;
 }
 export default function ListHeader({ uid, selectedBookmark, setSelectedBookmark }: IListHeaderProps) {
-  // 마커 데이터 조회
+  // 북마크 데이터 조회
   const { bookmarks, isLoading: isBookmarkersLoading } = useBookmarks({ uid });
 
-  useEffect(() => {
-    if (bookmarks.length > 0) {
-      setSelectedBookmark(bookmarks[0].name);
-    }
-  }, [bookmarks, setSelectedBookmark]);
+  // console.log("bookmarks: ", bookmarks);
+  // useEffect(() => {
+  //   if (bookmarks.length > 0) {
+  //     setSelectedBookmark(bookmarks[0].name);
+  //   }
+  // }, [bookmarks, setSelectedBookmark]);
 
   return (
     <div className="fixed flex gap-4 w-full px-8 py-4 bg-white border-b">
