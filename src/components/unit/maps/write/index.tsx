@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "@/hooks/useAlert";
 
 import DatePicker from "@/components/commons/DatePicker";

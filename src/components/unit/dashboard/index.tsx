@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 import { useAlert } from "@/hooks/useAlert";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/authContext";
 
 import Link from "next/link";
 

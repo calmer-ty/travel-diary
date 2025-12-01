@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "@/hooks/useAlert";
 import { useMarkers } from "@/hooks/useMarkers";
 import { useDialog } from "@/hooks/useDialog";
@@ -53,7 +53,8 @@ export default function Maps() {
 
   // 📌 마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
-  const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers({ uid });
+  const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers();
+  console.log("markers: ", markers);
 
   // 🖊️ 폼 관련
   const { isOpen, setIsOpen } = useDialog();
@@ -135,8 +136,6 @@ export default function Maps() {
   if (!mapsKey) {
     throw new Error("Google Maps API Key is missing!");
   }
-
-  console.log("GOOGLE KEY:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: mapsKey,

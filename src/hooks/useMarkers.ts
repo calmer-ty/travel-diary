@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { addDoc, collection, doc, getDocs, getFirestore, limit, orderBy, query, startAfter, updateDoc, where } from "firebase/firestore";
-import { db, firebaseApp } from "@/lib/firebase/firebaseApp";
+import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebaseApp";
 
-import type { QueryDocumentSnapshot } from "firebase/firestore";
-import type { ICreateMarkerParams, ILogPlace, IUpdateMarker, IUserID } from "@/types";
+import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
+import { useAuth } from "@/contexts/authContext";
 
-export const useMarkers = ({ uid }: IUserID) => {
+export const useMarkers = () => {
+  const { uid } = useAuth();
+
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -87,59 +89,59 @@ export const useMarkers = ({ uid }: IUserID) => {
   }, [uid]);
 
   // 무한스크롤
-  const limitCount = 10;
-  const [hasMore, setHasMore] = useState(true);
-  const lastDocRef = useRef<QueryDocumentSnapshot | null>(null);
+  // const limitCount = 10;
+  // const [hasMore, setHasMore] = useState(true);
+  // const lastDocRef = useRef<QueryDocumentSnapshot | null>(null);
 
-  const fetchMoreMarkers = useCallback(async () => {
-    if (!uid) return;
+  // const fetchMoreMarkers = useCallback(async () => {
+  //   if (!uid) return;
 
-    setIsLoading(true); // 로딩 시작
+  //   setIsLoading(true); // 로딩 시작
 
-    const db = getFirestore(firebaseApp);
-    const travelData = collection(db, "travelData");
+  //   const db = getFirestore(firebaseApp);
+  //   const travelData = collection(db, "travelData");
 
-    // 🔥 현재 로그인한 유저의 uid로 필터링
-    // 기본적으로 limitCount만 가져오기 (첫 페이지)
-    let q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), limit(limitCount));
-    if (lastDocRef.current) {
-      // 이전에 가져온 마지막 문서(lastDoc) 이후부터 다음 limitCount만큼 가져오기 (다음 페이지)
-      q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), startAfter(lastDocRef.current), limit(limitCount));
-    }
+  //   // 🔥 현재 로그인한 유저의 uid로 필터링
+  //   // 기본적으로 limitCount만 가져오기 (첫 페이지)
+  //   let q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), limit(limitCount));
+  //   if (lastDocRef.current) {
+  //     // 이전에 가져온 마지막 문서(lastDoc) 이후부터 다음 limitCount만큼 가져오기 (다음 페이지)
+  //     q = query(travelData, where("uid", "==", uid), orderBy("date", "desc"), startAfter(lastDocRef.current), limit(limitCount));
+  //   }
 
-    const snapshot = await getDocs(q);
+  //   const snapshot = await getDocs(q);
 
-    // snapshot.empty > 남아있는 Doc가 있을 경우
-    if (!snapshot.empty) {
-      const newData = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        date: doc.data().date.toDate(),
-      })) as ILogPlace[];
+  //   // snapshot.empty > 남아있는 Doc가 있을 경우
+  //   if (!snapshot.empty) {
+  //     const newData = snapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       date: doc.data().date.toDate(),
+  //     })) as ILogPlace[];
 
-      setMarkers((prev) => [...prev, ...newData]); // 기존 마커에 새 데이터 추가
-      lastDocRef.current = snapshot.docs[snapshot.docs.length - 1];
+  //     setMarkers((prev) => [...prev, ...newData]); // 기존 마커에 새 데이터 추가
+  //     lastDocRef.current = snapshot.docs[snapshot.docs.length - 1];
 
-      if (snapshot.docs.length < limitCount) {
-        setHasMore(false); // 마지막 페이지일 때 더 이상 fetch 안 함
-      }
-    } else {
-      setHasMore(false);
-    }
+  //     if (snapshot.docs.length < limitCount) {
+  //       setHasMore(false); // 마지막 페이지일 때 더 이상 fetch 안 함
+  //     }
+  //   } else {
+  //     setHasMore(false);
+  //   }
 
-    setIsLoading(false); // 로딩 종료
-  }, [uid]);
+  //   setIsLoading(false); // 로딩 종료
+  // }, [uid]);
 
   useEffect(() => {
-    fetchMoreMarkers();
-  }, [fetchMoreMarkers]);
+    fetchMarkers();
+  }, [fetchMarkers]);
 
   return {
     markers,
+    isLoading,
     createMarker,
     updateMarker,
     fetchMarkers,
-    fetchMoreMarkers,
-    isLoading,
-    hasMore,
+    // fetchMoreMarkers,
+    // hasMore,
   };
 };

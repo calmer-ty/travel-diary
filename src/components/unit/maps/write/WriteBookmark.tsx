@@ -3,7 +3,7 @@ import { useState } from "react";
 import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "@/hooks/useAlert";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useDialog } from "@/hooks/useDialog";
