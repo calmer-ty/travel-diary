@@ -20,7 +20,7 @@ export default function List() {
   };
 
   return (
-    <article className="flex flex-col gap-6 h-full px-40 py-14">
+    <article className="flex flex-col gap-6 h-full py-14 bg-blue-50 px-10 sm:px-20 md:px-40">
       <div className="relative max-h-160 h-full">
         <h2 className="mb-6">나의 여행 기록들을 확인해보세요</h2>
         {isLoading ? (
@@ -28,7 +28,7 @@ export default function List() {
           <Loader size={30} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         ) : (
           // 리스트
-          <div id="scroll-container" className="h-full rounded-md space-y-4">
+          <div id="scroll-container" className="rounded-md space-y-4">
             {bookmarks.map((b) => {
               const relatedMarkers = markers.filter((m) => m.bookmark.name === b.name); // 현재 bookmark 에 속하는 markers만 추출
               if (relatedMarkers.length === 0) return null; // 0개면 렌더하지 않음
@@ -46,7 +46,7 @@ export default function List() {
                   }}
                   className="flex flex-col gap-2"
                 >
-                  <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-border shadow-sm transition-colors bg-muted/40 hover:bg-muted/60">
+                  <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-border transition-colors bg-white hover:shadow-md">
                     <div>
                       <div className="flex gap-2 mb-2">
                         <h4 className="text-sm font-semibold tracking-wide">{b.name}</h4>
@@ -70,7 +70,7 @@ export default function List() {
                     {markers
                       .filter((m) => m.bookmark.name === b.name)
                       .map((m) => (
-                        <Card key={m._id} className="border border-border/60 rounded-xl shadow-sm transition-colors bg-muted/30 hover:bg-muted/50">
+                        <Card key={m._id} className="border border-border/60 rounded-xl transition-colors bg-white hover:shadow-md">
                           <CardContent className="flex gap-4 px-6">
                             <div className="text-sm leading-relaxed">{format(m.date, "yyyy-MM-dd")}</div>
                             <div>
