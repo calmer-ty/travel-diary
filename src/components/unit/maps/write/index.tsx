@@ -51,7 +51,6 @@ export default function MapsWrite({
   updateMarker,
   fetchMarkers,
 }: IMapsDialogProps) {
-  // 유저 ID
   const { uid } = useAuth();
 
   const [date, setDate] = useState<Date | undefined>(undefined);
