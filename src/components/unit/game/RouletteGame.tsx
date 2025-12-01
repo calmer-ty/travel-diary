@@ -144,7 +144,7 @@ export default function RouletteGame() {
           `}
         >
           <Input type="text " className="bg-[#ffffff] " value={inputValue} onChange={onChangeItem} placeholder="입력하세요." />
-          <Button className={isSpinning ? "pointer-events-none" : "pointer-events-auto"} variant="primary" onClick={handleAddItem}>
+          <Button className={isSpinning ? "pointer-events-none" : "pointer-events-auto"} variant="input" onClick={handleAddItem}>
             입력
           </Button>
         </div>
@@ -185,7 +185,7 @@ export default function RouletteGame() {
           </p>
         </div>
 
-        <Button variant="primary" onClick={onClickReset} className="absolute bottom-5 left-1/2 transform -translate-x-1/2">
+        <Button variant="input" onClick={onClickReset} className="absolute bottom-5 left-1/2 transform -translate-x-1/2">
           다시 하기
         </Button>
       </div>

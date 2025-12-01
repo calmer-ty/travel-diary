@@ -213,7 +213,7 @@ export default function MapsWrite({
                 <Button variant="close">닫기</Button>
               </DialogClose>
               <Button
-                variant="destructive"
+                variant="remove"
                 type="button"
                 onClick={() => {
                   handleDelete(selectedMarker?._id ?? "");
@@ -221,7 +221,7 @@ export default function MapsWrite({
               >
                 삭제
               </Button>
-              <Button variant="primary" type="submit">
+              <Button variant="input" type="submit">
                 {isEdit ? "수정" : "등록"}
               </Button>
             </DialogFooter>
