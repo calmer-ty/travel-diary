@@ -6,7 +6,6 @@ import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 
 import type { Metadata } from "next";
 import "./globals.css";
-// import MobileMenu from "@/components/commons/layout/mobileMenu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,13 +32,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <LayoutHeader />
-          {/* <main className="h-[calc(100%-3rem)]">{children}</main> */}
+
           <main className="h-full">
             <Wrapper>{children}</Wrapper>
           </main>
-          {/* <div className="block sm:hidden">
-          <MobileMenu />
-        </div> */}
         </AuthProvider>
       </body>
     </html>
