@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { AuthProvider } from "@/contexts/authContext";
+import Wrapper from "@/components/commons/layout/Wrapper";
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 
 import type { Metadata } from "next";
@@ -32,7 +33,10 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <LayoutHeader />
-          <main className="h-[calc(100%-3rem)]">{children}</main>
+          {/* <main className="h-[calc(100%-3rem)]">{children}</main> */}
+          <main className="h-full">
+            <Wrapper>{children}</Wrapper>
+          </main>
           {/* <div className="block sm:hidden">
           <MobileMenu />
         </div> */}

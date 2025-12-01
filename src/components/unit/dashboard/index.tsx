@@ -61,7 +61,7 @@ export default function Dashboard() {
   }, []);
   console.log(countryItems, "countryItems");
   return (
-    <div className="size-full p-5">
+    <article className="size-full p-5">
       <div className="relative flex size-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-3xl ">
         {/* 사진 영역 */}
         <section className="relative w-[60%] h-full bg-[#7E9EC0] rounded-3xl overflow-hidden">
@@ -107,6 +107,6 @@ export default function Dashboard() {
         {/* 비행기 */}
         <img className="absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-1/2 w-35" src="./images/ico_airplane.png" alt="" />
       </div>
-    </div>
+    </article>
   );
 }
