@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useAuth } from "@/contexts/authContext";
 
@@ -9,8 +9,14 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function LayoutHeader() {
-  const pathname = usePathname();
   const { user, handleLogin, handleLogout } = useAuth();
+
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const onClickMoveToList = () => {
+    router.push("/list");
+  };
 
   return (
     <>
@@ -35,8 +41,12 @@ export default function LayoutHeader() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="start">
-                    {/* <DropdownMenuLabel>설정 정보</DropdownMenuLabel> */}
-                    <DropdownMenuItem onClick={handleLogout}>로그아웃</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer" onClick={onClickMoveToList}>
+                      나의 여행기록
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
+                      로그아웃
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
