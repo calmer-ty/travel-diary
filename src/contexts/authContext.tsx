@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db, googleProvider } from "@/lib/firebase/firebaseApp";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 
 import type { User } from "firebase/auth";
@@ -37,10 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const router = useRouter();
 
-  console.log("uid: ", uid);
-
   useEffect(() => {
-    // console.log("AuthProvider mounted, setting up onAuthStateChanged listener");
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
@@ -55,15 +51,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      await createUser({ user });
-      router.push("/dashboard"); // 로그인 시 첫 진입 페이지
+      await createUser(user);
+      router.push("/dashboard");
     } catch (error) {
       console.error("로그인 실패:", error);
     }
   };
 
   // 유저 데이터 등록 함수
-  const createUser = async ({ user }: { user: User }) => {
+  const createUser = async (user: User) => {
     if (!user) return;
 
     const docRef = doc(db, "users", user.uid);
@@ -71,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await setDoc(
         docRef,
         {
+          _id: user.uid,
           name: user.displayName,
           email: user.email,
           grade: "free",
@@ -87,14 +84,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleLogout = async (): Promise<void> => {
     try {
       await auth.signOut();
-      router.push("/"); // 로그아웃 시 진입 페이지
+      router.push("/");
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }
   };
 
-  return <AuthContext.Provider value={{ user, loading, uid, handleLogin, handleLogout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, uid, loading, handleLogin, handleLogout }}>{children}</AuthContext.Provider>;
 };
 
-// 커스텀 훅으로 간편하게 사용 가능
 export const useAuth = () => useContext(AuthContext);

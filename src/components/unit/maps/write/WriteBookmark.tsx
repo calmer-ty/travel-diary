@@ -29,7 +29,6 @@ interface IMapsDialogProps {
 }
 
 export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }: IMapsDialogProps) {
-  // 유저 ID
   const { uid } = useAuth();
 
   // 알림창 등

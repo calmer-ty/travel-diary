@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function LayoutHeader() {
+  const { user, handleLogin, handleLogout } = useAuth();
+
   const pathname = usePathname();
   const router = useRouter();
-  const { user, handleLogin, handleLogout } = useAuth();
 
   const onClickMoveToList = () => {
     router.push("/list");
@@ -40,7 +41,6 @@ export default function LayoutHeader() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="start">
-                    {/* <DropdownMenuLabel>설정 정보</DropdownMenuLabel> */}
                     <DropdownMenuItem className="cursor-pointer" onClick={onClickMoveToList}>
                       나의 여행기록
                     </DropdownMenuItem>

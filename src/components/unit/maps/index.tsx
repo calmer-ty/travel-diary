@@ -53,6 +53,8 @@ export default function Maps() {
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
   const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers();
 
+  console.log("markers: ", markers);
+
   // 🖊️ 폼 관련
   const { isOpen, setIsOpen } = useDialog();
 

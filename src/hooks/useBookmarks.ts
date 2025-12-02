@@ -6,10 +6,9 @@ import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "./useAlert";
 
 export const useBookmarks = () => {
+  const { uid } = useAuth();
   const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const { uid } = useAuth();
 
   const { triggerAlert } = useAlert();
 
@@ -21,11 +20,10 @@ export const useBookmarks = () => {
         return;
       }
 
-      setIsLoading(true); // 로딩 시작
+      setIsLoading(true);
 
       const bookmarkData = collection(db, "bookmarkData");
 
-      // 현재 로그인한 유저의 uid로 필터링
       const q = query(bookmarkData, where("uid", "==", uid));
       const snapshot = await getDocs(q);
 
@@ -37,7 +35,7 @@ export const useBookmarks = () => {
 
       setBookmarks(fetchedData);
 
-      setIsLoading(false); // 로딩 종료
+      setIsLoading(false);
     } catch (error) {
       console.error("Firebase 북마크 불러오기 실패:", error);
     }
