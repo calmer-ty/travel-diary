@@ -12,7 +12,7 @@ export function AIPopover() {
     <Popover>
       <BasicTooltip content="AI 챗봇 열기">
         <PopoverTrigger asChild>
-          <Button variant="default" className="absolute bottom-8 right-8 w-12 h-12 rounded-full button-pulse">
+          <Button variant="default" className="absolute bottom-8 right-8 w-10 h-10 rounded-full button-pulse md:w-12 md:h-12">
             <Brain className="!w-6 !h-6" />
           </Button>
         </PopoverTrigger>

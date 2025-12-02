@@ -76,7 +76,7 @@ export default function Dashboard() {
         </section>
 
         {/* 오른쪽 영역 */}
-        <section className="flex flex-col gap-8 md:w-[40%] md:h-full p-5 w-full">
+        <section className="flex flex-col gap-3 md:gap-8 md:w-[40%] md:h-full p-5 w-full">
           <div>
             <p className="text-xl mb-3 font-semibold">여행 주의 국가</p>
 
@@ -119,7 +119,7 @@ export default function Dashboard() {
           {/* 검색창 */}
           <div>
             <p className="text-xl mb-3 font-semibold">원하는 여행지를 검색해 보세요.</p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mr-10 md:mr-0">
               <Input onChange={(e) => setKeyWord(e.target.value)} className="bg-white" placeholder="검색" />
               <Button onClick={handleSearchKeyword} variant="search">
                 검색
