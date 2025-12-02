@@ -13,7 +13,7 @@ export default function StartedUI() {
   };
 
   return (
-    <section
+    <article
       style={{ backgroundImage: "url('/images/img_bg.jpg')" }}
       className="relative p-10 overflow-x-hidden bg-cover bg-bottom bg-no-repeat
         md:pl-25 md:pr-25 md:p-15"
@@ -88,6 +88,6 @@ export default function StartedUI() {
       </motion.div>
 
       <footer className="opacity-0">배경 이미지 출처: freepik</footer>
-    </section>
+    </article>
   );
 }

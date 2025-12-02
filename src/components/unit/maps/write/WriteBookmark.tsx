@@ -209,7 +209,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
                 <Button variant="close" onClick={onClickNewBookmarkCancel}>
                   닫기
                 </Button>
-                <Button variant="primary" type="button" onClick={handleAddBookmark}>
+                <Button variant="input" type="button" onClick={handleAddBookmark}>
                   추가
                 </Button>
               </div>
