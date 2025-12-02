@@ -105,8 +105,9 @@ export default function RouletteGame() {
   const isDisabled = isSpinning || !!selectedItem;
 
   return (
-    <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className=" size-full gap-10 p-10 bg-cover bg-bottom bg-no-repeat ">
-      <h2 className="text-2xl text-center">롤렛 돌리기</h2>
+    <div className=" size-full gap-10 p-10 bg-cover bg-bottom bg-no-repeat ">
+      {/* <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className=" size-full gap-10 p-10 bg-cover bg-bottom bg-no-repeat "> */}
+      <h2 className="text-2xl text-center mb-5">롤렛 돌리기</h2>
 
       <div className="relative overflow-hidden">
         {/* 게임 사운드 */}
