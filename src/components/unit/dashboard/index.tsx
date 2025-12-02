@@ -54,19 +54,19 @@ export default function Dashboard() {
     <article className="relative size-full p-5">
       <div className="relative flex flex-col size-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-3xl md:flex-row">
         {/* 사진 영역 */}
-        <section className="relative md:w-[60%] h-full bg-[#7E9EC0] rounded-3xl overflow-hidden w-full">
+        <section className="relative md:w-[60%] md:h-full bg-[#7E9EC0] rounded-3xl overflow-hidden w-full">
           <img className="w-full h-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
 
           <div className="absolute md:top-20 md:left-20 top-5 left-5">
             <p className=" text-white md:text-3xl text-xl">여행의 순간을 나만의 일기로 완성하세요.</p>
-            <Link className="block w-fit bg-white rounded-2xl text-[#316192] p-8 py-3 mt-5 font-bold" href="./maps">
+            <Link className="block w-fit bg-white rounded-2xl text-[#316192] p-8 py-3 mt-5 font-bold text-xs md:text-xl" href="./maps">
               시작하기
             </Link>
           </div>
         </section>
 
         {/* 오른쪽 영역 */}
-        <section className="flex flex-col gap-8 md:w-[40%] h-full p-5 w-full">
+        <section className="flex flex-col gap-8 md:w-[40%] md:h-full p-5 w-full">
           <div>
             <p className="text-xl mb-3 font-semibold">여행 주의 국가</p>
 
@@ -117,7 +117,7 @@ export default function Dashboard() {
         </section>
 
         {/* 비행기 */}
-        <img className="absolute bottom-[8%] left-[60%] -translate-x-1/2  w-20 md:w-30" src="./images/icon_airplane.png" alt="" />
+        <img className="absolute bottom-[8%] left-[60%] -translate-x-1/2 w-20 hidden md:block md:w-30" src="./images/icon_airplane.png" alt="" />
       </div>
 
       <AIPopover />

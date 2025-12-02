@@ -1,4 +1,5 @@
-import { FC } from "react";
+"use client";
+import { FC, useEffect } from "react";
 import { X } from "lucide-react";
 import type { ITravelWaringItem } from "@/types";
 import { Button } from "./button";
@@ -10,25 +11,35 @@ interface ICountryModalProps {
   country: ITravelWaringItem | null;
 }
 
-
-
 const CountryModal: FC<ICountryModalProps> = ({ isOpen, onClose, country }) => {
   if (!isOpen || !country) return null;
 
- const alertNotes = [
+  // ESC 키 이벤트
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  const alertNotes = [
     country.attention_note,
     country.control_note,
     country.limita_note,
     country.ban_yna || country.ban_note,
   ];
 
-  // CountryLabelColor와 alertNotes를 map으로 결합
   const alerts = CountryLabelColor.map((el, idx) => ({
     label: el.label,
     note: alertNotes[idx],
     textColor: el.text,
     bg: el.bg,
-  })).filter((a) => a.note); // note가 없는 항목 제거
+  })).filter((a) => a.note);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -56,8 +67,6 @@ const CountryModal: FC<ICountryModalProps> = ({ isOpen, onClose, country }) => {
             </div>
           ))}
         </div>
-
-       
 
         {/* 확인 버튼 */}
         <div className="mt-6 text-center">
