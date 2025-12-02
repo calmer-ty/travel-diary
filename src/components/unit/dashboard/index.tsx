@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 
 import { useAlert } from "@/hooks/useAlert";
-import { useAuth } from "@/hooks/useAuth";
 
 import Link from "next/link";
 
@@ -10,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { ITravelWaringItem } from "@/types";
+import { useAuth } from "@/contexts/authContext";
 
 const mainItem = [
   {
