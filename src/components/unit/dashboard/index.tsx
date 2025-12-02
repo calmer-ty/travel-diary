@@ -97,16 +97,16 @@ export default function Dashboard() {
 
             <div className="flex flex-col gap-2 max-h-[340px] overflow-y-auto p-2">
               {loading ? (
-                <div>
-                  {Array.from({ length: 7 }).map((_, idx) => (
-                    <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>
-                  ))}
-                </div>
+                // 로딩 스켈레톤
+                Array.from({ length: 7 }).map((_, idx) => <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>)
+              ) : countryItems.length === 0 ? (
+                // 데이터 없음
+                <p className="text-gray-500">조회 가능한 데이터가 없습니다.</p>
               ) : (
+                // 데이터 존재
                 countryItems
                   .filter((el) => {
-                    if (!selectedLabel) return true; // 전체
-                    // 각 country의 label이 CountryLabelColor 순서대로 어떤 note가 있는지 확인
+                    if (!selectedLabel) return true;
                     const labelMap: Record<string, string | undefined> = {
                       "여행 유의": el.attention_note,
                       "여행 자제": el.control_note,
@@ -116,9 +116,9 @@ export default function Dashboard() {
                     return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
                   })
                   .map((el, idx) => (
-                    <button onClick={() => openModal(el)} key={idx} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
+                    <button key={idx} onClick={() => openModal(el)} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
                       <p>{el.country_name}</p>
-                      <p className="text-xs text-gray-500 ">더보기</p>
+                      <p className="text-xs text-gray-500">더보기</p>
                     </button>
                   ))
               )}
