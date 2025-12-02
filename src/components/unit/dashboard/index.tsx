@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,8 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<ITravelWaringItem | null>(null);
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
+  const [keyword, setKeyWord] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -28,7 +32,7 @@ export default function Dashboard() {
         } else {
           setCountryItems(data.items.item);
           setTotalCount(data.totalCount);
-          console.log(data.items.item, "data.items.item");
+          // console.log(data.items.item, "data.items.item");
         }
       } catch (err) {
         setError("데이터를 불러오는 중 오류 발생");
@@ -42,12 +46,18 @@ export default function Dashboard() {
   }, []);
   // console.log(countryItems, "countryItems");
 
+  // 여행 주의 국가 모달 관련
   const openModal = (country: ITravelWaringItem) => {
     setSelectedCountry(country);
   };
 
   const closeModal = () => {
     setSelectedCountry(null);
+  };
+
+  const handleSearchKeyword = () => {
+    if (!keyword) return;
+    router.push(`/maps?keyword=${encodeURIComponent(keyword)}`);
   };
 
   return (
@@ -110,8 +120,10 @@ export default function Dashboard() {
           <div>
             <p className="text-xl mb-3 font-semibold">원하는 여행지를 검색해 보세요.</p>
             <div className="flex items-center gap-2">
-              <Input className="bg-white" placeholder="검색" />
-              <Button variant="search">검색</Button>
+              <Input onChange={(e) => setKeyWord(e.target.value)} className="bg-white" placeholder="검색" />
+              <Button onClick={handleSearchKeyword} variant="search">
+                검색
+              </Button>
             </div>
           </div>
         </section>

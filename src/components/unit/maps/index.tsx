@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+"use client";
+import { useEffect, useRef, useState } from "react";
 
 import { useAlert } from "@/hooks/useAlert";
 import { useMarkers } from "@/hooks/useMarkers";
@@ -11,6 +12,9 @@ import MotionAlert from "@/components/commons/MotionAlert";
 import MapsWrite from "./write";
 
 import type { ILogPlace } from "@/types";
+import { useAuth } from "@/contexts/authContext";
+
+import { useSearchParams } from "next/navigation";
 
 const containerStyle = {
   width: "100%",
@@ -34,9 +38,13 @@ const mapOptions = {
 const LIBRARIES: "places"[] = ["places"];
 
 export default function Maps() {
-  // 🔧Edit 상태
+  const { uid } = useAuth();
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get("keyword") ?? "";
+
+  // Edit 상태
   const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가
-  // 🗺️ 지도 관련 상태
+  // 지도 관련 상태
   const [mapCenter, setMapCenter] = useState(initialCenter); // 지도 중심을 위한 별도 state 추가
   const [mapsAddress, setMapsAddress] = useState<google.maps.places.PlaceResult>(); // 지도 중심을 위한 별도 state 추가
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(initialCenter); // POI 클릭시 위치 값
@@ -46,19 +54,19 @@ export default function Maps() {
   // 을 포함해서 사각형 범위를 나타내는 객체
   const mapRef = useRef<google.maps.Map | null>(null);
 
-  // 🔍 검색 관련
+  //  검색 관련
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
 
-  // 📌 마커 관련
+  //  마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
   const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers();
 
-  console.log("markers: ", markers);
+  // console.log("markers: ", markers);
 
-  // 🖊️ 폼 관련
+  // 폼 관련
   const { isOpen, setIsOpen } = useDialog();
 
-  // ⚠️ 알림창 등
+  //  알림창 등
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   // 지도 bounds 변경 시 호출
@@ -68,7 +76,7 @@ export default function Maps() {
     }
   };
 
-  // 🔍 [검색 박스] 장소 검색 후 위치 이동 // 기존에 구글에서 제공한 코드
+  //  [검색 박스] 장소 검색 후 위치 이동 // 기존에 구글에서 제공한 코드
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current?.getPlaces();
     if (!places || places.length === 0) return;
@@ -144,6 +152,21 @@ export default function Maps() {
   // 지도 로드 시 참조 저장
   const onLoadMap = (map: google.maps.Map) => {
     mapRef.current = map;
+
+    // Dashboard에서 전달된 keyword가 있으면 검색
+    if (keyword) {
+      const service = new window.google.maps.places.PlacesService(map);
+
+      service.findPlaceFromQuery({ query: keyword, fields: ["geometry"] }, (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && results?.[0]?.geometry?.location) {
+          const loc = results[0].geometry.location;
+          const newCenter = { lat: loc.lat(), lng: loc.lng() };
+          setMapCenter(newCenter);
+          map.panTo(newCenter);
+          map.setZoom(13);
+        }
+      });
+    }
   };
 
   if (!isLoaded) return <Loader2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 animate-spin text-muted-foreground" aria-label="Loading" />;
@@ -155,8 +178,9 @@ export default function Maps() {
         .filter((marker) => {
           if (!bounds) return true; // bounds 없으면 모두 렌더링 (초기값)
           const position = new window.google.maps.LatLng(marker.latLng.lat, marker.latLng.lng);
-          return bounds.contains(position); // ✅ bounds 안에 있는 마커만!
+          return bounds.contains(position); // bounds 안에 있는 마커만!
         })
+
         .map((marker) => (
           <Marker
             key={marker._id}
