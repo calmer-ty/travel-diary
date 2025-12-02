@@ -2,7 +2,21 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-const waveText = [{ text: "T" }, { text: "r" }, { text: "a" }, { text: "v" }, { text: "e" }, { text: "l" }, { text: " " }, { text: "D" }, { text: "i" }, { text: "a" }, { text: "r" }, { text: "y" }];
+const waveText = [
+  { text: "T" },
+  { text: "r" },
+  { text: "a" },
+  { text: "v" },
+  { text: "e" },
+  { text: "l" },
+  { text: " " },
+  { text: "D" },
+  { text: "i" },
+  { text: "a" },
+  { text: "r" },
+  { text: "y" },
+  { img: "/images/icon_airplane.png", alt: "plane icon" },
+];
 const moveImages = ["./images/img_map.png", "./images/img_folder.png", "./images/img_game.png"];
 
 export default function StartedUI() {
@@ -30,9 +44,9 @@ export default function StartedUI() {
               ease: "easeInOut",
             }}
             className="inline-block text-5xl md:text-7xl text-[#1D538A]"
-            style={{ textShadow: "0px 2px 2px rgba(0,0,0,0.35)" }}
+            style={{ textShadow: el.text ? "0px 2px 2px rgba(0,0,0,0.35)" : "none" }}
           >
-            {el.text}
+            {el.text ? el.text : el.img ? <img src={el.img} alt={el.alt || ""} className="inline-block align-middle h-12 md:h-14" /> : null}
           </motion.span>
         ))}
       </h2>
