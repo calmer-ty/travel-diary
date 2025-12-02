@@ -96,24 +96,32 @@ export default function Dashboard() {
             </div>
 
             <div className="flex flex-col gap-2 max-h-[340px] overflow-y-auto p-2">
-              {countryItems
-                .filter((el) => {
-                  if (!selectedLabel) return true; // 전체
-                  // 각 country의 label이 CountryLabelColor 순서대로 어떤 note가 있는지 확인
-                  const labelMap: Record<string, string | undefined> = {
-                    "여행 유의": el.attention_note,
-                    "여행 자제": el.control_note,
-                    "철수 권고": el.limita_note,
-                    "여행 금지": el.ban_yna || el.ban_note,
-                  };
-                  return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
-                })
-                .map((el, idx) => (
-                  <button onClick={() => openModal(el)} key={idx} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
-                    <p>{el.country_name}</p>
-                    <p className="text-xs text-gray-500 ">더보기</p>
-                  </button>
-                ))}
+              {loading ? (
+                <div>
+                  {Array.from({ length: 7 }).map((_, idx) => (
+                    <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>
+                  ))}
+                </div>
+              ) : (
+                countryItems
+                  .filter((el) => {
+                    if (!selectedLabel) return true; // 전체
+                    // 각 country의 label이 CountryLabelColor 순서대로 어떤 note가 있는지 확인
+                    const labelMap: Record<string, string | undefined> = {
+                      "여행 유의": el.attention_note,
+                      "여행 자제": el.control_note,
+                      "철수 권고": el.limita_note,
+                      "여행 금지": el.ban_yna || el.ban_note,
+                    };
+                    return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
+                  })
+                  .map((el, idx) => (
+                    <button onClick={() => openModal(el)} key={idx} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
+                      <p>{el.country_name}</p>
+                      <p className="text-xs text-gray-500 ">더보기</p>
+                    </button>
+                  ))
+              )}
             </div>
           </div>
           {/* 검색창 */}
@@ -133,7 +141,7 @@ export default function Dashboard() {
       </div>
 
       <AIPopover />
-      <CountryModal isOpen={!!selectedCountry} onClose={closeModal} country={selectedCountry} />
+      {typeof window !== "undefined" && <CountryModal isOpen={!!selectedCountry} onClose={closeModal} country={selectedCountry} />}
     </article>
   );
 }
