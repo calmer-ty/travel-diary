@@ -35,7 +35,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
         ))}
       </div>
 
-      <div className="flex flex-col gap-2 sm:max-h-90 overflow-y-auto p-2">
+      <div className="flex flex-col gap-2 max-h-70 overflow-y-auto p-2">
         {loading
           ? // 로딩 스켈레톤
             Array.from({ length: 7 }).map((_, idx) => <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>)

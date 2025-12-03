@@ -34,9 +34,9 @@ export default function Dashboard() {
       <div className="relative flex flex-col size-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-3xl md:flex-row">
         {/* 사진 영역 */}
         <section className="relative md:w-[60%] md:h-full bg-[#7E9EC0] rounded-3xl overflow-hidden w-full">
-          <img className="w-full h-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
+          <img className="absolute top-0 left-0 w-full h-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
 
-          <div className="absolute md:top-20 md:left-20 top-5 left-5">
+          <div className="relative z-10 py-10 px-8 md:py-20 md:px-14">
             <p className=" text-white md:text-3xl text-xl">여행의 순간을 나만의 일기로 완성하세요.</p>
             <Link className="block w-fit bg-white rounded-2xl text-[#316192] p-8 py-3 mt-5 font-bold text-xs md:text-xl" href="./maps">
               시작하기
