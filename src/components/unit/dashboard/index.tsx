@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { AIPopover } from "@/components/commons/AIPopover";
 
 import { ITravelWaringItem } from "@/types";
-import CountryModal from "@/components/ui/countryModal";
+
 import { CountryLabelColor } from "../maps/colorList";
+import CountryModal from "./countryModal";
 
 export default function Dashboard() {
   const [countryItems, setCountryItems] = useState<ITravelWaringItem[]>([]);

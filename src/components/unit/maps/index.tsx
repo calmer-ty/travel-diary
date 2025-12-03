@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useAlert } from "@/hooks/useAlert";
 import { useMarkers } from "@/hooks/useMarkers";

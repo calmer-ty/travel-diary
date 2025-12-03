@@ -1,8 +1,8 @@
 "use client";
 import { FC, useEffect } from "react";
 import type { ITravelWaringItem } from "@/types";
-import { Button } from "./button";
-import { CountryLabelColor } from "../unit/maps/colorList";
+import { Button } from "@/components/ui/button";
+import { CountryLabelColor } from "../maps/colorList";
 
 interface ICountryModalProps {
   isOpen: boolean;
@@ -26,12 +26,7 @@ const CountryModal: FC<ICountryModalProps> = ({ isOpen, onClose, country }) => {
     };
   }, [onClose]);
 
-  const alertNotes = [
-    country.attention_note,
-    country.control_note,
-    country.limita_note,
-    country.ban_yna || country.ban_note,
-  ];
+  const alertNotes = [country.attention_note, country.control_note, country.limita_note, country.ban_yna || country.ban_note];
 
   const alerts = CountryLabelColor.map((el, idx) => ({
     label: el.label,
@@ -51,10 +46,14 @@ const CountryModal: FC<ICountryModalProps> = ({ isOpen, onClose, country }) => {
         {/* 타이틀 */}
         <div className="flex items-center gap-3 mb-4">
           <img className="w-16 h-10 object-cover rounded shadow-[1px_1px_8px_1px_rgba(0,0,0,0.25)]" src={country.img_url} alt={country.country_name} />
-          <h3 className="text-xl font-bold "><span className="text-[#1D538A]">{country.country_name}</span> 여행 경보</h3>
+          <h3 className="text-xl font-bold ">
+            <span className="text-[#1D538A]">{country.country_name}</span> 여행 경보
+          </h3>
         </div>
 
-        <p className="text-gray-600 mb-4">{country.country_en_name} | {country.continent}</p>
+        <p className="text-gray-600 mb-4">
+          {country.country_en_name} | {country.continent}
+        </p>
         {country.wrt_dt && <p className="text-gray-500 mb-4 text-sm">등록일: {country.wrt_dt}</p>}
 
         {/* 경보 섹션 */}
@@ -69,7 +68,9 @@ const CountryModal: FC<ICountryModalProps> = ({ isOpen, onClose, country }) => {
 
         {/* 확인 버튼 */}
         <div className="mt-6 text-center">
-          <Button variant="input" onClick={onClose}>확인</Button>
+          <Button variant="input" onClick={onClose}>
+            확인
+          </Button>
         </div>
       </div>
     </div>
