@@ -27,7 +27,7 @@ export default function DiceGame() {
   };
 
   return (
-    <div style={{ backgroundImage: "url('/images/img_bg.jpg')" }} className="relative flex flex-col items-center size-full gap-10  p-10 bg-cover bg-bottom bg-no-repeat">
+    <div className="relative flex flex-col items-center size-full gap-10  p-10 ">
       <h2 className="text-2xl ">주사위 굴리기</h2>
 
       <div className="relative flex justify-center  w-full overflow-hidden">
@@ -60,7 +60,7 @@ export default function DiceGame() {
         </div>
       </div>
 
-      <footer className="opacity-0">배경 이미지 출처: freepik</footer>
+      {/* <footer className="opacity-0">배경 이미지 출처: freepik</footer> */}
     </div>
   );
 }

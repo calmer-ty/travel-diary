@@ -68,7 +68,7 @@ export default function Dashboard() {
         <section className="relative md:w-[60%] md:h-full bg-[#7E9EC0] rounded-3xl overflow-hidden w-full">
           <img className="w-full h-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
 
-          <div className="absolute md:top-20 md:left-20 top-5 left-5">
+          <div className="absolute md:top-13 md:left-13 top-5 left-5 md:w-[80%]">
             <p className=" text-white md:text-3xl text-xl">여행의 순간을 나만의 일기로 완성하세요.</p>
             <Link className="block w-fit bg-white rounded-2xl text-[#316192] p-8 py-3 mt-5 font-bold text-xs md:text-xl" href="./maps">
               시작하기
