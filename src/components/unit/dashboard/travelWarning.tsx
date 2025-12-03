@@ -8,6 +8,7 @@ import { ChevronRight } from "lucide-react";
 import { CountryLabelColor } from "../maps/colorList";
 
 import type { ITravelWaringItem } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
 interface ITravelWarningProps {
   openDialog: (country: ITravelWaringItem) => void;
 }
@@ -38,7 +39,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
       <div className="flex flex-col gap-2 max-h-70 overflow-y-auto p-2">
         {loading
           ? // 로딩 스켈레톤
-            Array.from({ length: 7 }).map((_, idx) => <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>)
+            Array.from({ length: 6 }).map((_, idx) => <Skeleton key={idx} className="w-full h-8 mb-2" />)
           : // 데이터 존재
             countryItems
               .filter((el) => {
