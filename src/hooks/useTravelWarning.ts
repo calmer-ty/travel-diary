@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 
 import type { ITravelWaringItem } from "@/types";
+interface ITravelWarningResponse {
+  items: {
+    item: ITravelWaringItem[];
+  };
+  totalCount: number;
+  error?: string;
+}
 
 export function useTravelWarning() {
   const [countryItems, setCountryItems] = useState<ITravelWaringItem[]>([]);
@@ -12,7 +19,7 @@ export function useTravelWarning() {
     async function fetchData() {
       try {
         const res = await fetch("/api/travelWarning");
-        const data = await res.json();
+        const data: ITravelWarningResponse = await res.json();
 
         if (data.error) {
           setError(data.error);
