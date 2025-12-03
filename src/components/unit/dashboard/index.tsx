@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { useTravelWarning } from "@/hooks/useTravelWarning";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,39 +16,12 @@ import type { ITravelWaringItem } from "@/types";
 export default function Dashboard() {
   const router = useRouter();
 
-  const [countryItems, setCountryItems] = useState<ITravelWaringItem[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<ITravelWaringItem | null>(null);
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
   const [keyword, setKeyWord] = useState("");
 
-  // API 훅 관련
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/travelWarning");
-        const data = await res.json();
-
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setCountryItems(data.items.item);
-          setTotalCount(data.totalCount);
-          // console.log(data.items.item, "data.items.item");
-        }
-      } catch (err) {
-        setError("데이터를 불러오는 중 오류 발생");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
+  // 여행유의 훅
+  const { countryItems, loading } = useTravelWarning();
 
   // 여행 주의 국가 모달 관련
   const openDialog = (country: ITravelWaringItem) => {
