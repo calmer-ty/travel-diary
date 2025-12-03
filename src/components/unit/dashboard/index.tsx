@@ -97,32 +97,27 @@ export default function Dashboard() {
             </div>
 
             <div className="flex flex-col gap-2 max-h-[340px] overflow-y-auto p-2">
-              {loading ? (
-                // 로딩 스켈레톤
-                Array.from({ length: 7 }).map((_, idx) => <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>)
-              ) : countryItems.length === 0 ? (
-                // 데이터 없음
-                <p className="text-gray-500">조회 가능한 데이터가 없습니다.</p>
-              ) : (
-                // 데이터 존재
-                countryItems
-                  .filter((el) => {
-                    if (!selectedLabel) return true;
-                    const labelMap: Record<string, string | undefined> = {
-                      "여행 유의": el.attention_note,
-                      "여행 자제": el.control_note,
-                      "철수 권고": el.limita_note,
-                      "여행 금지": el.ban_yna || el.ban_note,
-                    };
-                    return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
-                  })
-                  .map((el, idx) => (
-                    <button key={idx} onClick={() => openModal(el)} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
-                      <p>{el.country_name}</p>
-                      <p className="text-xs text-gray-500">더보기</p>
-                    </button>
-                  ))
-              )}
+              {loading
+                ? // 로딩 스켈레톤
+                  Array.from({ length: 7 }).map((_, idx) => <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>)
+                : // 데이터 존재
+                  countryItems
+                    .filter((el) => {
+                      if (!selectedLabel) return true;
+                      const labelMap: Record<string, string | undefined> = {
+                        "여행 유의": el.attention_note,
+                        "여행 자제": el.control_note,
+                        "철수 권고": el.limita_note,
+                        "여행 금지": el.ban_yna || el.ban_note,
+                      };
+                      return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
+                    })
+                    .map((el, idx) => (
+                      <button key={idx} onClick={() => openModal(el)} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
+                        <p>{el.country_name}</p>
+                        <p className="text-xs text-gray-500">더보기</p>
+                      </button>
+                    ))}
             </div>
           </div>
           {/* 검색창 */}
