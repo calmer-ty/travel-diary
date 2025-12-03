@@ -21,7 +21,7 @@ export default function LayoutHeader() {
   return (
     <>
       {pathname !== "/" && (
-        <header className="flex justify-between items-center w-full h-12 px-4 bg-white fixed z-10">
+        <header className="flex justify-between items-center w-full h-12 px-4 bg-white fixed z-255">
           {/* <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10"> */}
           <h1 className="w-35 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat text-[0px]">
             <Link href="/dashboard" className="block size-full">
