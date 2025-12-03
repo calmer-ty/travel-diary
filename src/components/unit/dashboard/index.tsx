@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,20 +6,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AIPopover } from "@/components/commons/AIPopover";
 
-import { ITravelWaringItem } from "@/types";
+import CountryDialog from "./countryDialog";
 
 import { CountryLabelColor } from "../maps/colorList";
-import CountryModal from "./countryModal";
+import type { ITravelWaringItem } from "@/types";
 
 export default function Dashboard() {
+  const router = useRouter();
+
   const [countryItems, setCountryItems] = useState<ITravelWaringItem[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<ITravelWaringItem | null>(null);
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
   const [keyword, setKeyWord] = useState("");
-  const router = useRouter();
+
+  // API 훅 관련
+  const [totalCount, setTotalCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -45,14 +47,13 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
-  // console.log(countryItems, "countryItems");
 
   // 여행 주의 국가 모달 관련
-  const openModal = (country: ITravelWaringItem) => {
+  const openDialog = (country: ITravelWaringItem) => {
     setSelectedCountry(country);
   };
 
-  const closeModal = () => {
+  const closeDialog = () => {
     setSelectedCountry(null);
   };
 
@@ -113,7 +114,7 @@ export default function Dashboard() {
                       return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
                     })
                     .map((el, idx) => (
-                      <button key={idx} onClick={() => openModal(el)} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
+                      <button key={idx} onClick={() => openDialog(el)} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
                         <p>{el.country_name}</p>
                         <p className="text-xs text-gray-500">더보기</p>
                       </button>
@@ -137,7 +138,7 @@ export default function Dashboard() {
       </div>
 
       <AIPopover />
-      {typeof window !== "undefined" && <CountryModal isOpen={!!selectedCountry} onClose={closeModal} country={selectedCountry} />}
+      {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
     </article>
   );
 }
