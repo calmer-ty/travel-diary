@@ -38,7 +38,6 @@ export default function RootLayout({
           <SidebarProvider defaultOpen={false}>
             <div className="flex flex-col w-full">
               <LayoutHeader />
-              {/* h-[calc(100vh - 3rem)] */}
               <main className="w-full flex-1">
                 <Wrapper>{children}</Wrapper>
               </main>
