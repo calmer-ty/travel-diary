@@ -36,10 +36,13 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <SidebarProvider defaultOpen={false}>
-            <LayoutHeader />
-            <main className="size-full">
-              <Wrapper>{children}</Wrapper>
-            </main>
+            <div className="flex flex-col w-full">
+              <LayoutHeader />
+              {/* h-[calc(100vh - 3rem)] */}
+              <main className="w-full flex-1">
+                <Wrapper>{children}</Wrapper>
+              </main>
+            </div>
             <AppSidebar />
           </SidebarProvider>
         </AuthProvider>

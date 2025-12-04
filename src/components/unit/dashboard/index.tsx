@@ -30,7 +30,7 @@ export default function Dashboard() {
   };
 
   return (
-    <article className="relative w-full h-full p-5">
+    <article className="relative size-full p-5">
       <div className="relative flex flex-col w-full h-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-3xl md:flex-row">
         {/* 사진 영역 */}
         <section className="relative md:w-[60%] bg-[#7E9EC0] rounded-3xl overflow-hidden w-full min-h-45">
