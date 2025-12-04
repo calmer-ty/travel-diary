@@ -2,7 +2,7 @@
 
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 
 // Menu items.
@@ -56,9 +56,6 @@ export function AppSidebar() {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
-                  {/* <SidebarMenuButton asChild> */}
-                  <SidebarTrigger className="-ml-1" />
-                  {/* </SidebarMenuButton> */}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>

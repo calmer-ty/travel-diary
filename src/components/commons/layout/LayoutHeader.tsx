@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/authContext";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function LayoutHeader() {
   const { user, handleLogin, handleLogout } = useAuth();
@@ -49,6 +50,7 @@ export default function LayoutHeader() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <SidebarTrigger className="ml-4" />
               </>
             ) : (
               <Button variant="outline" onClick={handleLogin}>
