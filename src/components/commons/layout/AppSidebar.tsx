@@ -36,10 +36,11 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+
   return (
     <>
       {pathname !== "/" && (
-        <Sidebar side="right" collapsible="icon">
+        <Sidebar side="right">
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Application</SidebarGroupLabel>
@@ -50,7 +51,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild>
                         <a href={item.url}>
                           <item.icon />
-                          {/* <span>{item.title}</span> */}
+                          <span>{item.title}</span>
                         </a>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
