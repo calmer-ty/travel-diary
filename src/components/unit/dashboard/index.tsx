@@ -1,61 +1,29 @@
-"use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AIPopover } from "@/components/commons/AIPopover";
 
-import { ITravelWaringItem } from "@/types";
+import CountryDialog from "./countryDialog";
+import TravelWarning from "./travelWarning";
 
-import { CountryLabelColor } from "../maps/colorList";
-import CountryModal from "./countryModal";
+import type { ITravelWaringItem } from "@/types";
 
 export default function Dashboard() {
-  const [countryItems, setCountryItems] = useState<ITravelWaringItem[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState<ITravelWaringItem | null>(null);
-  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
-  const [keyword, setKeyWord] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/travelWarning");
-        const data = await res.json();
-
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setCountryItems(data.items.item);
-          setTotalCount(data.totalCount);
-          // console.log(data.items.item, "data.items.item");
-        }
-      } catch (err) {
-        setError("데이터를 불러오는 중 오류 발생");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-  // console.log(countryItems, "countryItems");
+  const [selectedCountry, setSelectedCountry] = useState<ITravelWaringItem | null>(null);
+  const [keyword, setKeyWord] = useState("");
 
   // 여행 주의 국가 모달 관련
-  const openModal = (country: ITravelWaringItem) => {
+  const openDialog = (country: ITravelWaringItem) => {
     setSelectedCountry(country);
   };
-
-  const closeModal = () => {
+  const closeDialog = () => {
     setSelectedCountry(null);
   };
-
   const handleSearchKeyword = () => {
     if (!keyword) return;
     router.push(`/maps?keyword=${encodeURIComponent(keyword)}`);
@@ -66,9 +34,9 @@ export default function Dashboard() {
       <div className="relative flex flex-col size-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-3xl md:flex-row">
         {/* 사진 영역 */}
         <section className="relative md:w-[60%] md:h-full bg-[#7E9EC0] rounded-3xl overflow-hidden w-full">
-          <img className="w-full h-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
+          <img className="absolute top-0 left-0 w-full h-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
 
-          <div className="absolute md:top-13 md:left-13 top-5 left-5 md:w-[80%]">
+          <div className="relative z-10 py-10 px-8 md:py-20 md:px-14">
             <p className=" text-white md:text-3xl text-xl">여행의 순간을 나만의 일기로 완성하세요.</p>
             <Link className="block w-fit bg-white rounded-2xl text-[#316192] p-8 py-3 mt-5 font-bold text-xs md:text-xl" href="./maps">
               시작하기
@@ -78,50 +46,10 @@ export default function Dashboard() {
 
         {/* 오른쪽 영역 */}
         <section className="flex flex-col gap-3 md:gap-8 md:w-[40%] md:h-full p-5 w-full">
-          <div>
-            <p className="text-xl mb-3 font-semibold">여행 주의 국가</p>
-
-            <div className="flex flex-wrap gap-2 mb-3">
-              <button className="px-2 py-1 rounded-full text-sm bg-gray-200 text-gray-800" onClick={() => setSelectedLabel(null)}>
-                전체
-              </button>
-              {CountryLabelColor.map((el) => (
-                <button
-                  key={el.label}
-                  className={`px-2 py-1 rounded-full text-sm ${el.text} ${el.bg} ${selectedLabel === el.label ? "ring-2 ring-[#1D538A]" : ""}`}
-                  onClick={() => setSelectedLabel(el.label)}
-                >
-                  {el.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-2 max-h-[340px] overflow-y-auto p-2">
-              {loading
-                ? // 로딩 스켈레톤
-                  Array.from({ length: 7 }).map((_, idx) => <div key={idx} className="w-full rounded bg-gray-200 h-8 mb-2"></div>)
-                : // 데이터 존재
-                  countryItems
-                    .filter((el) => {
-                      if (!selectedLabel) return true;
-                      const labelMap: Record<string, string | undefined> = {
-                        "여행 유의": el.attention_note,
-                        "여행 자제": el.control_note,
-                        "철수 권고": el.limita_note,
-                        "여행 금지": el.ban_yna || el.ban_note,
-                      };
-                      return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
-                    })
-                    .map((el, idx) => (
-                      <button key={idx} onClick={() => openModal(el)} className="flex justify-between items-center p-2 rounded text-left hover:bg-[#7E9EC0] hover:text-white">
-                        <p>{el.country_name}</p>
-                        <p className="text-xs text-gray-500">더보기</p>
-                      </button>
-                    ))}
-            </div>
-          </div>
+          {/* 여행 유의 컴포넌트 */}
+          <TravelWarning openDialog={openDialog} />
           {/* 검색창 */}
-          <div>
+          <div className="h-full p-4 rounded-md bg-muted">
             <p className="text-xl mb-3 font-semibold">원하는 여행지를 검색해 보세요.</p>
             <div className="flex items-center gap-2 mr-10 md:mr-0">
               <Input onChange={(e) => setKeyWord(e.target.value)} className="bg-white" placeholder="검색" />
@@ -137,7 +65,7 @@ export default function Dashboard() {
       </div>
 
       <AIPopover />
-      {typeof window !== "undefined" && <CountryModal isOpen={!!selectedCountry} onClose={closeModal} country={selectedCountry} />}
+      {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
     </article>
   );
 }

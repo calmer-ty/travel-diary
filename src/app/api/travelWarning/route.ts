@@ -18,8 +18,7 @@ export async function GET() {
     });
 
     const initialRes = await fetch(`${endpoint}?${initialParams.toString()}`);
-    const initialText = await initialRes.text();
-    const initialData = JSON.parse(initialText);
+    const initialData = await initialRes.json();
 
     const totalCount = initialData.response?.body?.totalCount ?? 0;
 
@@ -36,8 +35,7 @@ export async function GET() {
     });
 
     const allRes = await fetch(`${endpoint}?${allParams.toString()}`);
-    const allText = await allRes.text();
-    const allData = JSON.parse(allText);
+    const allData = await allRes.json();
 
     return NextResponse.json({
       items: allData.response?.body?.items ?? [],

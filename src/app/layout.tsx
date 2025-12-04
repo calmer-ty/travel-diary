@@ -8,6 +8,8 @@ import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppSidebar } from "@/components/commons/layout/AppSidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,11 +35,13 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <LayoutHeader />
-
-          <main className="h-full">
-            <Wrapper>{children}</Wrapper>
-          </main>
+          <SidebarProvider>
+            <LayoutHeader />
+            <main className="size-full">
+              <Wrapper>{children}</Wrapper>
+            </main>
+            <AppSidebar />
+          </SidebarProvider>
         </AuthProvider>
       </body>
     </html>
