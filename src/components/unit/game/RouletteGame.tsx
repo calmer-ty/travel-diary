@@ -98,7 +98,7 @@ export default function RouletteGame() {
   const isDisabled = isSpinning || !!selectedItem;
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-6 bg-blue-50">
+    <div className="h-full flex flex-col items-center p-6 bg-blue-50">
       {/* HEADER */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold">룰렛 돌리기</h2>

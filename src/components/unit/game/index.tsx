@@ -3,7 +3,7 @@ import { GameList } from "./gameList";
 
 export default function Game() {
   return (
-    <article className="size-full p-10">
+    <article className="size-full p-10 bg-blue-50">
       <div className="text-2xl break-keep">게임을 통해 친구와 내기를 해보세요!</div>
 
       <div

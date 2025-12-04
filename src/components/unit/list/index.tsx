@@ -20,15 +20,15 @@ export default function List() {
   };
 
   return (
-    <article className="flex flex-col gap-6 relative h-full py-14 bg-blue-50 px-10 sm:px-20 md:px-40">
+    <article className="relative flex flex-col gap-6  h-full  bg-blue-50 p-10">
       <div className="relative">
-        <h2 className="mb-6">나의 여행 기록들을 확인해보세요</h2>
+        <h2 className="mb-4 text-2xl">나의 여행 기록들을 확인해보세요!</h2>
         {isLoading ? (
           // 로딩중
           <Loader size={30} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         ) : (
           // 리스트
-          <div id="scroll-container" className="overflow-auto max-h-170 h-full mr-1 rounded-md space-y-4">
+          <div id="scroll-container" className="overflow-auto max-h-160  mr-1 rounded-md space-y-4 p-3">
             {bookmarks.map((b) => {
               const relatedMarkers = markers.filter((m) => m.bookmark.name === b.name); // 현재 bookmark 에 속하는 markers만 추출
               if (relatedMarkers.length === 0) return null; // 0개면 렌더하지 않음
