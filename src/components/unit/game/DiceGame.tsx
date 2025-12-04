@@ -27,8 +27,11 @@ export default function DiceGame() {
   };
 
   return (
-    <div className="relative flex flex-col items-center size-full gap-10  p-10 ">
-      <h2 className="text-2xl ">주사위 굴리기</h2>
+    <div className="relative flex flex-col items-center size-full gap-10  p-10 bg-blue-50">
+      <div className="text-center mb-3">
+        <h2 className="text-2xl ">주사위 굴리기</h2>
+        <p className="text-neutral-600 mt-1">더 높은 숫자를 뽑아 행운을 가져가보세요!</p>
+      </div>
 
       <div className="relative flex justify-center  w-full overflow-hidden">
         <div className="relative  text-center  w-full ">
