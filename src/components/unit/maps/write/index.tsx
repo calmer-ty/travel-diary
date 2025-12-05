@@ -14,26 +14,28 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
+import type { Dispatch, SetStateAction } from "react";
 import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
 
 interface IMapsDialogProps {
   isEdit: boolean;
   // 다이얼로그 창 스테이트
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   // 맵 데이터
   mapsAddress: google.maps.places.PlaceResult | undefined;
   selectedPosition: google.maps.LatLngLiteral | null;
-  setSelectedPosition: React.Dispatch<React.SetStateAction<google.maps.LatLngLiteral | null>>;
-  setMapCenter: React.Dispatch<
-    React.SetStateAction<{
+  setSelectedPosition: Dispatch<SetStateAction<google.maps.LatLngLiteral | null>>;
+  setMapCenter: Dispatch<
+    SetStateAction<{
       lat: number;
       lng: number;
     }>
   >;
   // 마커
   selectedMarker: ILogPlace | null;
-  createMarker: ({ markerToSave }: ICreateMarkerParams) => Promise<void>;
+  setMarkers: Dispatch<SetStateAction<ILogPlace[]>>;
+  createMarker: ({ markerToSave }: ICreateMarkerParams) => Promise<{ _id: string }>;
   updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
   fetchMarkers: () => Promise<void>;
 }
@@ -47,6 +49,7 @@ export default function MapsWrite({
   setSelectedPosition,
   setMapCenter,
   selectedMarker,
+  setMarkers,
   createMarker,
   updateMarker,
   fetchMarkers,
@@ -128,6 +131,17 @@ export default function MapsWrite({
 
     try {
       await createMarker({ markerToSave });
+
+      const { _id } = await createMarker({ markerToSave });
+
+      // 3. 새 마커 객체 구성
+      const newMarker = {
+        ...markerToSave,
+        _id,
+      };
+      // 4. 상태 업데이트
+      setMarkers((prev) => [...prev, newMarker]);
+
       // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
       setMapCenter(selectedPosition);
       setSelectedPosition(null);

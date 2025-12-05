@@ -24,14 +24,10 @@ export const useMarkers = () => {
       _id: docRef.id,
     });
 
-    // 3. 새 마커 객체 구성
-    const newMarker = {
-      ...markerToSave,
+    // return { _id: docRef.id };
+    return {
       _id: docRef.id,
     };
-
-    // 4. 상태 업데이트
-    setMarkers((prev) => [...prev, newMarker]);
   };
 
   // ✅ [수정]
@@ -95,6 +91,7 @@ export const useMarkers = () => {
   return {
     markers,
     isLoading,
+    setMarkers,
     createMarker,
     updateMarker,
     fetchMarkers,
