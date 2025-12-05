@@ -59,7 +59,7 @@ export default function MapsContent({ keyword }: { keyword: string }) {
 
   //  마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
-  const { markers, createMarker, updateMarker, fetchMarkers } = useMarkers();
+  const { markers, setMarkers, createMarker, updateMarker, fetchMarkers } = useMarkers();
 
   // console.log("markers: ", markers);
 
@@ -218,6 +218,7 @@ export default function MapsContent({ keyword }: { keyword: string }) {
         setMapCenter={setMapCenter}
         // 마커
         selectedMarker={selectedMarker}
+        setMarkers={setMarkers}
         createMarker={createMarker}
         updateMarker={updateMarker}
         fetchMarkers={fetchMarkers}
