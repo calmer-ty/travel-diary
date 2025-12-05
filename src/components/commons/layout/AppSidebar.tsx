@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPinned, Home, Inbox, NotebookText, Settings } from "lucide-react";
+import { MapPinned, Home, Inbox, NotebookText } from "lucide-react";
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";

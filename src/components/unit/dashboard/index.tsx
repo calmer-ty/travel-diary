@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AIPopover } from "@/components/commons/AIPopover";
+// import { AIPopover } from "@/components/commons/AIPopover";
 
 import CountryDialog from "./countryDialog";
 import TravelWarning from "./travelWarning";
@@ -64,7 +64,7 @@ export default function Dashboard() {
         <img className="absolute bottom-[8%] left-[60%] -translate-x-1/2 w-20 hidden md:block md:w-30" src="./images/icon_airplane.png" alt="" />
       </div>
 
-      <AIPopover />
+      {/* <AIPopover /> */}
       {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
     </article>
   );
