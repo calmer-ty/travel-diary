@@ -1,9 +1,5 @@
 import { useState } from "react";
-// firebase - 추후 리팩토링 필요
-import { addDoc, collection, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase/firebaseApp";
 
-import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "@/hooks/useAlert";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useDialog } from "@/hooks/useDialog";
@@ -16,7 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { ColorList } from "../colorList";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { IBookmark, ILogPlace } from "@/types";
+import type { ILogPlace } from "@/types";
 
 interface IMapsDialogProps {
   selectedMarker: ILogPlace | null;
@@ -29,17 +25,15 @@ interface IMapsDialogProps {
 }
 
 export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }: IMapsDialogProps) {
-  const { uid } = useAuth();
-
   // 알림창 등
   const { triggerAlert } = useAlert();
 
   // 북마크 관련 훅
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
-  const { bookmarks, setBookmarks, deleteBookmark } = useBookmarks();
+  const { bookmarks, setBookmarks, createBookmark, deleteBookmark } = useBookmarks();
 
   // 새 북마크 추가 시 사용하는 상태
-  const [newBookmark, setNewBookmark] = useState({ name: "", color: "" });
+  const [newBookmark, setNewBookmark] = useState({ _id: "", name: "", color: "" });
 
   // 새 북마크 추가 함수
   const handleAddBookmark = async () => {
@@ -59,28 +53,11 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
       return;
     }
 
-    // 저장할 마커 정보 준비
-    const bookmarkToSave: IBookmark = {
-      _id: "",
-      name: newBookmark.name,
-      color: newBookmark.color,
-    };
-
     try {
-      const bookmarkData = collection(db, "bookmarkData");
-
-      // Firestore에 저장
-      const docRef = await addDoc(bookmarkData, {
-        uid,
-        ...bookmarkToSave,
-      });
-      await updateDoc(docRef, { _id: docRef.id });
-
-      const savedBookmark = {
-        _id: docRef.id,
+      const savedBookmark = await createBookmark({
         name: newBookmark.name,
         color: newBookmark.color,
-      };
+      });
 
       // 상태 업데이트
       setBookmarks((prev) => [...prev, savedBookmark]);
@@ -89,7 +66,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
       setBookmark(savedBookmark);
 
       // 입력 초기화 및 닫기
-      setNewBookmark({ name: "", color: "" });
+      setNewBookmark({ _id: "", name: "", color: "" });
       setIsOpen(false);
     } catch (error) {
       if (error instanceof Error) {
@@ -102,6 +79,8 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
   const handleDeleteBookmark = async (_id: string) => {
     deleteBookmark(_id);
 
+    // 상태에서 삭제
+    setBookmarks((prev) => prev.filter((bm) => bm._id !== _id));
     // 만약 삭제한 북마크가 현재 선택된 북마크라면 초기화
     if (bookmark._id === _id) {
       setBookmark({ _id: "", name: "", color: "" });
@@ -115,7 +94,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
 
   // 새 북마크 생성 취소
   const onClickNewBookmarkCancel = () => {
-    setNewBookmark({ name: "", color: "" });
+    setNewBookmark({ _id: "", name: "", color: "" });
     setIsOpen(false);
   };
 
