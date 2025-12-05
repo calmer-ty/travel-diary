@@ -20,7 +20,7 @@ export default function DatePicker({ date, setDate, className }: IDatePicker01Pr
     <div className={`flex flex-col gap-3 ${className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" id="date" className="!flex">
+          <Button variant="outline" id="date" className="!flex pointer-events-auto">
             <CalendarIcon size={24} />
             <span>{date ? date.toLocaleDateString() : "기록할 날짜를 선택하세요."}</span>
           </Button>
