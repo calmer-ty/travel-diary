@@ -201,10 +201,10 @@ export default function MapsWrite({
           </DialogHeader>
 
           {/* 다이얼로그 */}
-          <div className="grid gap-3 mt-4">
+          <div className="grid gap-3 mt-4 ">
             <WriteBookmark selectedMarker={selectedMarker} bookmark={bookmark} setBookmark={setBookmark} />
             {/* 날짜 선택 */}
-            <DatePicker date={date} setDate={setDate} className="" />
+            <DatePicker date={date} setDate={setDate} className="pointer-events-auto" />
             {/* 내용 작성 */}
             <Textarea value={content} onChange={(e) => setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
             {/* 버튼 */}
@@ -230,6 +230,7 @@ export default function MapsWrite({
       </DialogContent>
 
       {/* 경고창 */}
+
       {showAlert && <MotionAlert alertValue={alertValue} />}
     </Dialog>
   );

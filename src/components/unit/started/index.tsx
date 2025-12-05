@@ -43,10 +43,10 @@ export default function StartedUI() {
               delay: idx * 0.1, // 글자마다 순차적으로 딜레이
               ease: "easeInOut",
             }}
-            className="inline-block text-5xl md:text-7xl text-[#1D538A]"
+            className="inline-block text-4xl md:text-7xl text-[#1D538A]"
             style={{ textShadow: el.text ? "0px 2px 2px rgba(0,0,0,0.35)" : "none" }}
           >
-            {el.text ? el.text : el.img ? <img src={el.img} alt={el.alt || ""} className="inline-block align-middle h-12 md:h-14" /> : null}
+            {el.text ? el.text : el.img ? <img src={el.img} alt={el.alt || ""} className="inline-block align-middle h-12 md:h-14 max-w-fit" /> : null}
           </motion.span>
         ))}
       </h2>
@@ -78,7 +78,7 @@ export default function StartedUI() {
               key={i}
               src={src}
               alt="출처: figma"
-              className={i === 0 ? "h-30 md:h-40" : "h-30 md:h-55"}
+              className={i === 0 ? "h-23 md:h-40 sm:h25" : "h-25 md:h-55 sm:h-30"}
               animate={{ y: [0, -20, 0] }}
               transition={{
                 duration: 2 + i * 0.3, // 이미지마다 약간 다른 속도

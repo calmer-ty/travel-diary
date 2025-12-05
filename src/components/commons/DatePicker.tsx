@@ -17,15 +17,15 @@ export default function DatePicker({ date, setDate, className }: IDatePicker01Pr
   // const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   return (
-    <div className={`flex flex-col gap-3 ${className}`}>
+    <div className={`flex flex-col gap-3   ${className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" id="date" className="!flex pointer-events-auto">
             <CalendarIcon size={24} />
-            <span>{date ? date.toLocaleDateString() : "기록할 날짜를 선택하세요."}</span>
+            {date ? date.toLocaleDateString() : "기록할 날짜를 선택하세요."}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0 bg-white" align="start">
+        <PopoverContent className="w-auto overflow-hidden p-0 bg-white pointer-events-auto" align="start">
           <Calendar
             mode="single"
             selected={date}
