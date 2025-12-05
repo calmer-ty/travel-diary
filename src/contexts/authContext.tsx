@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { auth, db, googleProvider } from "@/lib/firebase/firebaseApp";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
@@ -32,9 +32,16 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [routingPoint, setRoutingPoint] = useState("");
   const uid = user?.uid;
 
   const router = useRouter();
+  const pathname = usePathname();
+
+  // 클라이언트에서 마운트된 후에 pathname 값 저장
+  useEffect(() => {
+    setRoutingPoint(pathname);
+  }, [pathname]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -52,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const user = result.user;
 
       await createUser(user);
-      router.push("/dashboard");
+      router.push(routingPoint);
     } catch (error) {
       console.error("로그인 실패:", error);
     }

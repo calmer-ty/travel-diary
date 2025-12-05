@@ -1,4 +1,3 @@
-// import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 
 import { useAuth } from "@/contexts/authContext";
@@ -39,8 +38,6 @@ const LIBRARIES: "places"[] = ["places"];
 
 export default function MapsContent({ keyword }: { keyword: string }) {
   const { uid } = useAuth();
-  //   const searchParams = useSearchParams();
-  //   const keyword = searchParams.get("keyword") ?? "";
 
   // Edit 상태
   const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가

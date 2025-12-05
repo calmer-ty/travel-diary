@@ -6,7 +6,6 @@ import { Loader2 } from "lucide-react";
 
 export default function Maps() {
   const [keyword, setKeyword] = useState("");
-  console.log("keyword: ", keyword);
 
   return (
     // prettier-ignore
