@@ -1,6 +1,6 @@
 import { useState } from "react";
 // firebase - 추후 리팩토링 필요
-import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { useAuth } from "@/contexts/authContext";
@@ -36,7 +36,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
 
   // 북마크 관련 훅
   const { isOpen, onClickToggle, setIsOpen } = useDialog();
-  const { bookmarks, setBookmarks } = useBookmarks();
+  const { bookmarks, setBookmarks, deleteBookmark } = useBookmarks();
 
   // 새 북마크 추가 시 사용하는 상태
   const [newBookmark, setNewBookmark] = useState({ name: "", color: "" });
@@ -100,13 +100,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
 
   // 북마크 삭제 함수
   const handleDeleteBookmark = async (_id: string) => {
-    // const db = getFirestore(firebaseApp);
-    const docRef = collection(db, "bookmarkData");
-
-    await deleteDoc(doc(docRef, _id));
-
-    // 상태에서 삭제
-    setBookmarks((prev) => prev.filter((bm) => bm._id !== _id));
+    deleteBookmark(_id);
 
     // 만약 삭제한 북마크가 현재 선택된 북마크라면 초기화
     if (bookmark._id === _id) {
@@ -148,18 +142,18 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
             <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
               {bookmarks.map((bm) => (
                 <div key={bm._id} className="flex items-center gap-3 cursor-pointer">
-                  <DropdownMenuItem onClick={() => onClickSaveBookmark(bm._id, bm.name, bm.color)} className="flex items-center gap-1">
+                  <DropdownMenuItem onClick={() => onClickSaveBookmark(bm._id, bm.name, bm.color)} className="flex items-center gap-1 cursor-pointer">
                     <img src={`./images/bookmark/icon_bookmarker_${bm.color}.png`} alt="북마크 아이콘, 출처: figma" className="w-5" />
                     <span>{bm.name}</span>
                   </DropdownMenuItem>
 
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteBookmark(bm._id);
                     }}
-                    type="button"
-                    className="w-4 h-4 bg-[url(/images/icon_trash.png)] bg-contain bg-no-repeat"
+                    className="w-7 h-7 p-0 bg-[url(/images/icon_trash.png)] bg-[length:0.95rem] bg-no-repeat bg-center"
                     aria-label="북마크 삭제"
                   />
                 </div>

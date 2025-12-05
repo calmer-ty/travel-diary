@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 
 import { useAuth } from "@/contexts/authContext";
 import { useAlert } from "./useAlert";
@@ -11,6 +11,16 @@ export const useBookmarks = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const { triggerAlert } = useAlert();
+
+  // ✅ [등록]
+  const deleteBookmark = async (_id: string) => {
+    const docRef = collection(db, "bookmarkData");
+
+    await deleteDoc(doc(docRef, _id));
+
+    // 상태에서 삭제
+    setBookmarks((prev) => prev.filter((bm) => bm._id !== _id));
+  };
 
   // ✅ [조회]
   const fetchBookmarks = useCallback(async () => {
@@ -48,6 +58,7 @@ export const useBookmarks = () => {
   return {
     bookmarks,
     setBookmarks,
+    deleteBookmark,
     fetchBookmarks,
     isLoading,
   };
