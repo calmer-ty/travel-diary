@@ -1,29 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { useAuth } from "@/contexts/authContext";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import BasicTooltip from "../BasicTooltip";
 
 export default function LayoutHeader() {
   const { user, handleLogin, handleLogout } = useAuth();
-
   const pathname = usePathname();
-  const router = useRouter();
-
-  const onClickMoveToList = () => {
-    router.push("/list");
-  };
 
   return (
     <>
       {pathname !== "/" && (
         <header className="flex justify-between items-center w-full h-12 px-4 bg-white">
-          {/* <header className="flex justify-between items-center w-full h-12 px-4 bg-white shadow-md fixed z-10"> */}
           <h1 className="w-35 h-8 bg-[url(/images/Logo.png)] bg-contain bg-no-repeat text-[0px]">
             <Link href="/dashboard" className="block size-full">
               Travel Diary
@@ -42,15 +36,15 @@ export default function LayoutHeader() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="start">
-                    <DropdownMenuItem className="cursor-pointer" onClick={onClickMoveToList}>
-                      나의 여행기록
-                    </DropdownMenuItem>
                     <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                       로그아웃
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <SidebarTrigger className="ml-4" />
+                {/* 사이드바 트리거 버튼 */}
+                <BasicTooltip content="다이어리 메뉴">
+                  <SidebarTrigger className="ml-4" />
+                </BasicTooltip>
               </>
             ) : (
               <Button variant="outline" onClick={handleLogin}>

@@ -9,22 +9,22 @@ import Link from "next/link";
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "홈",
     url: "/dashboard",
     icon: Home,
   },
   {
-    title: "Map",
+    title: "여행 일기쓰기",
     url: "/maps",
     icon: MapPinned,
   },
   {
-    title: "MyTravelDiary",
+    title: "나의 여행기록",
     url: "/list",
     icon: NotebookText,
   },
   {
-    title: "Game",
+    title: "게임하기",
     url: "/game",
     icon: Inbox,
   },
