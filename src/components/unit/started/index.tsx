@@ -72,13 +72,13 @@ export default function StartedUI() {
         </div>
 
         {/* img 영역*/}
-        <div className="flex items-center justify-end gap-5 w-full mb-10">
+        <div className="flex items-center justify-end gap-5 w-full my-10">
           {moveImages.map((src, i) => (
             <motion.img
               key={i}
               src={src}
               alt="출처: figma"
-              className={i === 0 ? "h-23 md:h-40 sm:h25" : "h-25 md:h-55 sm:h-30"}
+              className={i === 0 ? "h-23 lg:h-40 md:h-35 sm:h-25" : "h-25 lg:h-55 md:h-47 sm:h-30"}
               animate={{ y: [0, -20, 0] }}
               transition={{
                 duration: 2 + i * 0.3, // 이미지마다 약간 다른 속도
