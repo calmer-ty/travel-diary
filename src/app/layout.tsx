@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/contexts/authContext";
 import { AppSidebar } from "@/components/commons/layout/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "next-themes";
 
 import Wrapper from "@/components/commons/layout/Wrapper";
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
@@ -31,19 +32,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AuthProvider>
-          <SidebarProvider defaultOpen={false}>
-            <div className="flex flex-col w-full">
-              <LayoutHeader />
-              <main className="w-full flex-1">
-                <Wrapper>{children}</Wrapper>
-              </main>
-            </div>
-            <AppSidebar />
-          </SidebarProvider>
-        </AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            <SidebarProvider defaultOpen={false}>
+              <div className="flex flex-col w-full">
+                <LayoutHeader />
+                <main className="w-full flex-1">
+                  <Wrapper>{children}</Wrapper>
+                </main>
+              </div>
+              <AppSidebar />
+            </SidebarProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
