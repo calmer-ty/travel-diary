@@ -27,10 +27,10 @@ export default function DiceGame() {
   };
 
   return (
-    <div className="relative flex flex-col items-center size-full gap-10  p-10 bg-blue-50">
+    <div className="relative flex flex-col items-center size-full gap-10 p-10 bg-blue-50 dark:bg-blue-900/20">
       <div className="text-center mb-3">
         <h2 className="text-2xl ">주사위 굴리기</h2>
-        <p className="text-neutral-600 mt-1">더 높은 숫자를 뽑아 행운을 가져가보세요!</p>
+        <p className="text-muted-foreground mt-2">더 높은 숫자를 뽑아 행운을 가져가보세요!</p>
       </div>
 
       <div className="relative flex justify-center  w-full overflow-hidden">
@@ -57,7 +57,7 @@ export default function DiceGame() {
           )}
 
           {/* 시작 버튼 */}
-          <Button onClick={onClickDice} className="mt-10 bg-[#E97C50] shadow-[inset_-2px_-2px_0px_#F3642A] hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E97C50] ">
+          <Button onClick={onClickDice} className="mt-10 bg-[#E97C50] text-white shadow-[inset_-2px_-2px_0px_#F3642A] hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E97C50]">
             굴리기
           </Button>
         </div>

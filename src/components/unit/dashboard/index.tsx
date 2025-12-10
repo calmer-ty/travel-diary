@@ -42,6 +42,16 @@ export default function Dashboard() {
               시작하기
             </Link>
           </div>
+
+          <a
+            href="https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%ED%99%A9%ED%98%BC-%EB%AC%B4%EB%A0%B5-%EC%82%AC%EB%A7%89-%ED%92%8D%EA%B2%BD%EC%9D%84-%EA%B0%90%EC%8B%B8%EB%8A%94-%EB%B0%94%EC%9C%84-%EC%95%84%EC%B9%98-GQCEh8rvVh8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute right-2 bottom-2 px-2 py-1 text-xs text-white/70 bg-black/20 rounded-md backdrop-blur-sm
+                  transition-colors hover:bg-black/30 hover:text-white"
+          >
+            Image by Unsplash
+          </a>
         </section>
 
         {/* 오른쪽 영역 */}

@@ -20,7 +20,7 @@ export default function List() {
   };
 
   return (
-    <article className="relative flex flex-col gap-6 h-full p-10 bg-blue-100 dark:bg-blue-900/20">
+    <article className="relative flex flex-col gap-6 h-full p-10 bg-blue-50 dark:bg-blue-900/20">
       <div className="relative">
         <h2 className="mb-4 text-2xl">나의 여행 기록들을 확인해보세요!</h2>
         {isLoading ? (
