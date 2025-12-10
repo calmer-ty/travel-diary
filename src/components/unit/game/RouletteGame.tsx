@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import MotionAlert from "@/components/commons/MotionAlert";
-
 // 👉 기능 훅 import (네 기존 코드 그대로 사용)
 import { useAlert } from "@/hooks/useAlert";
 import { useAudio } from "@/hooks/useAudio";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
+
+import MotionAlert from "@/components/commons/MotionAlert";
 
 export default function RouletteGame() {
   /* -------------------------------
