@@ -7,13 +7,15 @@ import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
 import { useAuth } from "@/contexts/authContext";
 
 export const useMarkers = () => {
-  const { uid } = useAuth();
+  const { user } = useAuth();
 
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // ✅ [등록]
   const createMarker = async ({ markerToSave }: ICreateMarkerParams) => {
+    if (!user) return;
+
     const travelData = collection(db, "travelData");
 
     // 1. 문서 생성 (ID 자동 생성)
@@ -32,6 +34,8 @@ export const useMarkers = () => {
 
   // ✅ [수정]
   const updateMarker = async ({ markerId, date, content, bookmark }: IUpdateMarker) => {
+    if (!user) return;
+
     const docRef = doc(db, "travelData", markerId);
 
     await updateDoc(docRef, {
@@ -64,7 +68,8 @@ export const useMarkers = () => {
 
   // ✅ [조회]
   const fetchMarkers = useCallback(async () => {
-    if (!uid) return;
+    if (!user) return;
+    const uid = user.uid;
 
     setIsLoading(true);
 
@@ -82,7 +87,7 @@ export const useMarkers = () => {
     setMarkers(fetchedData);
 
     setIsLoading(false);
-  }, [uid]);
+  }, [user]);
 
   useEffect(() => {
     fetchMarkers();

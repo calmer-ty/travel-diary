@@ -20,7 +20,7 @@ export default function List() {
   };
 
   return (
-    <article className="relative flex flex-col gap-6 h-full bg-blue-50 p-10">
+    <article className="relative flex flex-col gap-6 h-full p-10">
       <div className="relative">
         <h2 className="mb-4 text-2xl">나의 여행 기록들을 확인해보세요!</h2>
         {isLoading ? (
@@ -49,10 +49,10 @@ export default function List() {
                   <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-border transition-colors bg-white hover:shadow-md">
                     <div>
                       <div className="flex gap-2 mb-2">
-                        <h4 className="text-sm font-semibold tracking-wide">{b.name}</h4>
-                        <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-md">{relatedMarkers.length}</span>
+                        <h4 className="text-sm font-semibold">{b.name}</h4>
+                        <span className="text-xs bg-primary/10 px-2 py-0.5 rounded-md">{relatedMarkers.length}</span>
                       </div>
-                      <span className="flex items-center gap-1 text-xs text-primary py-0.5 rounded-md">
+                      <span className="flex items-center gap-1 text-xs py-0.5 rounded-md">
                         <Clock className="w-3 h-3" />
                         {format(earliest, "yyyy-MM-dd")}
                         <span className="mx-1">–</span> {/* 날짜 범위 구분 아이콘 */}

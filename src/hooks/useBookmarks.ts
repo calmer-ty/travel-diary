@@ -7,12 +7,15 @@ import { useAuth } from "@/contexts/authContext";
 import type { IBookmark } from "@/types";
 
 export const useBookmarks = () => {
-  const { uid } = useAuth();
+  const { user } = useAuth();
   const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // ✅ [등록]
   const createBookmark = async (newBookmark: { name: string; color: string }) => {
+    if (!user) return;
+    const uid = user.uid;
+
     // 저장할 마커 정보 준비
     const bookmarkToSave: IBookmark = {
       _id: "",
@@ -38,6 +41,8 @@ export const useBookmarks = () => {
 
   // ✅ [삭제]
   const deleteBookmark = async (_id: string) => {
+    if (!user) return;
+
     const docRef = collection(db, "bookmarkData");
 
     await deleteDoc(doc(docRef, _id));
@@ -45,6 +50,9 @@ export const useBookmarks = () => {
 
   // ✅ [조회]
   const fetchBookmarks = useCallback(async () => {
+    if (!user) return;
+    const uid = user.uid;
+
     try {
       setIsLoading(true);
 
@@ -65,7 +73,7 @@ export const useBookmarks = () => {
     } catch (error) {
       console.error("Firebase 북마크 불러오기 실패:", error);
     }
-  }, [uid]);
+  }, [user]);
 
   useEffect(() => {
     fetchBookmarks();
