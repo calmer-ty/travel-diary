@@ -36,7 +36,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
         ))}
       </div>
 
-      <div className="flex flex-col gap-2 max-h-70  overflow-y-auto p-2">
+      <div className="flex flex-col gap-2 max-h-70 overflow-y-auto p-2">
         {loading
           ? // 로딩 스켈레톤
             Array.from({ length: 6 }).map((_, idx) => <Skeleton key={idx} className="w-full h-8 mb-2" />)
@@ -53,7 +53,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
                 return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
               })
               .map((el, idx) => (
-                <Button variant="default" key={idx} onClick={() => openDialog(el)} className="flex justify-between items-center bg-white text-black hover:bg-[#7E9EC0] hover:text-white">
+                <Button variant="outline" key={idx} onClick={() => openDialog(el)} className="flex justify-between items-center hover:bg-[#7E9EC0] hover:text-white">
                   <span>{el.country_name}</span>
                   <ChevronRight />
                 </Button>

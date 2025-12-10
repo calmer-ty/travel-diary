@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 // import { AIPopover } from "@/components/commons/AIPopover";
 
-import CountryDialog from "./countryDialog";
-import TravelWarning from "./travelWarning";
+import CountryDialog from "./CountryDialog";
+import TravelWarning from "./TravelWarning";
 
 import type { ITravelWaringItem } from "@/types";
 

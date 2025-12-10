@@ -32,7 +32,7 @@ export default function CountryDialog({ country, closeDialog }: ICountryModalPro
           <div className="flex items-center gap-2">
             <img className="w-16 h-10 object-cover rounded shadow-[1px_1px_8px_1px_rgba(0,0,0,0.25)]" src={country.img_url} alt={country.country_name} />
             <DialogTitle className="text-xl">
-              <span className="text-[#1D538A]">{country.country_name}</span> 여행 경보
+              <span className="text-[#1D538A] dark:text-[#2884e0]">{country.country_name}</span> 여행 경보
             </DialogTitle>
           </div>
           <DialogDescription>
@@ -47,8 +47,8 @@ export default function CountryDialog({ country, closeDialog }: ICountryModalPro
         <div className="space-y-3">
           {alerts.map((alert, idx) => (
             <div key={idx} className="flex gap-2 items-start">
-              <span className={`flex-shrink-0 px-2 py-1 rounded-full text-sm  ${alert.textColor} ${alert.bg}`}>{alert.label}</span>
-              <p className="mt-0.5 text-gray-700">{alert.note}</p>
+              <span className={`flex-shrink-0 px-2 py-1 rounded-full text-sm ${alert.textColor} ${alert.bg}`}>{alert.label}</span>
+              <p className="mt-0.5 text-muted-foreground">{alert.note}</p>
             </div>
           ))}
         </div>
