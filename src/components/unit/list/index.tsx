@@ -20,7 +20,7 @@ export default function List() {
   };
 
   return (
-    <article className="relative flex flex-col gap-6 h-full p-10">
+    <article className="relative flex flex-col gap-6 h-full p-10 bg-blue-100 dark:bg-blue-900/20">
       <div className="relative">
         <h2 className="mb-4 text-2xl">나의 여행 기록들을 확인해보세요!</h2>
         {isLoading ? (
@@ -46,11 +46,11 @@ export default function List() {
                   }}
                   className="flex flex-col gap-2"
                 >
-                  <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-border transition-colors bg-white hover:shadow-md">
+                  <Card className="flex-row justify-between items-center px-6 hover:shadow-md">
                     <div>
                       <div className="flex gap-2 mb-2">
                         <h4 className="text-sm font-semibold">{b.name}</h4>
-                        <span className="text-xs bg-primary/10 px-2 py-0.5 rounded-md">{relatedMarkers.length}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-md">{relatedMarkers.length}</span>
                       </div>
                       <span className="flex items-center gap-1 text-xs py-0.5 rounded-md">
                         <Clock className="w-3 h-3" />
@@ -65,12 +65,12 @@ export default function List() {
                         <span className="sr-only">Toggle</span>
                       </Button>
                     </CollapsibleTrigger>
-                  </div>
-                  <CollapsibleContent className="flex flex-col gap-3 px-2 pt-2">
+                  </Card>
+                  <CollapsibleContent className="flex flex-col gap-3 px-6 pt-2">
                     {markers
                       .filter((m) => m.bookmark.name === b.name)
                       .map((m) => (
-                        <Card key={m._id} className="border border-border/60 rounded-xl transition-colors bg-white hover:shadow-md">
+                        <Card key={m._id} className="border rounded-xl transition-colors hover:shadow-md">
                           <CardContent className="flex gap-4 px-6">
                             <div className="text-sm leading-relaxed">{format(m.date, "yyyy-MM-dd")}</div>
                             <div>
