@@ -110,7 +110,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          <img src={`/images/bookmark/icon_bookmarker_${bookmarkColor}.png`} alt="북마크 아이콘, 출처: figma" className="w-5 inline-block mr-1" />
+          <img src={`/images/bookmark/icon_bookmarker_${bookmarkColor}.png`} alt="북마크 아이콘, 출처: figma Icons8" className="w-5 inline-block mr-1" />
           <span className="inline-block align-middle">{bookmarkName}</span>
         </Button>
       </DropdownMenuTrigger>
@@ -122,7 +122,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
               {bookmarks.map((bm) => (
                 <div key={bm._id} className="flex items-center gap-3 cursor-pointer">
                   <DropdownMenuItem onClick={() => onClickSaveBookmark(bm._id, bm.name, bm.color)} className="flex items-center gap-1 cursor-pointer">
-                    <img src={`./images/bookmark/icon_bookmarker_${bm.color}.png`} alt="북마크 아이콘, 출처: figma" className="w-5" />
+                    <img src={`./images/bookmark/icon_bookmarker_${bm.color}.png`} alt="북마크 아이콘, 출처: figma Icons8" className="w-5" />
                     <span>{bm.name}</span>
                   </DropdownMenuItem>
 
@@ -152,7 +152,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
               onClickToggle();
             }}
           >
-            <img className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘, 출처: figma" />
+            <img className="w-5 inline-block" src="./images/icon_plus.png" alt="여정 추가 아이콘, 출처: figma Icons8" />
             <span>여정 추가하기</span>
           </DropdownMenuItem>
         )}
@@ -173,7 +173,7 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
                     }}
                     className="cursor-pointer border rounded-sm"
                   >
-                    <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="북마크 아이콘, 출처: figma" />
+                    <img className="w-8" src={`./images/bookmark/icon_bookmarker_${color}.png`} alt="북마크 아이콘, 출처: figma Icons8" />
                   </li>
                 ))}
               </ul>
