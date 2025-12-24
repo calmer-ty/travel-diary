@@ -16,6 +16,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
   const { countryItems, loading } = useTravelWarning();
+  console.log("test");
 
   return (
     <div>

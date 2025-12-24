@@ -11,6 +11,8 @@ interface ICountryModalProps {
 export default function CountryDialog({ country, closeDialog }: ICountryModalProps) {
   if (!country) return null;
 
+  console.log("test");
+
   const alertNotes = [country.attention_note, country.control_note, country.limita_note, country.ban_yna || country.ban_note];
 
   const alerts = CountryLabelColor.map((el, idx) => ({
