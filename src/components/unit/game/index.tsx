@@ -24,7 +24,7 @@ export default function Game() {
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-15 
                    group-hover:opacity-20 transition-opacity duration-200"
               src={`./images/game/icon_${el.src}.png`}
-              alt={el.src ? "출처: figma" : ""}
+              alt={el.src ? "출처: figma Icons8" : ""}
             />
             <span
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 

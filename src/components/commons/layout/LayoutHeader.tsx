@@ -30,7 +30,7 @@ export default function LayoutHeader() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline">
                       <div className="flex items-center gap-2">
-                        <img className="w-4 h-4" src="/images/icon_people.png" alt="출처: figma" />
+                        <img className="w-4 h-4" src="/images/icon_people.png" alt="출처: figma Icons8" />
                         <span>{user.displayName}</span>
                       </div>
                     </Button>
