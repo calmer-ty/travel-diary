@@ -4,14 +4,15 @@ import { useTravelWarning } from "@/hooks/useTravelWarning";
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { CountryLabelColor } from "../maps/colorList";
 
 import type { ITravelWaringItem } from "@/types";
-import { Skeleton } from "@/components/ui/skeleton";
 interface ITravelWarningProps {
   openDialog: (country: ITravelWaringItem) => void;
 }
+
 export default function TravelWarning({ openDialog }: ITravelWarningProps) {
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
@@ -22,7 +23,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
       <p className="text-xl mb-3 font-semibold">여행 주의 국가</p>
 
       <div className="flex flex-wrap gap-2 mb-3">
-        <button className="px-2 py-1 rounded-full text-sm bg-gray-200 text-gray-800" onClick={() => setSelectedLabel(null)}>
+        <button className="px-2 py-1 rounded-full text-sm bg-gray-200 text-gray-800 bg-[#aab2c5]" onClick={() => setSelectedLabel(null)}>
           전체
         </button>
         {CountryLabelColor.map((el) => (

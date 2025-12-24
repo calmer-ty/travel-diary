@@ -18,7 +18,7 @@ export default function Game() {
             href={`/game/${el.src}`}
             key={`${el.name}_${idx}`}
             className="relative h-40 rounded-2xl bg-[#FAFAF2] shadow-[1px_1px_16px_1px_rgba(0,0,0,0.2)]
-                 group transition-colors duration-200"
+              group transition-colors duration-200"
           >
             <img
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-15 
@@ -28,8 +28,8 @@ export default function Game() {
             />
             <span
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                      text-xl text-center break-keep opacity-0 
-                      group-hover:opacity-100 transition-opacity duration-200"
+                text-xl text-center break-keep opacity-0 text-black
+                group-hover:opacity-100 transition-opacity duration-200"
             >
               {el.name}
             </span>
