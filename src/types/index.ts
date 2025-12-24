@@ -33,10 +33,6 @@ export interface IUpdateMarker {
   };
 }
 
-export interface IUserID {
-  uid: string | undefined;
-}
-
 export interface ITravelWaringItem {
   id: number; // 인덱스
   continent: string; // 대륙 **
