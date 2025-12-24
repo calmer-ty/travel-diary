@@ -24,8 +24,6 @@ export default function LayoutHeader() {
   const [mount, setMount] = useState(false);
   useEffect(() => setMount(true), []);
 
-  console.log("theme: ", theme);
-
   return (
     <>
       {pathname !== "/" && (

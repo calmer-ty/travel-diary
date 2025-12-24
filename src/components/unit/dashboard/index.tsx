@@ -71,7 +71,7 @@ export default function Dashboard() {
         </section>
 
         {/* 비행기 */}
-        <img className="absolute bottom-[8%] left-[60%] -translate-x-1/2 w-20 hidden md:block md:w-30" src="./images/icon_airplane.png" alt="" />
+        <img className="hidden xl:block absolute bottom-[8%] left-[60%] -translate-x-1/2 w-20 hidden md:w-30" src="./images/icon_airplane.png" alt="" />
       </div>
 
       {/* <AIPopover /> */}
