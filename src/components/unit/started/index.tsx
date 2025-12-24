@@ -77,7 +77,7 @@ export default function StartedUI() {
             <motion.img
               key={i}
               src={src}
-              alt="출처: figma"
+              alt="출처: figma Icons8"
               className={i === 0 ? "h-23 lg:h-40 md:h-35 sm:h-25" : "h-25 lg:h-55 md:h-47 sm:h-30"}
               animate={{ y: [0, -20, 0] }}
               transition={{
