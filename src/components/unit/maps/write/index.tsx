@@ -54,7 +54,7 @@ export default function MapsWrite({
   updateMarker,
   fetchMarkers,
 }: IMapsDialogProps) {
-  const { uid } = useAuth();
+  const { user } = useAuth();
 
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState<string>("");
@@ -87,7 +87,7 @@ export default function MapsWrite({
     e.preventDefault(); // 이벤트 기본동작 막기 (페이지 리로드 방지)
 
     // uid 없을 경우 등록 막기
-    if (!uid) {
+    if (!user) {
       triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
       return;
     }
@@ -123,7 +123,7 @@ export default function MapsWrite({
       name: mapsAddress?.name,
       address: mapsAddress?.formatted_address,
       latLng: selectedPosition,
-      uid,
+      uid: user.uid,
       date,
       content,
       bookmark,
@@ -163,7 +163,7 @@ export default function MapsWrite({
     e.preventDefault(); // 이벤트 기본동작 막기
 
     const markerId = selectedMarker?._id;
-    if (!uid) {
+    if (!user) {
       triggerAlert("로그인이 필요합니다. 먼저 로그인해주세요!");
       return;
     }

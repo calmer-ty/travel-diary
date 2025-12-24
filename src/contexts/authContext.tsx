@@ -11,7 +11,6 @@ import type { ReactNode } from "react";
 
 interface AuthContextType {
   user: User | null;
-  uid: string | undefined;
   loading: boolean;
   handleLogin: () => Promise<void>;
   handleLogout: () => Promise<void>;
@@ -19,7 +18,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  uid: undefined,
   loading: true,
   handleLogin: async () => {
     throw new Error("handleLogin not implemented");
@@ -33,7 +31,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [routingPoint, setRoutingPoint] = useState("");
-  const uid = user?.uid;
 
   const router = useRouter();
   const pathname = usePathname();
@@ -97,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  return <AuthContext.Provider value={{ user, uid, loading, handleLogin, handleLogout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, loading, handleLogin, handleLogout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

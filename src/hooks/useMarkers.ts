@@ -3,8 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
 import { useAuth } from "@/contexts/authContext";
+
+import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
 
 export const useMarkers = () => {
   const { user } = useAuth();
@@ -14,7 +15,9 @@ export const useMarkers = () => {
 
   // ✅ [등록]
   const createMarker = async ({ markerToSave }: ICreateMarkerParams) => {
-    if (!user) return;
+    if (!user) {
+      throw new Error("user 없음");
+    }
 
     const travelData = collection(db, "travelData");
 
@@ -26,10 +29,7 @@ export const useMarkers = () => {
       _id: docRef.id,
     });
 
-    // return { _id: docRef.id };
-    return {
-      _id: docRef.id,
-    };
+    return { _id: docRef.id };
   };
 
   // ✅ [수정]

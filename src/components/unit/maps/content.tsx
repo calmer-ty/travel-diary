@@ -37,7 +37,7 @@ const LIBRARIES: "places"[] = ["places"];
 // function
 
 export default function MapsContent({ keyword }: { keyword: string }) {
-  const { uid } = useAuth();
+  const { user } = useAuth();
 
   // Edit 상태
   const [isEdit, setIsEdit] = useState(false); // 지도 중심을 위한 별도 state 추가
@@ -104,8 +104,8 @@ export default function MapsContent({ keyword }: { keyword: string }) {
     if (placeId) {
       e.stop(); // infoWindow 기본 동작 막기
 
-      // 🔒 uid 없을 경우 등록 막기
-      if (!uid) {
+      // 🔒 user 없을 경우 등록 막기
+      if (!user) {
         triggerAlert("기록을 저장하려면 로그인이 필요합니다.");
         return;
       }

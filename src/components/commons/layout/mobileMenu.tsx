@@ -8,7 +8,7 @@ import { useAlert } from "@/hooks/useAlert";
 import MotionAlert from "../MotionAlert";
 
 export default function MobileMenu() {
-  const { uid } = useAuth();
+  const { user } = useAuth();
   const { showAlert, alertValue, triggerAlert } = useAlert();
 
   return (
@@ -27,7 +27,7 @@ export default function MobileMenu() {
           <li className="flex justify-center items-center w-1/4 h-full">
             <Link
               onClick={(e) => {
-                if (!uid) {
+                if (!user) {
                   e.preventDefault(); // 링크 이동 막기
                   triggerAlert("로그인이 필요한 페이지 입니다.");
                 }
