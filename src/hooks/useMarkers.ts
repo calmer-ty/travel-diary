@@ -5,7 +5,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 
 import { useAuth } from "@/contexts/authContext";
 
-import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
+import type { ILogPlace, IUpdateMarker } from "@/types";
 
 export const useMarkers = () => {
   const { user } = useAuth();
@@ -13,8 +13,9 @@ export const useMarkers = () => {
   const [markers, setMarkers] = useState<ILogPlace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // markerToSave: ILogPlace;
   // ✅ [등록]
-  const createMarker = async ({ markerToSave }: ICreateMarkerParams) => {
+  const createMarker = async (markerToSave: ILogPlace) => {
     if (!user) {
       throw new Error("user 없음");
     }

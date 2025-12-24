@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreateMarkerParams, ILogPlace, IUpdateMarker } from "@/types";
+import type { ILogPlace, IUpdateMarker } from "@/types";
 
 interface IMapsDialogProps {
   isEdit: boolean;
@@ -35,7 +35,7 @@ interface IMapsDialogProps {
   // 마커
   selectedMarker: ILogPlace | null;
   setMarkers: Dispatch<SetStateAction<ILogPlace[]>>;
-  createMarker: ({ markerToSave }: ICreateMarkerParams) => Promise<{ _id: string }>;
+  createMarker: (markerToSave: ILogPlace) => Promise<{ _id: string }>;
   updateMarker: ({ markerId, date, content, bookmark }: IUpdateMarker) => Promise<void>;
   fetchMarkers: () => Promise<void>;
 }
@@ -130,9 +130,9 @@ export default function MapsWrite({
     };
 
     try {
-      await createMarker({ markerToSave });
+      await createMarker(markerToSave);
 
-      const { _id } = await createMarker({ markerToSave });
+      const { _id } = await createMarker(markerToSave);
 
       // 3. 새 마커 객체 구성
       const newMarker = {

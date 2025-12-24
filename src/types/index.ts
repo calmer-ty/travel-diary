@@ -33,10 +33,6 @@ export interface IUpdateMarker {
   };
 }
 
-export interface ICreateMarkerParams {
-  markerToSave: ILogPlace;
-}
-
 export interface IUserID {
   uid: string | undefined;
 }
