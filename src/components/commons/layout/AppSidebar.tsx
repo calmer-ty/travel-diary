@@ -37,7 +37,7 @@ export function AppSidebar() {
     <>
       {pathname !== "/" && (
         <Sidebar side="right">
-          <SidebarContent>
+          <SidebarContent className="dark:shadow-[0px_10px_15px_3px_rgba(255,255,255,0.35)]">
             <SidebarGroup>
               <SidebarGroupLabel>Travel Diary</SidebarGroupLabel>
               <SidebarGroupContent>
