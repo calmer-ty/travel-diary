@@ -59,6 +59,8 @@ export default function WriteBookmark({ bookmark, setBookmark, selectedMarker }:
         color: newBookmark.color,
       });
 
+      // if (!savedBookmark) return;
+
       // 상태 업데이트
       setBookmarks((prev) => [...prev, savedBookmark]);
 

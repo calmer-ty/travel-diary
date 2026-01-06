@@ -5,15 +5,21 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } 
 import { useAuth } from "@/contexts/authContext";
 
 import type { IBookmark } from "@/types";
+import { useAlert } from "./useAlert";
 
 export const useBookmarks = () => {
   const { user } = useAuth();
   const [bookmarks, setBookmarks] = useState<{ _id: string; name: string; color: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ [등록]
+  const { triggerAlert } = useAlert();
+
+  // [등록]
   const createBookmark = async (newBookmark: { name: string; color: string }) => {
-    if (!user) return;
+    if (!user) {
+      triggerAlert("로그인이 필요합니다.");
+      throw new Error("User not authenticated");
+    }
     const uid = user.uid;
 
     // 저장할 마커 정보 준비
