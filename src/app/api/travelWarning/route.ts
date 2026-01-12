@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const serviceKey = process.env.NEXT_PUBLIC_TRAVEL_SERVICE_KEY;
+  const serviceKey = process.env.TRAVEL_SERVICE_KEY;
   if (!serviceKey) {
     return NextResponse.json({ error: "서비스 키가 설정되지 않았습니다." }, { status: 500 });
   }
