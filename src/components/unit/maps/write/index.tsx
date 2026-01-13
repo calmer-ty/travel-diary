@@ -130,16 +130,11 @@ export default function MapsWrite({
     };
 
     try {
-      await createMarker(markerToSave);
-
+      // 한 번만 호출하여 ID를 받아옵니다.
       const { _id } = await createMarker(markerToSave);
+      const newMarker = { ...markerToSave, _id };
 
-      // 3. 새 마커 객체 구성
-      const newMarker = {
-        ...markerToSave,
-        _id,
-      };
-      // 4. 상태 업데이트
+      // 상태 업데이트
       setMarkers((prev) => [...prev, newMarker]);
 
       // 등록 후 입력 폼 맵 센터, 다이얼로그, 포지션 초기화
