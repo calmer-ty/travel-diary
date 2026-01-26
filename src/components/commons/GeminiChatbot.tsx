@@ -11,7 +11,7 @@ import { Brain } from "lucide-react";
 import type { Content } from "@google/genai";
 import BasicTooltip from "./BasicTooltip";
 
-// const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_GEN_AI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GOOGLE_GEN_AI_API_KEY });
 
 export default function GeminiChatbot() {
   const [input, setInput] = useState("");
