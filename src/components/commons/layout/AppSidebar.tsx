@@ -33,30 +33,42 @@ const items = [
 export function AppSidebar() {
   const pathname = usePathname();
 
+  // const [aiOpen, setAiOpen] = useState(false);
+
   return (
     <>
       {pathname !== "/" && (
-        <Sidebar side="right">
-          <SidebarContent className="dark:shadow-[0px_10px_15px_3px_rgba(255,255,255,0.35)]">
-            <SidebarGroup>
-              <SidebarGroupLabel>Travel Diary</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <Link href={`${item.url}`}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
+        <>
+          <Sidebar side="left">
+            <SidebarContent className="dark:shadow-[0px_10px_15px_3px_rgba(255,255,255,0.35)]">
+              <SidebarGroup>
+                <SidebarGroupLabel>Travel Diary</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {items.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                          <Link href={`${item.url}`}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                    {/* <SidebarMenuItem>
+                      <SidebarMenuButton onClick={() => setAiOpen(true)}>
+                        <Brain />
+                        <span>AI</span>
                       </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-        </Sidebar>
+                    </SidebarMenuItem> */}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+          </Sidebar>
+
+          {/* <div>ai</div> */}
+        </>
       )}
     </>
   );

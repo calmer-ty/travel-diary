@@ -37,13 +37,13 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
             <SidebarProvider defaultOpen={false}>
+              <AppSidebar />
               <div className="flex flex-col w-full">
                 <LayoutHeader />
                 <main className="w-full flex-1">
                   <Wrapper>{children}</Wrapper>
                 </main>
               </div>
-              <AppSidebar />
             </SidebarProvider>
           </AuthProvider>
         </ThemeProvider>

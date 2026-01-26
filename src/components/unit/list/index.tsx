@@ -9,6 +9,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronsUpDown, Clock, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import GeminiChatbot from "@/components/commons/GeminiChatbot";
+
 export default function List() {
   const { markers, isLoading } = useMarkers();
   const { bookmarks } = useBookmarks();
@@ -88,6 +90,7 @@ export default function List() {
           </div>
         )}
       </div>
+      <GeminiChatbot />
     </article>
   );
 }

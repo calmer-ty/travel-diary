@@ -43,12 +43,12 @@ interface IMapsDialogProps {
 export default function MapsWrite({
   isEdit,
   isOpen,
-  setIsOpen,
   mapsAddress,
   selectedPosition,
-  setSelectedPosition,
-  setMapCenter,
   selectedMarker,
+  setIsOpen,
+  setMapCenter,
+  setSelectedPosition,
   setMarkers,
   createMarker,
   updateMarker,
@@ -205,8 +205,8 @@ export default function MapsWrite({
       <DialogContent className="bg-[#F9F9F9] sm:w-140 lg:w-180">
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{isEdit ? selectedMarker?.name ?? "이름 없음" : mapsAddress?.name ?? "이름 없음"}</DialogTitle>
-            <DialogDescription>{isEdit ? selectedMarker?.name ?? "주소 정보 없음" : mapsAddress?.formatted_address ?? "주소 정보 없음"}</DialogDescription>
+            <DialogTitle>{isEdit ? (selectedMarker?.name ?? "이름 없음") : (mapsAddress?.name ?? "이름 없음")}</DialogTitle>
+            <DialogDescription>{isEdit ? (selectedMarker?.name ?? "주소 정보 없음") : (mapsAddress?.formatted_address ?? "주소 정보 없음")}</DialogDescription>
           </DialogHeader>
 
           {/* 다이얼로그 */}

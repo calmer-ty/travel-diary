@@ -9,13 +9,13 @@ import { Card } from "../ui/card";
 import { Brain } from "lucide-react";
 
 import type { Content } from "@google/genai";
+import BasicTooltip from "./BasicTooltip";
 
 const ai = new GoogleGenAI({ apiKey: "AIzaSyBaJnjfhcYg8cP6H679K1Rbog7UYAhIoIU" });
 
 export default function GeminiChatbot() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Content[]>([{ role: "model", parts: [{ text: "만나서 반갑습니다. 무엇을 도와드릴까요?" }] }]);
-  console.log("messages: ", messages);
 
   const gemini = async (input: string) => {
     try {
@@ -39,13 +39,15 @@ export default function GeminiChatbot() {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="default" className="absolute bottom-4 right-4 w-10 h-10 rounded-full md:w-12 md:h-12">
-          <Brain className="!w-6 !h-6" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 mb-2 mr-8">
-        <div className="overflow-x-auto flex flex-col h-100 p-3 mb-4">
+      <BasicTooltip content="안녕하세요. Travel AI입니다.">
+        <PopoverTrigger asChild>
+          <Button variant="default" className="absolute bottom-4 right-4 w-10 h-10 rounded-full md:w-12 md:h-12">
+            <Brain className="!w-6 !h-6" />
+          </Button>
+        </PopoverTrigger>
+      </BasicTooltip>
+      <PopoverContent className="w-80 mb-1 mr-4">
+        <div className="overflow-x-auto flex flex-col h-100 mb-4">
           {messages.map((m) => (
             <p key={m.parts?.[0].text} className={`my-2 py-2 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl bg-slate-50"}`}>
               {m.parts?.[0].text}

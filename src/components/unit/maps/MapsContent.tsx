@@ -22,7 +22,7 @@ const initialCenter = {
   lng: -73.98633,
 };
 const mapOptions = {
-  mapTypeControl: false,
+  disableDefaultUI: true,
   styles: [
     // {
     //   featureType: "poi",
@@ -57,8 +57,6 @@ export default function MapsContent({ keyword }: { keyword: string }) {
   //  마커 관련
   const [selectedMarker, setSelectedMarker] = useState<ILogPlace | null>(null);
   const { markers, setMarkers, createMarker, updateMarker, fetchMarkers } = useMarkers();
-
-  // console.log("markers: ", markers);
 
   // 폼 관련
   const { isOpen, setIsOpen } = useDialog();
@@ -207,15 +205,13 @@ export default function MapsContent({ keyword }: { keyword: string }) {
       <MapsWrite
         isEdit={isEdit}
         isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        // 맵
         mapsAddress={mapsAddress}
         selectedPosition={selectedPosition}
-        setSelectedPosition={setSelectedPosition}
-        setMapCenter={setMapCenter}
-        // 마커
         selectedMarker={selectedMarker}
+        setIsOpen={setIsOpen}
+        setMapCenter={setMapCenter}
         setMarkers={setMarkers}
+        setSelectedPosition={setSelectedPosition}
         createMarker={createMarker}
         updateMarker={updateMarker}
         fetchMarkers={fetchMarkers}

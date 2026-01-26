@@ -13,6 +13,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Moon, Sun, User } from "lucide-react";
 
 import BasicTooltip from "../BasicTooltip";
+import { Separator } from "@/components/ui/separator";
 
 export default function LayoutHeader() {
   const pathname = usePathname();
@@ -28,12 +29,23 @@ export default function LayoutHeader() {
     <>
       {pathname !== "/" && (
         <header className="flex justify-between items-center w-full h-12 px-4">
-          <h1 className="">
-            <Link href="/dashboard" className="flex items-center size-full text-[#1D538A] text-xl font-bold ">
-              <span className="text-shadow-[1px_1px_3px_rgba(0,0,0,0.3)] dark:text-shadow-[1px_1px_2px_rgba(255,255,255,0.35)]">Travel Diary</span>
-              <img className="h-8" src="/images/icon_airplane.png" alt="" />
-            </Link>
-          </h1>
+          {/* 사이드바 트리거 버튼 */}
+          <div className="flex items-center gap-2">
+            {user && (
+              <>
+                <BasicTooltip content="다이어리 메뉴">
+                  <SidebarTrigger />
+                </BasicTooltip>
+                <Separator orientation="vertical" className="!h-6 mr-2" />
+              </>
+            )}
+            <h1>
+              <Link href="/dashboard" className="flex items-center size-full text-[#1D538A] dark:text-white text-xl font-bold ">
+                <span className="text-shadow-[1px_1px_3px_rgba(0,0,0,0.3)] dark:text-shadow-[1px_1px_2px_rgba(255,255,255,0.35)]">Travel Diary</span>
+                <img className="h-8" src="/images/icon_airplane.png" alt="" />
+              </Link>
+            </h1>
+          </div>
           <div>
             {mount && (
               <div className="flex items-center gap-3">
@@ -63,12 +75,6 @@ export default function LayoutHeader() {
                     {theme === "dark" ? <Sun /> : <Moon />}
                   </Button>
                 </BasicTooltip>
-                {/* 사이드바 트리거 버튼 */}
-                {user && (
-                  <BasicTooltip content="다이어리 메뉴">
-                    <SidebarTrigger />
-                  </BasicTooltip>
-                )}
               </div>
             )}
           </div>
