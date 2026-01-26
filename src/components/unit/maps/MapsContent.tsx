@@ -134,7 +134,7 @@ export default function MapsContent({ keyword }: { keyword: string }) {
   };
 
   // Google API Loader
-  const mapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const mapsKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!mapsKey) {
     throw new Error("Google Maps API Key is missing!");
   }
