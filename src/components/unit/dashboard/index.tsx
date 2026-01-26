@@ -1,13 +1,13 @@
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-// import { AIPopover } from "@/components/commons/AIPopover";
-
+import Link from "next/link";
+import GeminiChatbot from "@/components/commons/GeminiChatbot";
 import CountryDialog from "./CountryDialog";
 import TravelWarning from "./TravelWarning";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import type { ITravelWaringItem } from "@/types";
 
@@ -68,13 +68,14 @@ export default function Dashboard() {
               </Button>
             </div>
           </div>
+
+          <GeminiChatbot />
         </section>
 
         {/* 비행기 */}
         <img className="hidden xl:block absolute bottom-[8%] left-[60%] -translate-x-1/2 w-20 hidden md:w-30" src="./images/icon_airplane.png" alt="" />
       </div>
 
-      {/* <AIPopover /> */}
       {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
     </article>
   );
