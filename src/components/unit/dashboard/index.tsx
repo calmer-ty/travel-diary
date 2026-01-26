@@ -31,10 +31,10 @@ export default function Dashboard() {
 
   return (
     <article className="relative size-full p-5">
-      <div className="relative flex flex-col w-full h-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-3xl md:flex-row dark:shadow-[3px_0px_15px_3px_rgba(255,255,255,0.35)]">
+      <div className="relative flex flex-col md:flex-row size-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-2xl dark:shadow-none">
         {/* 사진 영역 */}
-        <section className="relative md:w-[60%] bg-[#7E9EC0] rounded-3xl overflow-hidden w-full min-h-45">
-          <img className="absolute top-0 left-0 w-full h-full block object-cover " src="./images/img_main02.jpg" alt="출처: unsplash" />
+        <section className="overflow-hidden relative w-full md:w-[60%] min-h-45 rounded-3xl bg-[#7E9EC0]">
+          <img className="absolute top-0 left-0 size-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
 
           <div className="relative z-10 py-8 px-8 md:py-20 md:px-14">
             <p className=" text-white md:text-3xl text-xl">여행의 순간을 나만의 일기로 완성하세요.</p>

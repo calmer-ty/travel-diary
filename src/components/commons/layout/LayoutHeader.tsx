@@ -40,8 +40,9 @@ export default function LayoutHeader() {
               </>
             )}
             <h1>
-              <Link href="/dashboard" className="flex items-center size-full text-[#1D538A] dark:text-white text-xl font-bold ">
-                <span className="text-shadow-[1px_1px_3px_rgba(0,0,0,0.3)] dark:text-shadow-[1px_1px_2px_rgba(255,255,255,0.35)]">Travel Diary</span>
+              <Link href="/dashboard" className="flex items-center size-full text-[#1D538A] dark:text-white text-xl font-bold">
+                <span className="">Travel Diary</span>
+                {/* text-shadow-[1px_1px_3px_rgba(0,0,0,0.3)] dark:text-shadow-[1px_1px_2px_rgba(255,255,255,0.35)] */}
                 <img className="h-8" src="/images/icon_airplane.png" alt="" />
               </Link>
             </h1>
