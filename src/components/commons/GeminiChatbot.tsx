@@ -12,6 +12,7 @@ import BasicTooltip from "./BasicTooltip";
 import type { Content } from "@google/genai";
 
 interface IData {
+  date?: string;
   text?: Content;
   history?: Content[];
 }
@@ -19,9 +20,11 @@ export default function GeminiChatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
   const [data, setData] = useState<IData | undefined>({
+    date: "",
     text: { role: "", parts: [{ text: "" }] },
-    history: [{ role: "model", parts: [{ text: "만나서 반갑습니다. 무엇을 도와드릴까요?" }] }],
+    // history: [{ role: "", parts: [{ text: "" }] }],
   });
+  console.log("data: ", data);
 
   // 대화 생성 시 스크롤 업데이트
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -47,7 +50,7 @@ export default function GeminiChatbot() {
         method: "POST",
         body: JSON.stringify({
           input: input,
-          history: data?.history, // 현재까지 저장된 대화 기록 전송
+          // history: data?.history, // 현재까지 저장된 대화 기록 전송
         }),
       });
 
@@ -73,6 +76,7 @@ export default function GeminiChatbot() {
       </BasicTooltip>
       <PopoverContent className="w-80 mb-1 mr-4">
         <div ref={scrollRef} className="overflow-x-auto flex flex-col h-100 mb-4">
+          <p>{data?.date}</p>
           {data?.history?.map((m, idx) => (
             <p key={`${m.parts?.[0].text}_${idx}`} className={`my-2 py-2 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl bg-slate-50"}`}>
               {m.parts?.[0].text}
