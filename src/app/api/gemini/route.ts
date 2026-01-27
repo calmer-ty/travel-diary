@@ -14,12 +14,16 @@ export async function POST(req: Request) {
     });
 
     // 그 카톡방에 메시지를 톡 던지는 행위입니다. 그러면 상대방(AI)이 답장을 하겠죠?
-    await chat.sendMessage({
+    const result = await chat.sendMessage({
       message: input,
     });
 
     // 클라이언트로 전달
-    return NextResponse.json(chat.getHistory());
+    return NextResponse.json({
+      // result: result,
+      text: result.candidates?.[0].content,
+      history: chat.getHistory(),
+    });
   } catch (error) {
     console.error(error);
   }

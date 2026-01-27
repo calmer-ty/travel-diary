@@ -1,37 +1,64 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { Textarea } from "../ui/textarea";
 import { Card } from "../ui/card";
-import { Brain } from "lucide-react";
+import { ArrowRight, Brain } from "lucide-react";
 
-import type { Content } from "@google/genai";
 import BasicTooltip from "./BasicTooltip";
 
-export default function GeminiChatbot() {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Content[] | undefined>([{ role: "model", parts: [{ text: "만나서 반갑습니다. 무엇을 도와드릴까요?" }] }]);
+import type { Content } from "@google/genai";
 
+interface IData {
+  text?: Content;
+  history?: Content[];
+}
+export default function GeminiChatbot() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState("");
+  const [data, setData] = useState<IData | undefined>({
+    text: { role: "", parts: [{ text: "" }] },
+    history: [{ role: "model", parts: [{ text: "만나서 반갑습니다. 무엇을 도와드릴까요?" }] }],
+  });
+
+  // 대화 생성 시 스크롤 업데이트
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current && isLoading) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth", // 부드럽게 스르륵 내려가는 효과
+      });
+    }
+  }, [isLoading]);
+
+  // 대화 생성
   const handleGemini = async (input: string) => {
+    if (!input.trim()) return;
+    setIsLoading(true);
+    setInput("");
+
     try {
       // 우리 서버 API로 요청을 보냄
       const res = await fetch("/api/gemini", {
         method: "POST",
         body: JSON.stringify({
           input: input,
-          history: messages, // 현재까지 저장된 대화 기록 전송
+          history: data?.history, // 현재까지 저장된 대화 기록 전송
         }),
       });
 
-      const data: Content[] | undefined = await res.json();
+      const resJson = await res.json();
 
       // 서버가 돌려준 최신 대화 기록으로 상태 업데이트
-      setMessages(data);
-      setInput("");
+      setData(resJson);
     } catch (error) {
       console.error("통신 에러:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,19 +72,21 @@ export default function GeminiChatbot() {
         </PopoverTrigger>
       </BasicTooltip>
       <PopoverContent className="w-80 mb-1 mr-4">
-        <div className="overflow-x-auto flex flex-col h-100 mb-4">
-          {messages?.map((m) => (
-            <p key={m.parts?.[0].text} className={`my-2 py-2 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl bg-slate-50"}`}>
+        <div ref={scrollRef} className="overflow-x-auto flex flex-col h-100 mb-4">
+          {data?.history?.map((m, idx) => (
+            <p key={`${m.parts?.[0].text}_${idx}`} className={`my-2 py-2 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl bg-slate-50"}`}>
               {m.parts?.[0].text}
             </p>
           ))}
+          {/* 로딩 중일 때만 보이는 문구 */}
+          {isLoading && <p className="self-start text-sm text-slate-400 animate-pulse">생각 중...</p>}
         </div>
 
         <Card className="flex flex-col gap-2 p-2">
           <Textarea className="border-none shadow-none" value={input} onChange={(e) => setInput(e.target.value)} />
 
-          <Button className="mt-2 self-end" onClick={() => handleGemini(input)}>
-            보내기
+          <Button className="self-end" onClick={() => handleGemini(input)}>
+            <ArrowRight />
           </Button>
         </Card>
       </PopoverContent>
