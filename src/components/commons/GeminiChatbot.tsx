@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { Textarea } from "../ui/textarea";
 import { Card } from "../ui/card";
 import { ArrowRight, Brain } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 import BasicTooltip from "./BasicTooltip";
 
@@ -21,26 +21,33 @@ export default function GeminiChatbot() {
   const [input, setInput] = useState("");
   const [data, setData] = useState<IData | undefined>({
     date: "",
-    text: { role: "", parts: [{ text: "" }] },
-    // history: [{ role: "", parts: [{ text: "" }] }],
+    history: [{ role: "model", parts: [{ text: "만나서 반갑습니다. 무엇을 도와드릴까요?" }] }],
   });
-  console.log("data: ", data);
 
   // 대화 생성 시 스크롤 업데이트
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (scrollRef.current && isLoading) {
+    if (scrollRef.current && data) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
         behavior: "smooth", // 부드럽게 스르륵 내려가는 효과
       });
     }
-  }, [isLoading]);
+  }, [data]);
 
   // 대화 생성
   const handleGemini = async (input: string) => {
     if (!input.trim()) return;
+
+    // 1. 사용자의 메시지를 history에 즉시 추가
+    const userContent: Content = { role: "user", parts: [{ text: input }] };
+
+    setData((prev) => ({
+      ...prev,
+      history: [...(prev?.history ?? []), userContent],
+    }));
+
     setIsLoading(true);
     setInput("");
 
@@ -50,7 +57,7 @@ export default function GeminiChatbot() {
         method: "POST",
         body: JSON.stringify({
           input: input,
-          // history: data?.history, // 현재까지 저장된 대화 기록 전송
+          history: data?.history, // 현재까지 저장된 대화 기록 전송
         }),
       });
 
@@ -65,6 +72,20 @@ export default function GeminiChatbot() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // 1. 한글 입력 시 마지막 글자가 중복 전송되는 현상 방지
+    if (e.nativeEvent.isComposing) return;
+
+    // 2. 엔터 키를 눌렀을 때 (Shift 키와 함께 누르지 않았을 때)
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // 엔터로 인한 줄바꿈 방지
+
+      if (input.trim()) {
+        handleGemini(input);
+      }
+    }
+  };
+
   return (
     <Popover>
       <BasicTooltip content="안녕하세요. Travel AI입니다.">
@@ -74,22 +95,22 @@ export default function GeminiChatbot() {
           </Button>
         </PopoverTrigger>
       </BasicTooltip>
-      <PopoverContent className="w-80 mb-1 mr-4">
-        <div ref={scrollRef} className="overflow-x-auto flex flex-col h-100 mb-4">
-          <p>{data?.date}</p>
+      <PopoverContent className="w-80 mb-1 mr-4 font-['Roboto']">
+        <div ref={scrollRef} className="overflow-x-auto flex flex-col h-100 mb-4 text-sm">
           {data?.history?.map((m, idx) => (
-            <p key={`${m.parts?.[0].text}_${idx}`} className={`my-2 py-2 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl bg-slate-50"}`}>
-              {m.parts?.[0].text}
-            </p>
+            <div key={`${m.parts?.[0].text}_${idx}`} className={`my-2 py-2 space-y-4 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl"}`}>
+              <ReactMarkdown>{m.parts?.[0].text}</ReactMarkdown>
+            </div>
           ))}
+
           {/* 로딩 중일 때만 보이는 문구 */}
           {isLoading && <p className="self-start text-sm text-slate-400 animate-pulse">생각 중...</p>}
         </div>
 
         <Card className="flex flex-col gap-2 p-2">
-          <Textarea className="border-none shadow-none" value={input} onChange={(e) => setInput(e.target.value)} />
+          <textarea className="border-none shadow-none outline-none text-sm" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} />
 
-          <Button className="self-end" onClick={() => handleGemini(input)}>
+          <Button className="w-8 h-8 self-end" onClick={() => handleGemini(input)}>
             <ArrowRight />
           </Button>
         </Card>
