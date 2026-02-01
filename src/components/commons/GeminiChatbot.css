@@ -1,0 +1,10 @@
+ol {
+  list-style: decimal;
+  padding-left: 1rem; /* 여백이 없으면 숫자가 잘려요! */
+}
+
+/* 점(불렛)이 있는 리스트 */
+ul {
+  list-style: disc;
+  padding-left: 1rem;
+}

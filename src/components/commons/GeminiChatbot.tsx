@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 
 import BasicTooltip from "./BasicTooltip";
 
+import "./GeminiChatbot.css";
 import type { Content } from "@google/genai";
 
 interface IData {
@@ -16,13 +17,13 @@ interface IData {
   text?: Content;
   history?: Content[];
 }
-export default function GeminiChatbot() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function GeminiChatbot({ modelText, instruction }: { modelText: string; instruction: string }) {
   const [input, setInput] = useState("");
   const [data, setData] = useState<IData | undefined>({
     date: "",
-    history: [{ role: "model", parts: [{ text: "만나서 반갑습니다. 무엇을 도와드릴까요?" }] }],
+    history: [{ role: "model", parts: [{ text: modelText }] }],
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   // 대화 생성 시 스크롤 업데이트
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,6 +59,7 @@ export default function GeminiChatbot() {
         body: JSON.stringify({
           input: input,
           history: data?.history, // 현재까지 저장된 대화 기록 전송
+          instruction: instruction,
         }),
       });
 
@@ -96,10 +98,11 @@ export default function GeminiChatbot() {
         </PopoverTrigger>
       </BasicTooltip>
       <PopoverContent className="w-80 mb-1 mr-4 font-['Roboto']">
-        <div ref={scrollRef} className="overflow-x-auto flex flex-col h-50 mb-4 text-sm">
+        <div ref={scrollRef} className="overflow-x-auto flex flex-col h-50 pr-4 mb-4 text-sm">
           {data?.history?.map((m, idx) => (
-            <div key={`${m.parts?.[0].text}_${idx}`} className={`my-2 py-2 space-y-4 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl"}`}>
+            <div key={`${m.parts?.[0].text}_${idx}`} className={`my-4 py-2 space-y-4 ${m.role === "model" ? "self-start" : "px-4 self-end border rounded-xl"}`}>
               <ReactMarkdown>{m.parts?.[0].text}</ReactMarkdown>
+              {/* {m.parts?.[0].text} */}
             </div>
           ))}
 

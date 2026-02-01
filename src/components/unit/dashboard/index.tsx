@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Link from "next/link";
-import GeminiChatbot from "@/components/commons/GeminiChatbot";
 import CountryDialog from "./CountryDialog";
 import TravelWarning from "./TravelWarning";
 
@@ -76,7 +75,6 @@ export default function Dashboard() {
 
       {/* 모달 */}
       {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
-      <GeminiChatbot />
     </article>
   );
 }
