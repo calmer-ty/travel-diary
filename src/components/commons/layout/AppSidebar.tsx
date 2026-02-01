@@ -66,8 +66,6 @@ export function AppSidebar() {
               </SidebarGroup>
             </SidebarContent>
           </Sidebar>
-
-          {/* <div>ai</div> */}
         </>
       )}
     </>

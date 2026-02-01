@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Link from "next/link";
+import GeminiChatbot from "@/components/commons/GeminiChatbot";
 import CountryDialog from "./CountryDialog";
 import TravelWarning from "./TravelWarning";
 
@@ -75,6 +76,7 @@ export default function Dashboard() {
 
       {/* 모달 */}
       {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
+      <GeminiChatbot modelText="오늘 여행은 어떠셨나요? 기억에 남는 순간을 들려주세요!" instruction="당신은 여행 일기 서비스의 '비서'입니다." />
     </article>
   );
 }
