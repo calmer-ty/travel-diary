@@ -54,7 +54,7 @@ export default function TravelWarning({ openDialog }: ITravelWarningProps) {
                 return labelMap[selectedLabel] !== undefined && labelMap[selectedLabel] !== "";
               })
               .map((el, idx) => (
-                <Button variant="outline" key={idx} onClick={() => openDialog(el)} className="flex justify-between items-center dark:shadow-none">
+                <Button variant="outline" key={idx} onClick={() => openDialog(el)} className="flex justify-between items-center">
                   {/*  hover:bg-[#7E9EC0] hover:text-white */}
                   <span>{el.country_name}</span>
                   <ChevronRight />

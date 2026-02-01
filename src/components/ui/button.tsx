@@ -20,8 +20,8 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         // custom
-        input: "self-end px-4 py-1 bg-[#5F9EA0] text-white rounded-md shadow-[inset_-2px_-2px_0px_#347B7D] hover:shadow-[inset_2px_2px_0px_#347B7D]",
-        remove: "bg-[#DFB489] text-white rounded-md shadow-[inset_-2px_-2px_0px_#CB9B6A] hover:shadow-[inset_2px_2px_0px_#CB9B6A]",
+        submit: "shadow-auto bg-[#5F9EA0] dark:bg-[#3E6B6D] dark:hover:bg-[#4A7F82] text-white rounded-md shadow-[inset_-2px_-2px_0px_#347B7D] dark:shadow-[inset_-2px_-2px_0px_#1A3335] hover:shadow-[inset_2px_2px_0px_#347B7D] dark:hover:shadow-[inset_2px_2px_0px_#1A3335] self-end",
+        remove: "shadow-auto bg-[#DFB489] dark:bg-[#A67C52] dark:hover:bg-[#B88D61] text-white rounded-md shadow-[inset_-2px_-2px_0px_#CB9B6A] dark:shadow-[inset_-2px_-2px_0px_#634A2F] hover:shadow-[inset_2px_2px_0px_#CB9B6A] dark:hover:shadow-[inset_2px_2px_0px_#634A2F]",
         close: "bg-background  rounded-md shadow-[inset_-2px_-2px_0px_#BCBBBB] hover:shadow-[inset_2px_2px_0px_#BCBBBB]",
         search: " bg-[#316192] rounded-md shadow-[inset_-2px_-2px_0px_#1D538A] text-white",
       },

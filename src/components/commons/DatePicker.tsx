@@ -7,25 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-interface IDatePicker01Props {
+interface IDatePickerProps {
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  className: string;
 }
-export default function DatePicker({ date, setDate, className }: IDatePicker01Props) {
+export default function DatePicker({ date, setDate }: IDatePickerProps) {
   const [open, setOpen] = React.useState(false);
   // const [date, setDate] = React.useState<Date | undefined>(undefined);
 
   return (
-    <div className={`flex flex-col gap-3   ${className}`}>
+    <div className="flex flex-col gap-3">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" id="date" className="!flex pointer-events-auto">
+          <Button variant="outline" id="date" className="!flex">
             <CalendarIcon size={24} />
             {date ? date.toLocaleDateString() : "기록할 날짜를 선택하세요."}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0 bg-white pointer-events-auto" align="start">
+        <PopoverContent className="w-auto overflow-hidden p-0 bg-white pointer-events-auto dark:bg-background" align="start">
           <Calendar
             mode="single"
             selected={date}

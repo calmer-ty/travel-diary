@@ -158,7 +158,7 @@ export default function RouletteGame() {
         {/* 입력 영역 */}
         <div className="flex gap-2 mb-4">
           <Input value={inputValue} onChange={onChangeItem} placeholder="룰렛 아이템 입력" className="bg-white" />
-          <Button variant="input" onClick={handleAddItem} disabled={isDisabled}>
+          <Button variant="submit" onClick={handleAddItem} disabled={isDisabled}>
             추가
           </Button>
         </div>
@@ -195,7 +195,7 @@ export default function RouletteGame() {
             <span className="text-[#E9897B] font-bold">{selectedItem?.label}</span> 당첨!
           </p>
 
-          <Button variant="input" onClick={onClickReset} className="absolute bottom-6 left-1/2 -translate-x-1/2">
+          <Button variant="submit" onClick={onClickReset} className="absolute bottom-6 left-1/2 -translate-x-1/2">
             다시 하기
           </Button>
         </div>

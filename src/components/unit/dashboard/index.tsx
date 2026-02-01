@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   return (
     <article className="relative size-full p-5">
-      <div className="flex flex-col md:flex-row overflow-hidden size-full rounded-2xl shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] dark:shadow-none">
+      <div className="flex flex-col md:flex-row overflow-hidden size-full rounded-2xl shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)]">
         {/* 사진 영역 */}
         <section className="relative w-full md:w-[60%] min-h-45 bg-[#7E9EC0]">
           <img className="absolute top-0 left-0 size-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />

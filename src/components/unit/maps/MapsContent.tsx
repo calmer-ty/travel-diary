@@ -197,7 +197,7 @@ export default function MapsContent({ keyword }: { keyword: string }) {
         <input
           type="text"
           placeholder="검색"
-          className="box-border border border-transparent w-60 h-8 px-3 rounded shadow-md text-sm outline-none truncate absolute left-1/2 -ml-30 mt-20.5 z-10 bg-white"
+          className="absolute left-1/2 -translate-x-1/2 t-50 z-10 w-60 h-8 px-3 mt-20 box-border border border-transparent rounded bg-white text-black shadow-md text-sm outline-none "
         />
       </StandaloneSearchBox>
 

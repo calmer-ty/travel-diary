@@ -10,8 +10,8 @@ import MotionAlert from "@/components/commons/MotionAlert";
 import WriteBookmark from "./WriteBookmark";
 
 // shadcn
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { Dispatch, SetStateAction } from "react";
@@ -202,7 +202,8 @@ export default function MapsWrite({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="bg-[#F9F9F9] sm:w-140 lg:w-180">
+      <DialogContent className="sm:w-140 lg:w-180">
+        {/* bg-[#F9F9F9]  */}
         <form onSubmit={isEdit ? handleUpdate : handleSubmit}>
           <DialogHeader>
             <DialogTitle>{isEdit ? (selectedMarker?.name ?? "이름 없음") : (mapsAddress?.name ?? "이름 없음")}</DialogTitle>
@@ -213,7 +214,7 @@ export default function MapsWrite({
           <div className="grid gap-3 mt-4 ">
             <WriteBookmark selectedMarker={selectedMarker} bookmark={bookmark} setBookmark={setBookmark} />
             {/* 날짜 선택 */}
-            <DatePicker date={date} setDate={setDate} className="pointer-events-auto" />
+            <DatePicker date={date} setDate={setDate} />
             {/* 내용 작성 */}
             <Textarea value={content} onChange={(e) => setContent(e.target.value)} className="h-full mb-4 bg-white placeholder-gray" placeholder="기록할 내용을 적어보세요." />
             {/* 버튼 */}
@@ -230,7 +231,7 @@ export default function MapsWrite({
               >
                 삭제
               </Button>
-              <Button variant="input" type="submit">
+              <Button variant="submit" type="submit">
                 {isEdit ? "수정" : "등록"}
               </Button>
             </DialogFooter>
