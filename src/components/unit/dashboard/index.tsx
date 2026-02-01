@@ -31,9 +31,9 @@ export default function Dashboard() {
 
   return (
     <article className="relative size-full p-5">
-      <div className="relative flex flex-col md:flex-row size-full shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] rounded-2xl dark:shadow-none">
+      <div className="flex flex-col md:flex-row overflow-hidden size-full rounded-2xl shadow-[3px_3px_15px_3px_rgba(0,0,0,0.25)] dark:shadow-none">
         {/* 사진 영역 */}
-        <section className="overflow-hidden relative w-full md:w-[60%] min-h-45 rounded-3xl bg-[#7E9EC0]">
+        <section className="relative w-full md:w-[60%] min-h-45 bg-[#7E9EC0]">
           <img className="absolute top-0 left-0 size-full block object-cover" src="./images/img_main02.jpg" alt="출처: unsplash" />
 
           <div className="relative z-10 py-8 px-8 md:py-20 md:px-14">
@@ -55,11 +55,11 @@ export default function Dashboard() {
         </section>
 
         {/* 오른쪽 영역 */}
-        <section className="flex flex-col gap-3 md:gap-8 md:w-[40%] p-5 w-full">
+        <section className="flex flex-col gap-3 md:gap-8 w-full md:w-[40%] p-5">
           {/* 여행 유의 컴포넌트 */}
           <TravelWarning openDialog={openDialog} />
           {/* 검색창 */}
-          <div className="p-4 rounded-md">
+          <div className="p-4">
             <p className="text-xl mb-3 font-semibold">원하는 여행지를 검색해 보세요.</p>
             <div className="flex items-center gap-2 mr-10 md:mr-0">
               <Input onChange={(e) => setKeyWord(e.target.value)} className="bg-white" placeholder="검색" />
@@ -68,15 +68,15 @@ export default function Dashboard() {
               </Button>
             </div>
           </div>
-
-          <GeminiChatbot />
         </section>
 
         {/* 비행기 */}
         <img className="hidden xl:block absolute bottom-[8%] left-[60%] -translate-x-1/2 w-20 hidden md:w-30" src="./images/icon_airplane.png" alt="" />
       </div>
 
+      {/* 모달 */}
       {selectedCountry && <CountryDialog country={selectedCountry} closeDialog={closeDialog} />}
+      <GeminiChatbot />
     </article>
   );
 }
