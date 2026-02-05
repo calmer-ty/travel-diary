@@ -90,7 +90,7 @@ export default function List() {
           </div>
         )}
       </div>
-      <GeminiChatbot />
+      <GeminiChatbot modelText="오늘 여행은 어떠셨나요? 기억에 남는 순간을 들려주세요!" instruction="당신은 여행 일기 서비스의 '비서'입니다." />
     </article>
   );
 }
