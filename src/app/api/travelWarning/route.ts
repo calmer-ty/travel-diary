@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 export const preferredRegion = "icn";
+export const revalidate = 3600; // 1시간 캐싱
 
 export async function GET() {
   const serviceKey = process.env.TRAVEL_SERVICE_KEY;
@@ -16,7 +17,7 @@ export async function GET() {
       serviceKey,
       returnType: "json",
       pageNo: "1",
-      numOfRows: "500", // 한번에 많은 양 가져오기
+      numOfRows: "500",
     });
 
     const res = await fetch(`${endpoint}?${params.toString()}`, {
