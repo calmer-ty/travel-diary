@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export const preferredRegion = "icn";
 export const revalidate = 3600; // 1시간 캐싱
+export const dynamic = "force-static"; // 1시간 동안 캐싱 사용
 
 export async function GET() {
   const serviceKey = process.env.TRAVEL_SERVICE_KEY;
