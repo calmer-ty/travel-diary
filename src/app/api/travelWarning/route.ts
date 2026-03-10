@@ -14,7 +14,7 @@ export async function GET() {
       serviceKey,
       returnType: "json",
       pageNo: "1",
-      numOfRows: "10",
+      numOfRows: "500", // 한번에 많은 양 불러오기
     });
 
     const initialRes = await fetch(`${endpoint}?${initialParams.toString()}`);
@@ -34,7 +34,10 @@ export async function GET() {
       numOfRows: totalCount.toString(),
     });
 
-    const allRes = await fetch(`${endpoint}?${allParams.toString()}`);
+    // const allRes = await fetch(`${endpoint}?${allParams.toString()}`);
+    const allRes = await fetch(`${endpoint}?${initialParams.toString()}`, {
+      next: { revalidate: 3600 }, // 1시간 캐싱
+    });
     const allData = await allRes.json();
 
     return NextResponse.json({
