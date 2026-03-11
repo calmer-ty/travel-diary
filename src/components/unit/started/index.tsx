@@ -93,7 +93,7 @@ export default function StartedUI() {
           <Button
             variant="default"
             className="bg-[#E9897B] shadow-[inset_-2px_-2px_0px_#F3642A] 
-              hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E9897B]"
+              hover:shadow-[inset_2px_2px_0px_#F3642A] hover:bg-[#E9897B] text-white"
             onClick={onClickMoveToHome}
           >
             지금 시작하기

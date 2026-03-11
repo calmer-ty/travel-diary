@@ -14,7 +14,7 @@ export async function GET() {
       serviceKey,
       returnType: "json",
       pageNo: "1",
-      numOfRows: "500",
+      numOfRows: "200",
     });
 
     const res = await fetch(`${endpoint}?${params.toString()}`, {
@@ -25,7 +25,7 @@ export async function GET() {
 
     return NextResponse.json({
       items: data.response?.body?.items ?? [],
-      totalCount: data.response?.body?.totalCount ?? 0,
+      // totalCount: data.response?.body?.totalCount ?? 0,
     });
   } catch (err) {
     console.error("API 호출 오류:", err);
