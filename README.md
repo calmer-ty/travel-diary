@@ -1,5 +1,6 @@
 ## 맵 데이터 시각화 및 관리
 <img width="1280" height="800" alt="20260518_132828" src="https://github.com/user-attachments/assets/239a8500-7e1f-4105-9673-3e1b9e182836" />
+<img width="1280" height="800" alt="20260518_133423" src="https://github.com/user-attachments/assets/9b85327e-b62b-472c-a37a-6eb67a3feb39" />
 
 - Google Maps API의 POI(Point of Interest)를 활용해 사용자 입력 정보를 구조화하여 저장
 - 마커 객체와 데이터베이스 ID를 매핑하여 모달 기반의 수정 및 삭제(CRUD) 기능 구현
